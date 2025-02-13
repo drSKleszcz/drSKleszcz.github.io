@@ -2,9 +2,9 @@
 title: Researcher
 email: kleszcz.slawosz@gmail.com
 url: https://github.com/drSKleszcz/
-description: "With a Ph.D. in Engineering and over five years of experience as an R&D Engineer in energy systems, I specialize in power systems modeling, numerical simulations, and techno-economic analysis to support sustainable energy solutions."
+description: "blablabla"
 keywords: "ANSYS Fluent, IPSEPro, Python, Excel, VBA,"
-skills: "Researcher - PhD - Simulations - Developer"
+skills: "Researcher - PhD - Developer"
 meta_author: Kleszcz Slawosz
 
 # Google webmaster tools
@@ -49,9 +49,7 @@ social:
 # Postal address (add as many lines as necessary)
 address:
   - line: Cracow, PL
-
 # Credits content
-
 
 # Build settings
 markdown: kramdown
