@@ -1,7 +1,7 @@
 Freelancer Jekyll theme  
 =========================
 
-Jekyll theme based on [Freelancer bootstrap theme ](http://startbootstrap.com/template-overviews/freelancer/)
+Jekyll theme based on [Freelancer bootstrap theme ](https://github.com/jeromelachaud/freelancer-theme?tab=readme-ov-file)
 
 ## How to use
  - Place a image in `/img/portfolio/`
