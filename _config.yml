@@ -1,10 +1,10 @@
 # Site settings
-title: Freelancer
+title: Researcher
 email: kleszcz.slawosz@gmail.com
 url: https://github.com/drSKleszcz/
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
-keywords: "your keywords, separated by commas"
-skills: "Web Developer - Graphic Artist - User Experience Designer"
+description: "With a Ph.D. in Engineering and over five years of experience as an R&D Engineer in energy systems, I specialize in power systems modeling, numerical simulations, and techno-economic analysis to support sustainable energy solutions."
+keywords: "ANSYS Fluent, IPSEPro, Python, Excel, VBA,"
+skills: "Researcher - PhD - Simulations - Developer"
 meta_author: Kleszcz Slawosz
 
 # Google webmaster tools
@@ -25,38 +25,33 @@ disqus_shortname: myshortname
 
 # Color settings (hex-codes without the leading hash-tag)
 color:
-  primary: 18bc9c #80B3FF
+  primary: 000000 #80B3FF
   primary-rgb: "24,288,156" #"128,179,255"
   secondary: 2c3e50 #FD6E8A
   secondary-dark: 233140 #A2122F
 
 # Footer settings
 footer:
-  copyright: Dr. Henry Jekyll
-  location: Location
-  social: Around the Web
-  credits: Credits
+  copyright: 
+  location: 
+  social: 
+  credits: 
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
-  - title: twitter
-    url: http://twitter.com/jekyllrb
-  - title: facebook
-    url:
-  - title: stack-overflow
-    url: http://stackoverflow.com/questions/tagged/jekyll
-  - title: bitbucket
-    url: http://bitbucket.org/jekyll
+  - title: orcid
+    url: https://orcid.org/0000-0002-8745-0033
+  - title: linkedin
+    url: www.linkedin.com/in/slawosz-kleszcz
   - title: github
-    url: http://github.com/jekyll
+    url: https://github.com/drSKleszcz/
 
 # Postal address (add as many lines as necessary)
 address:
-  - line: 3481 Melrose Place
-  - line: Beverly Hills, CA 90210
+  - line: Cracow, PL
 
 # Credits content
-credits: 'Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.'
+
 
 # Build settings
 markdown: kramdown
