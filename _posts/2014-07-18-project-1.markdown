@@ -1,11 +1,14 @@
 ---
 layout: default
 modal-id: 1
-date: 2014-07-18
-img: cabin.png
+date: 2025-02-16
+img: glicol_screen.png
 alt: image-alt
-project-date: April 2014
-client: Start Bootstrap
-category: Web Development
-description: Use this area of the page to describe your project. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.
+project-date: April 2018
+title: Automated Cost Estimation Software for Glycol Heat Exchange Systems.
+client: Frapol
+category: Software Development
+description: I developed a comprehensive software solution for estimating the cost of glycol-based heat exchange systems. This tool automates the selection of system components based on technical specifications, ensuring an optimal balance between performance and cost. The software is designed to streamline the planning, budgeting, and quoting process for sales and engineering teams. The software maps all required technical specifications and selects the most cost-effective and efficient components. The selection process is based on key input parameters, including fluid type, flow rate, heat exchanger resistance, heat exchanger volume, piping material, and system configuration. The software performs advanced hydraulic calculations to determine optimal pipe sizing, ensuring system efficiency. These calculations include cross-sectional area, flow velocity, Reynolds number, pressure losses (linear and local), three-way valve resistance, and total pressure drop. Based on flow parameters and cost constraints, the software selects the appropriate pump and other system components such as safety valves, expansion tanks, shut-off and balancing valves, filters, heat exchangers, and actuators. The software integrates a company database to pull real-time pricing for components, labor, and insulation costs. The user can select different material options, with cost and performance adjustments reflected instantly. A PDF report is automatically generated for sales and engineering teams, summarizing selected components, system specifications, cost breakdown, and performance parameters. This project significantly improved the accuracy and efficiency of pricing glycol heat exchange systems, enhancing the company’s ability to deliver precise and competitive quotations to clients.
+
+
 ---
