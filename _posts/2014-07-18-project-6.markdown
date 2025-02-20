@@ -1,0 +1,21 @@
+---
+layout: default
+modal-id: 6
+date: 2025-02-16
+img: mtt.png
+alt: image-alt
+project-date: Jul 2023
+title: Commissioning gas turbine and creating the digital twin 
+client: UiS
+category: Techno economical analysis
+description: |
+  <div style="text-align: justify;">
+    
+    <h3>test</h3>
+    
+  </div>
+
+
+
+
+---

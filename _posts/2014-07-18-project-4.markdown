@@ -10,7 +10,7 @@ client: UiS
 category: Techno economical analysis
 description: |
   <div style="text-align: justify;">
-    <h2>Techno-Economic Assessment of CO₂-Cushioned Underground Gas Storage (UGS) in Poland</h2>
+    
     <p>
         This project focused on evaluating the feasibility and economic viability of using CO₂ as a cushion gas for Underground Gas Storage (UGS) in Poland. The assessment included site selection, cost modeling, and sensitivity analysis to key market and operational factors.
     </p>
@@ -57,6 +57,10 @@ description: |
     <p>
         Overall, the project demonstrates that integrating CO₂ storage with UGS can enhance financial returns while contributing to carbon management initiatives, making it a viable solution for energy storage and emissions reduction.
     </p>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\monte_carlo.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
   </div>
 
 ---

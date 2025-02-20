@@ -2,16 +2,15 @@
 layout: default
 modal-id: 5
 date: 2025-02-16
-img: deso2.png
+img: deso4.png
 alt: image-alt
 project-date: Jul 2023
-title: Integration of Desalination and Solar Energy for Sustainable Water Supply on Thirasia Island 
+title: Integration of Desalination and Solar Energy for Sustainable Water Supply
 client: UiS
 category: Techno economical analysis
 description: |
   <div style="text-align: justify;">
-    <h2>Integration of Desalination and Solar Energy for Sustainable Water Supply on Thirasia Island</h2>
-
+    
     <h3>Project Overview</h3>
     <p>
         This project focuses on the installation and optimization of a photovoltaic-powered desalination plant on Thirasia Island, Greece. Given the island's dependency on desalinated water and the high cost of fossil fuel-based electricity, the initiative aims to enhance sustainability by integrating solar energy.
@@ -73,9 +72,7 @@ description: |
         The project is spearheaded by the Municipal Water Supply and Sewerage Company of Thira, in collaboration with the Norwegian University of Stavanger, leveraging international expertise to enhance system performance and reliability. The integration of solar energy ensures cost reductions, energy security, and environmental sustainability, providing a scalable model for other Greek islands.
     </p>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <img src="img\portfolio\deso1_small.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-    </div>
+  
 
 
   </div>
