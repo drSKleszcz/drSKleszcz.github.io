@@ -1,47 +1,85 @@
 ---
 layout: default
-modal-id: 3
+modal-id: 5
 date: 2025-02-16
-img: Silencer.png
+img: deso2.png
 alt: image-alt
-project-date: Jan 2017
-title: Silencers Calculation Software 
-client: Own project
-category: Software Development
+project-date: Jul 2023
+title: Integration of Desalination and Solar Energy for Sustainable Water Supply on Thirasia Island 
+client: UiS
+category: Techno economical analysis
 description: |
   <div style="text-align: justify;">
-    <p>I developed a comprehensive software solution for acoustic silencer modeling, optimization, and automated report generation. This tool integrates advanced mathematical modeling with industrial design parameters to optimize noise attenuation, pressure drop, and cost estimation.</p>
+    <h2>Integration of Desalination and Solar Energy for Sustainable Water Supply on Thirasia Island</h2>
 
+    <h3>Project Overview</h3>
+    <p>
+        This project focuses on the installation and optimization of a photovoltaic-powered desalination plant on Thirasia Island, Greece. Given the island's dependency on desalinated water and the high cost of fossil fuel-based electricity, the initiative aims to enhance sustainability by integrating solar energy.
+    </p>
+
+    <h3>Key Objectives:</h3>
     <ul>
-        <li><strong>Mathematical Model for Acoustic Attenuation:</strong> Predicts noise reduction across multiple frequency bands based on silencer geometry and airflow characteristics.</li>
-
-        <li><strong>Pressure Drop Calculation:</strong> Computes airflow resistance through the silencer, ensuring optimized design without excessive energy loss.</li>
-
-        <li><strong>Automated PDF Report Generation:</strong> Creates detailed reports with silencer specifications, performance metrics, and graphical representations of acoustic attenuation.</li>
-
-        <li><strong>Customizable Silencer Configurations:</strong> Allows selection of different baffle membranes and geometric parameters to tailor performance to specific industrial needs.</li>
-
-        <li><strong>Optimization Tool for Acoustic Performance:</strong> Implements an intelligent optimization algorithm that automatically determines the best silencer configuration based on input parameters such as height, depth, and length. The tool calculates:
+        <li><strong>System Evaluation & Optimization:</strong> 
             <ul>
-                <li>Optimal number of internal baffles</li>
-                <li>Best material selection for maximum noise reduction</li>
-                <li>Estimated weight and cost of the silencer</li>
+                <li>Assessing the performance of the existing desalination unit and solar system</li>
+                <li>Optimizing operational efficiency</li>
             </ul>
         </li>
 
-        <li><strong>Performance Visualization & Data Analysis:</strong> Generates graphical representations, including:
+        <li><strong>Financial Feasibility Analysis:</strong> 
             <ul>
-                <li>Acoustic attenuation across frequency bands</li>
-                <li>Pressure drop trends</li>
-                <li>Design parameter influence</li>
-                <li>Optimized material vs. performance trade-offs</li>
+                <li>Conducting a cost-benefit analysis to evaluate the economic viability of running the desalination plant using solar power</li>
+            </ul>
+        </li>
+
+        <li><strong>Renewable Energy Integration:</strong> 
+            <ul>
+                <li>Implementing a 60 kW photovoltaic system through net-metering</li>
+                <li>Reducing reliance on fossil fuels</li>
+            </ul>
+        </li>
+
+        <li><strong>Simulation & Data Analysis:</strong> 
+            <ul>
+                <li>Using Python for data cleaning and analysis</li>
+                <li>Ensuring accuracy and handling missing values</li>
+                <li>Optimizing system efficiency</li>
+            </ul>
+        </li>
+
+        <li><strong>Performance Modeling:</strong> 
+            <ul>
+                <li>Employing IPSEPro to simulate the desalination process</li>
+                <li>Considering membrane efficiency, pretreatment effects, and plant load conditions</li>
+            </ul>
+        </li>
+
+        <li><strong>Long-Term Solar Resource Assessment:</strong> 
+            <ul>
+                <li>Utilizing meteorological data from 2007 to 2023</li>
+                <li>Ensuring robust and accurate PV system performance predictions</li>
+            </ul>
+        </li>
+
+        <li><strong>Dissemination & Project Promotion:</strong> 
+            <ul>
+                <li>Engaging stakeholders and promoting the project's benefits to potential investors and policymakers</li>
             </ul>
         </li>
     </ul>
 
-    <p>This project automates the silencer design process, enabling engineers to optimize noise control solutions efficiently. By integrating precise mathematical models with an intelligent optimization engine and an intuitive reporting system, the tool streamlines industrial acoustic analysis and enhances decision-making.</p>
+    <h3>Collaborations & Impact:</h3>
+    <p>
+        The project is spearheaded by the Municipal Water Supply and Sewerage Company of Thira, in collaboration with the Norwegian University of Stavanger, leveraging international expertise to enhance system performance and reliability. The integration of solar energy ensures cost reductions, energy security, and environmental sustainability, providing a scalable model for other Greek islands.
+    </p>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\deso1_small.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
 
   </div>
+
 
 
 
