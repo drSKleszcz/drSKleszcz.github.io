@@ -195,19 +195,34 @@ section.success {
     }
 }
 
-#portfolio .portfolio-item {
+
+.portfolio-title {
+    text-align: center; /* Centers text horizontally */
+    font-size: 18px; /* Adjust size if needed */
+    font-weight: bold; /* Makes it stand out */
+    margin-top: 10px; /* Adds space above the title */
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    height: 50px; /* Adjust height as needed */
+  }
+
+#analysis .portfolio-item,
+#software-development .portfolio-item {
     right: 0;
     margin: 0 0 15px;
 }
 
-#portfolio .portfolio-item .portfolio-link {
+#analysis .portfolio-item .portfolio-link,
+#software-development .portfolio-item .portfolio-link {
     display: block;
     position: relative;
     margin: 0 auto;
     max-width: 400px;
 }
 
-#portfolio .portfolio-item .portfolio-link .caption {
+#analysis .portfolio-item .portfolio-link .caption,
+#software-development .portfolio-item .portfolio-link .caption {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -218,11 +233,13 @@ section.success {
     transition: all ease .5s;
 }
 
-#portfolio .portfolio-item .portfolio-link .caption:hover {
+#analysis .portfolio-item .portfolio-link .caption:hover,
+#software-development .portfolio-item .portfolio-link .caption:hover {
     opacity: 1;
 }
 
-#portfolio .portfolio-item .portfolio-link .caption .caption-content {
+#analysis .portfolio-item .portfolio-link .caption .caption-content,
+#software-development .portfolio-item .portfolio-link .caption .caption-content {
     position: absolute;
     top: 50%;
     width: 100%;
@@ -233,21 +250,26 @@ section.success {
     color: #fff;
 }
 
-#portfolio .portfolio-item .portfolio-link .caption .caption-content i {
+#analysis .portfolio-item .portfolio-link .caption .caption-content i,
+#software-development .portfolio-item .portfolio-link .caption .caption-content i {
     margin-top: -12px;
 }
 
-#portfolio .portfolio-item .portfolio-link .caption .caption-content h3,
-#portfolio .portfolio-item .portfolio-link .caption .caption-content h4 {
+#analysis .portfolio-item .portfolio-link .caption .caption-content h3,
+#analysis .portfolio-item .portfolio-link .caption .caption-content h4,
+#software-development .portfolio-item .portfolio-link .caption .caption-content h3,
+#software-development .portfolio-item .portfolio-link .caption .caption-content h4 {
     margin: 0;
 }
 
-#portfolio * {
+#analysis,
+#software-development * {
     z-index: 2;
 }
 
 @media(min-width:767px) {
-    #portfolio .portfolio-item {
+    #analysis .portfolio-item, 
+    #software-development .portfolio-item {
         margin: 0 0 30px;
     }
 }
@@ -296,6 +318,39 @@ section.success {
     color: #{{ site.color.primary }};
     background: #fff;
 }
+
+
+/* Style the dropdown menu */
+.dropdown-menu {
+    background-color: #fff;
+    border: 2px solid #{{ site.color.primary }};
+}
+
+.navbar-nav > li.active > a,
+.navbar-nav > li.active > a:focus,
+.navbar-nav > li.active > a:hover {
+    background-color: transparent !important; /* Set a color for the active background */
+    color: #fff !important; /* Make the active text white */
+}
+
+/* Style for active state in dropdown items */
+.navbar-nav .dropdown-menu li.active > a,
+.navbar-nav .dropdown-menu li.active > a:focus,
+.navbar-nav .dropdown-menu li.active > a:hover {
+    background-color: #fff !important;  /* Keep white background for active item */
+    color: #{{ site.color.primary }} !important;  /* Ensure the text color is visible, adjust as needed */
+}
+
+/* Style for the entire dropdown menu background */
+.navbar-nav .dropdown-menu {
+    background-color: #fff !important;  /* Ensure the dropdown has a white background */
+}
+
+.navbar-nav .dropdown-menu li a:hover {
+    background-color: #f8f9fa !important;  /* Hover effect for the dropdown items */
+    color: #{{ site.color.primary }} !important;  /* Ensure text stays visible on hover */
+}
+
 
 .floating-label-form-group {
     position: relative;
