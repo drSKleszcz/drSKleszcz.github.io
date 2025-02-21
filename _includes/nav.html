@@ -36,10 +36,3 @@
   <!-- /.container-fluid -->
 </nav>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-$(document).ready(function() {
-  $('.dropdown-menu li a').click(function() {
-      $('.dropdown-menu li').removeClass('active'); // Remove active from all
-      $(this).parent().addClass('active'); // Add active to clicked item
-  });
-});
