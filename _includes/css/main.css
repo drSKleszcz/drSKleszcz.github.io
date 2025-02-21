@@ -214,6 +214,15 @@ section.success {
     background: #{{ site.color.primary }};
 }
 
+
+#about {
+    padding: 40px 0; /* This gives the About section larger padding */
+}
+
+#contact {
+    padding: 40px 0; /* This gives the About section larger padding */
+}
+
 @media(max-width:767px) {
     section {
         padding: 5px 0;
