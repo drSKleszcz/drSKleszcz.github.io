@@ -171,6 +171,35 @@ header .intro-text .skills {
     border: 0;
 }
 
+.navbar-nav > li.active > a,
+.navbar-nav > li.active > a:focus,
+.navbar-nav > li.active > a:hover {
+    background-color: transparent !important; /* Set a color for the active background */
+    color: #fff !important; /* Make the active text white */
+}
+
+/* Style for active state in dropdown items */
+.navbar-nav .dropdown-menu li.active > a,
+.navbar-nav .dropdown-menu li.active > a:focus,
+.navbar-nav .dropdown-menu li.active > a:hover {
+    background-color: #fff !important;  /* Keep white background for active item */
+    color: #{{ site.color.primary }} !important;  /* Ensure the text color is visible, adjust as needed */
+}
+
+/* Style for the entire dropdown menu background */
+.navbar-nav .dropdown-menu {
+    background-color: #fff !important;  /* Ensure the dropdown has a white background */
+}
+
+.navbar-nav .dropdown-menu li a:hover {
+    background-color: #f8f9fa !important;  /* Hover effect for the dropdown items */
+    color: #{{ site.color.primary }} !important;  /* Ensure text stays visible on hover */
+}
+
+
+
+
+
 section {
     padding: 45px 0;
 }
@@ -324,31 +353,6 @@ section.success {
 .dropdown-menu {
     background-color: #fff;
     border: 2px solid #{{ site.color.primary }};
-}
-
-.navbar-nav > li.active > a,
-.navbar-nav > li.active > a:focus,
-.navbar-nav > li.active > a:hover {
-    background-color: transparent !important; /* Set a color for the active background */
-    color: #fff !important; /* Make the active text white */
-}
-
-/* Style for active state in dropdown items */
-.navbar-nav .dropdown-menu li.active > a,
-.navbar-nav .dropdown-menu li.active > a:focus,
-.navbar-nav .dropdown-menu li.active > a:hover {
-    background-color: #fff !important;  /* Keep white background for active item */
-    color: #{{ site.color.primary }} !important;  /* Ensure the text color is visible, adjust as needed */
-}
-
-/* Style for the entire dropdown menu background */
-.navbar-nav .dropdown-menu {
-    background-color: #fff !important;  /* Ensure the dropdown has a white background */
-}
-
-.navbar-nav .dropdown-menu li a:hover {
-    background-color: #f8f9fa !important;  /* Hover effect for the dropdown items */
-    color: #{{ site.color.primary }} !important;  /* Ensure text stays visible on hover */
 }
 
 
