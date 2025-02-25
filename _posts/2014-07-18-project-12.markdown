@@ -2,7 +2,7 @@
 layout: default
 modal-id: 12
 date: 2025-02-16
-img: constant.png
+img: constant2.png
 alt: image-alt
 project-date: Jul 2023
 title: Constant flow system for recuperators 
