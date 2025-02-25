@@ -1,0 +1,60 @@
+---
+layout: default
+modal-id: 10
+date: 2025-02-16
+img: test_station2.png
+alt: image-alt
+project-date: Jul 2023
+title: Pressure test station
+client: Frapol
+category: projects
+description: |
+
+
+ <div class="project-description">
+    <h2>Leakage Measurement Stand</h2>
+    <p>
+        This project involved the design and implementation of a leakage measurement stand in accordance with the PN EN 13141-7 standard, which outlines the methodology for testing the airtightness of recuperators. The primary objectives of the system were to ensure precise and reliable:
+    </p>
+    <ul>
+        <li>External leakage measurement</li>
+        <li>Internal leakage measurement</li>
+    </ul>
+    <p>
+        The project required a comprehensive approach, encompassing the specification and integration of all essential components. This included:
+    </p>
+    <ul>
+        <li>Orifices calibrated for accurate flow measurement</li>
+        <li>High-performance fans ensuring consistent airflow</li>
+        <li>Precision pressure sensors for accurate differential pressure readings</li>
+        <li>Customized duct systems for optimal flow dynamics</li>
+        <li>Advanced actuators and dampers for controlled air regulation</li>
+        <li>An intuitive HMI panel integrated with sophisticated automation systems for streamlined operation and monitoring</li>
+    </ul>
+    <p>
+        The project lifecycle included the strategic sourcing and procurement of all equipment, ensuring that components met the highest industry standards and were ready for seamless integration during the production phase. 
+    </p>
+    <p>
+        Comprehensive technical documentation (DTR) and user manuals were meticulously developed, providing detailed guidance on installation, operation, and maintenance procedures. These documents were crafted to enhance user understanding and ensure safe, efficient utilization of the measurement stand.
+    </p>
+    <p>
+        This project exemplifies a high level of engineering proficiency and commitment to quality, delivering a reliable solution for accurate leakage testing while adhering to stringent industry standards.
+    </p>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\norm.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+ </div>
+
+
+
+
+
+
+ 
+
+
+
+
+---
