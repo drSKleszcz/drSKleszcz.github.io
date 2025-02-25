@@ -1,0 +1,58 @@
+---
+layout: default
+modal-id: 8
+date: 2025-02-16
+img: mrr.png
+alt: image-alt
+project-date: Jul 2023
+title: Development of a microclimate control system / PHD
+client: AGH/Frapol
+category: projects
+description: |
+
+ <div style="text-align: justify;">
+   
+    <p>
+        This project focused on the development of a microclimate control system that addresses a critical challenge in mechanical ventilation systems: preventing the freezing of the Air Handling Unit (AHU) during cold winter conditions. The system, based on a highly efficient periodic counterflow heat exchanger, operates continuously without the need for additional energy-consuming protection, ensuring that the AHU remains functional even in extreme temperatures. This solution provides both energy efficiency and optimal air quality by managing heat and moisture recovery, making it ideal for nearly zero-energy buildings.
+    </p>
+
+ 
+    <ul>
+        <li><strong>Freezing in Ventilation Systems:</strong> In winter, outside temperatures can drop below zero, leading to freezing and potential damage of heat exchangers. This is a common issue in current heat recovery systems.</li>
+        <li><strong>Dry Air:</strong> Low temperatures result in dry air, which negatively impacts indoor air quality and human health. The developed system addresses this issue by recovering moisture from the exhaust air and reintroducing it into the incoming air.</li>
+    </ul>
+
+
+    <ul>
+        <li><strong>Prevention of Freezing:</strong> The system's core feature is its ability to prevent freezing of the heat exchanger without the need for external anti-freeze protection systems. This is achieved through the cyclical change in the airflow direction, which helps maintain the efficiency of heat and moisture recovery.</li>
+        <li><strong>Heat & Moisture Recovery:</strong> The system operates efficiently at very low intake temperatures, maintaining high-temperature efficiency (ηT = 78.0% ± 0.8%) and moisture recovery (ηx = 58.9% ± 3.8%) even at -20°C intake air temperature.</li>
+        <li><strong>Prototype Testing & Simulation:</strong> Laboratory tests and numerical simulations validated the system’s performance, confirming the feasibility of continuous operation in extreme conditions and the optimization of heat recovery through variable weather conditions.</li>
+    </ul>
+
+ 
+    <ul>
+        <li><strong>Cyclical Airflow Direction Change:</strong> This design prevents freezing in the heat exchanger by alternating the direction of airflow through the exchanger, ensuring that moisture is recovered and air temperature remains stable.</li>
+        <li><strong>Energy Efficiency & Environmental Benefits:</strong> The system minimizes additional energy consumption while maintaining optimal air quality, significantly reducing energy costs and contributing to lower carbon emissions.</li>
+        <li><strong>Real-World Implementation:</strong> The final prototype was installed and tested in a large-scale hotel facility near Krakow. The system maintained comfortable air conditions for over 92% of the measured time, providing tangible results in reducing energy consumption and improving air quality.</li>
+    </ul>
+
+    <ul>
+        <li><strong>Cost Savings:</strong> The microclimate control system has been shown to reduce the hotel’s energy costs by approximately 34%, saving around 1,680 PLN annually in air handling unit operations.</li>
+        <li><strong>Improved Indoor Air Quality:</strong> The system contributes to a healthier indoor environment by ensuring proper humidity and ventilation, without the risk of freezing or excessive dryness during winter.</li>
+    </ul>
+
+    <p>In conclusion, this innovative system addresses the common issue of freezing in heat exchangers in cold weather, providing a reliable, energy-efficient solution for maintaining optimal indoor air conditions in nearly zero-energy buildings.</p>
+
+ 
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\prototype.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+
+ </div>
+
+
+
+
+
+---

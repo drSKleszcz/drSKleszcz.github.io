@@ -10,7 +10,8 @@ client: Frapol
 category: Software Development
 description: |
   <div style="text-align: justify;">
-    <p>I developed a comprehensive software solution for estimating the cost of glycol-based heat exchange systems. This tool automates the selection of system components based on technical specifications, ensuring an optimal balance between performance and cost. The software is designed to streamline the planning, budgeting, and quoting process for sales and engineering teams.</p>
+    <p>A comprehensive software solution was developed to estimate the cost of glycol-based heat exchange systems. The tool automates the selection of system components based on technical specifications, ensuring an optimal balance between performance and cost. Designed to streamline the planning, budgeting, and quoting process, it enhances efficiency for sales and engineering teams.
+    </p>
 
     <ul>
         <li> <strong> Automated Component Selection: </strong> maps all required technical specifications and selects the most cost-effective and efficient components based on input parameters such as fluid type, flow rate, heat exchanger resistance, heat exchanger volume, piping material, and system configuration.</li>

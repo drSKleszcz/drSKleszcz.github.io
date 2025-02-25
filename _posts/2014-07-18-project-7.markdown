@@ -1,0 +1,63 @@
+---
+layout: default
+modal-id: 7
+date: 2025-02-16
+img: hub2.png
+alt: image-alt
+project-date: Jul 2023
+title: Hydrogen Hub Center
+client: UiS
+category: projects
+description: |
+ <div style="text-align: justify;">
+   
+    <p>
+        The Hydrogen Hub Center project focused on the testing, development, and production of hydrogen, as well as optimizing its utilization in energy systems. The project included designing a comprehensive safety and control system for hydrogen handling, integrating turbines and gas engines capable of burning hydrogen, and evaluating energy efficiency through hydrogen production and combustion cycles.
+        <a href="https://www.energytransitionnorway.no/blog/risavika-hydrogen-hub-project-partners-go-public-with-plans-to-revitalize-old-gas-center"> More info. </a>
+    </p>
+
+    
+    <ul>
+        <li> <strong> Hydrogen Production & Utilization: </strong> Developed and tested hydrogen production through electrolysis, with subsequent combustion in gas turbines and engines to assess energy efficiency and system performance.</li>
+
+        <li> <strong> Safety System Design: </strong> Engineered a safety framework for hydrogen storage and utilization, incorporating gas detection, automated shutdown mechanisms, and explosion risk mitigation strategies.</li>
+
+        <li> <strong> Turbine & Engine Adaptation: </strong> Adjusted gas turbines and engines to operate efficiently with hydrogen as a fuel source, ensuring optimal combustion and performance.</li>
+
+        <li> <strong> Ventilation & Gas Management: </strong> Designed and implemented a ventilation system for hydrogen storage and operational spaces to maintain safe gas concentration levels.</li>
+
+        <li> <strong> Measurement & Monitoring: </strong> Procured and integrated sensors, gas detectors, and measuring devices for real-time monitoring of hydrogen flow, pressure, and combustion parameters.</li>
+
+        <li> <strong> P&ID and Gas Distribution: </strong> Developed Piping & Instrumentation Diagrams (P&ID) for integrating hydrogen supply with two turbines, a gas engine, and an electrolyzer.</li>
+
+        <li> <strong> Cooling System Design: </strong> Engineered a dry-cooler-based cooling system for turbines, gas engines, and electrolyzers to optimize thermal performance and operational stability.</li>
+
+        <li> <strong> Energy Efficiency Analysis: </strong> Evaluated the efficiency of hydrogen energy conversion by analyzing the complete cycle from electrolysis to combustion, identifying optimization opportunities.</li>
+
+        <li> <strong> Automation & PLC Control: </strong> Designed and implemented a control system using Programmable Logic Controllers (PLCs) to automate hydrogen production, safety systems, and combustion processes.</li>
+
+        <li> <strong> Heating System: </strong> Integrated a heating system for hydrogen storage containers to maintain operational reliability in varying environmental conditions.</li>
+    </ul>
+
+    <p>
+        This project advanced hydrogen energy technology by optimizing the production, storage, and combustion of hydrogen in gas turbines and engines. The implemented safety measures and control systems ensured reliable operation while maximizing energy efficiency in hydrogen-based power generation.
+    </p>
+
+
+ 
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\hub.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\hub3.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+ </div>
+
+
+
+
+
+
+---

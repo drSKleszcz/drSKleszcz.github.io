@@ -11,12 +11,12 @@ category: Techno economical analysis
 description: |
   <div style="text-align: justify;">
     
-    <h3>Project Overview</h3>
+   
     <p>
         This project focuses on the installation and optimization of a photovoltaic-powered desalination plant on Thirasia Island, Greece. Given the island's dependency on desalinated water and the high cost of fossil fuel-based electricity, the initiative aims to enhance sustainability by integrating solar energy.
     </p>
 
-    <h3>Key Objectives:</h3>
+  
     <ul>
         <li><strong>System Evaluation & Optimization:</strong> 
             <ul>
@@ -67,7 +67,6 @@ description: |
         </li>
     </ul>
 
-    <h3>Collaborations & Impact:</h3>
     <p>
         The project is spearheaded by the Municipal Water Supply and Sewerage Company of Thira, in collaboration with the Norwegian University of Stavanger, leveraging international expertise to enhance system performance and reliability. The integration of solar energy ensures cost reductions, energy security, and environmental sustainability, providing a scalable model for other Greek islands.
     </p>

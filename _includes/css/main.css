@@ -245,12 +245,15 @@ section.success {
     height: 50px; /* Adjust height as needed */
   }
 
+#projects .portfolio-item,
 #analysis .portfolio-item,
 #software-development .portfolio-item {
     right: 0;
     margin: 0 0 15px;
 }
 
+
+#projects .portfolio-item .portfolio-link,
 #analysis .portfolio-item .portfolio-link,
 #software-development .portfolio-item .portfolio-link {
     display: block;
@@ -259,6 +262,7 @@ section.success {
     max-width: 400px;
 }
 
+#projects .portfolio-item .portfolio-link .caption,
 #analysis .portfolio-item .portfolio-link .caption,
 #software-development .portfolio-item .portfolio-link .caption {
     position: absolute;
@@ -271,11 +275,15 @@ section.success {
     transition: all ease .5s;
 }
 
+
+#projects .portfolio-item .portfolio-link .caption:hover,
 #analysis .portfolio-item .portfolio-link .caption:hover,
 #software-development .portfolio-item .portfolio-link .caption:hover {
     opacity: 1;
 }
 
+
+#projects .portfolio-item .portfolio-link .caption .caption-content,
 #analysis .portfolio-item .portfolio-link .caption .caption-content,
 #software-development .portfolio-item .portfolio-link .caption .caption-content {
     position: absolute;
@@ -288,11 +296,17 @@ section.success {
     color: #fff;
 }
 
+
+
+#projects .portfolio-item .portfolio-link .caption .caption-content i,
 #analysis .portfolio-item .portfolio-link .caption .caption-content i,
 #software-development .portfolio-item .portfolio-link .caption .caption-content i {
     margin-top: -12px;
 }
 
+
+#projects .portfolio-item .portfolio-link .caption .caption-content h3,
+#projects .portfolio-item .portfolio-link .caption .caption-content h4,
 #analysis .portfolio-item .portfolio-link .caption .caption-content h3,
 #analysis .portfolio-item .portfolio-link .caption .caption-content h4,
 #software-development .portfolio-item .portfolio-link .caption .caption-content h3,
@@ -300,6 +314,7 @@ section.success {
     margin: 0;
 }
 
+#projects,
 #analysis,
 #software-development * {
     z-index: 2;

@@ -10,7 +10,7 @@ client: Own project
 category: Software Development
 description: |
   <div style="text-align: justify;">
-    <p>I developed a comprehensive software solution for orifice flow measurement and uncertainty analysis in accordance with PN EN ISO 5167. This tool automates complex calculations related to real gas behavior, pressure drop estimation, and uncertainty evaluation, providing engineers and researchers with a powerful and accurate flow measurement system.</p>
+    <p>A comprehensive software solution was developed for orifice flow measurement and uncertainty analysis in accordance with PN EN ISO 5167. This tool automates complex calculations related to real gas behavior, pressure drop estimation, and uncertainty evaluation, providing engineers and researchers with a powerful and accurate flow measurement system.</p>
 
     <ul>
         <li> <strong> Orifice Flow Coefficient (C) Calculation: </strong> Accurately determines the discharge coefficient based on fluid properties, geometry, and operating conditions.</li>

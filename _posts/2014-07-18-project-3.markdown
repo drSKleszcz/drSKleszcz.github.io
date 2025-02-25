@@ -10,7 +10,7 @@ client: Own project
 category: Software Development
 description: |
   <div style="text-align: justify;">
-    <p>I developed a comprehensive software solution for acoustic silencer modeling, optimization, and automated report generation. This tool integrates advanced mathematical modeling with industrial design parameters to optimize noise attenuation, pressure drop, and cost estimation.</p>
+    <p>A comprehensive software solution was developed for acoustic silencer modeling, optimization, and automated report generation. This tool integrates advanced mathematical modeling with industrial design parameters to optimize noise attenuation, pressure drop, and cost estimation.</p>
 
     <ul>
         <li><strong>Mathematical Model for Acoustic Attenuation:</strong> Predicts noise reduction across multiple frequency bands based on silencer geometry and airflow characteristics.</li>

@@ -7,13 +7,55 @@ alt: image-alt
 project-date: Jul 2023
 title: Commissioning gas turbine and creating the digital twin 
 client: UiS
-category: Techno economical analysis
+category: projects
 description: |
-  <div style="text-align: justify;">
-    
-    <h3>test</h3>
-    
-  </div>
+ <div style="text-align: justify;">
+
+    <p>
+        This project focused on the commissioning, testing, and performance optimization of an MTT gas turbine, ensuring its seamless integration with gas and water systems. Advanced measurement techniques and simulation modeling were employed to validate system efficiency and enhance operational performance.
+    </p>
+
+    <ul>
+        <li><strong>System Commissioning & Integration:</strong> 
+            <ul>
+                <li>Overseeing the installation and connection of the gas turbine to gas and water systems</li>
+                <li>Procuring and implementing high-precision instrumentation for temperature, flow, pressure, and energy output measurements</li>
+            </ul>
+        </li>
+
+        <li><strong>Software Enhancement & Data Acquisition:</strong> 
+            <ul>
+                <li>Developing additional features within the original measurement software</li>
+                <li>Integrating a data logging system compatible with LabVIEW for real-time monitoring and analysis</li>
+            </ul>
+        </li>
+
+        <li><strong>Performance Simulation & Validation:</strong> 
+            <ul>
+                <li>Conducting a comprehensive gas turbine simulation using IPSEpro</li>
+                <li>Modeling all critical components, including the heat exchanger, compressor, and combustion chamber</li>
+                <li>Comparing simulated performance with real-world measurement data to validate system accuracy</li>
+            </ul>
+        </li>
+
+        <li><strong>Operational Optimization:</strong> 
+            <ul>
+                <li>Analyzing test results to enhance turbine efficiency</li>
+                <li>Identifying and addressing discrepancies between modeled and actual performance</li>
+            </ul>
+        </li>
+    </ul>
+
+    <p>
+        This project contributed to the advancement of gas turbine technology by integrating precise measurement tools, enhancing data acquisition methods, and validating simulation models against real-world performance. The findings provide a foundation for further optimization and efficiency improvements in gas turbine operations.
+    </p>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\mtt_software.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+ </div>
+
 
 
 
