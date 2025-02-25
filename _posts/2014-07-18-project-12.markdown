@@ -1,0 +1,57 @@
+---
+layout: default
+modal-id: 12
+date: 2025-02-16
+img: constant.png
+alt: image-alt
+project-date: Jul 2023
+title: Constant flow system for recuperators 
+client: Frapol
+category: projects
+description: |
+
+
+ <div style="text-align: justify;">
+    <p>
+        This project aimed to develop an advanced constant flow control system for recuperators, ensuring consistent airflow volume by leveraging pressure-based measurements. The primary objective was to maintain optimal performance and energy efficiency across varying operating conditions.
+    </p>
+    <p>
+        The measurement system utilized total pressure readings at the fan and static pressure measurements inside the recuperator. By calculating the difference between these two values, the dynamic pressure was obtained, allowing for the precise calculation of actual airflow. This approach provided accurate real-time flow monitoring essential for maintaining constant volume flow rates.
+    </p>
+    <p>
+        A key challenge in this project was selecting and configuring a pressure sensor that could reliably capture the necessary pressure differentials with high precision. The sensor's output was then processed using a custom-designed function to smooth the signal, ensuring stable and accurate flow readings despite fluctuations or noise in the pressure data.
+    </p>
+    <p>
+        The system required comprehensive calibration to establish the <em>c</em> flow coefficient, which is critical for accurate flow calculations using the equation:
+        <br><em>V = c · √(∆p/ρ)</em>.
+        This calibration process involved testing each unit across a range of flow conditions to determine the specific flow coefficient for each device. By doing so, consistent and accurate flow measurements were achieved, enhancing the reliability and efficiency of the recuperators.
+    </p>
+    <p>
+        Extensive testing was conducted to validate the system's performance, ensuring accurate and consistent airflow regulation. This included:
+    </p>
+    <ul>
+        <li>Verifying the pressure sensor's accuracy and responsiveness</li>
+        <li>Optimizing the smoothing function for stable output signals</li>
+        <li>Calibrating multiple units to standardize the flow coefficient across different models</li>
+    </ul>
+    <p>
+        The successful implementation of this flow control system significantly improved the operational efficiency and reliability of the recuperators, ensuring constant flow volume regardless of external conditions. This innovative solution not only enhanced product performance but also contributed to improved energy efficiency.
+    </p>
+    <p>
+        This project highlights advanced expertise in fluid dynamics, sensor integration, and control system calibration, demonstrating a comprehensive approach to solving complex airflow management challenges.
+    </p>
+    
+
+ </div>
+
+
+
+
+
+
+ 
+
+
+
+
+---
