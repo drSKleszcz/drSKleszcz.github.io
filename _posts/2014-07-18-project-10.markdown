@@ -11,7 +11,7 @@ category: projects
 description: |
 
 
-  <div style="text-align: justify;">
+ <div style="text-align: justify;">
     
     <p>
         This project involved the design and implementation of a leakage measurement stand in accordance with the PN EN 13141-7 standard, which outlines the methodology for testing the airtightness of recuperators. The primary objectives of the system were to ensure precise and reliable:

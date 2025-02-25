@@ -1,0 +1,60 @@
+---
+layout: default
+modal-id: 11
+date: 2025-02-16
+img: reg1.png
+alt: image-alt
+project-date: Jul 2023
+title: Flow measurement system
+client: Frapol
+category: projects
+description: |
+
+
+ <div style="text-align: justify;">
+
+    <p>
+        This project focused on developing an advanced flow measurement system for flow regulators, achieving a 5% increase in measurement accuracy and a 32.0% reduction in pressure drop. These enhancements significantly improved product performance and contributed to increased product sales.
+    </p>
+    <p>
+        The design approach was based on the formula used by Belimo in actuators dedicated to Variable Air Volume (VAV) systems: 
+        <br><em>V = c · √(∆p/ρ)</em>, 
+        where maintaining a constant coefficient (<em>c</em>) throughout the measurement range of 2-20 m/s was identified as a critical factor. Below 2 m/s, measurement accuracy becomes challenging due to the minimal pressure difference (∆p) between total and static pressures at the measuring element.
+    </p>
+    <p>
+        A key design aspect was optimizing the positioning of pressure sensing ports. The layout was calculated using the "log-linear" method, commonly applied in cross-sectional traversing for Prandtl tube measurements. This method is grounded in the theoretical velocity distribution within a duct and is compliant with the ISO 3966:2008 standard.
+    </p>
+    <p>
+        The project included the development and testing of multiple prototypes, supported by Computational Fluid Dynamics (CFD) simulations. The prototypes were subjected to rigorous testing under various conditions, including:
+    </p>
+    <ul>
+        <li>After obstacles such as 3-way valves</li>
+        <li>Downstream of single and double bends</li>
+        <li>Following different lengths of straight duct sections</li>
+    </ul>
+    <p>
+        These tests ensured the system's accuracy and reliability under real-world operating conditions. The results demonstrated consistent performance improvements, validating the design's effectiveness.
+    </p>
+    <p>
+        This project showcases a high level of technical expertise in fluid dynamics and flow measurement, leveraging advanced CFD analysis and practical testing methodologies to deliver a superior flow regulation solution.
+    </p>
+    
+   
+
+      <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\reg.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+ </div>
+
+
+
+
+
+
+ 
+
+
+
+
+---
