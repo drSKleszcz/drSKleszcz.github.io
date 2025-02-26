@@ -12,29 +12,29 @@ description: |
 
     <div style="text-align: justify;">
        
-        <p>In this project, I developed a 140-page price list encompassing all products offered by the company. The document is crafted in Microsoft Word and is dynamically linked to an Excel spreadsheet that retrieves real-time pricing data from our internal database. This setup ensures that the price list remains current without manual updates, enhancing efficiency and reducing the potential for errors.</p>
+        <p>A 140-page price list was developed, detailing all products offered by the company. Crafted in Microsoft Word, the document is dynamically linked to an Excel spreadsheet that retrieves real-time pricing data from the internal database. This configuration ensures the price list remains current without manual updates, enhancing efficiency and reducing potential errors.</p>
     
-        <h3>1. Dynamic Data Integration</h3>
+        <h5>Dynamic Data Integration</h5>
         <ul>
             <li><strong>Excel Spreadsheet:</strong> Designed an Excel sheet that connects to the company's database, automatically fetching the latest prices for each product.</li>
             <li><strong>Real-Time Updates:</strong> Utilized data connections and queries within Excel to ensure that any changes in the database are immediately reflected in the spreadsheet.</li>
         </ul>
-        <h3>2. Automated Document Formatting</h3>
+        <h5>Automated Document Formatting</h5>
         <ul>
             <li><strong>Word-Excel Linking:</strong> Integrated the Excel spreadsheet into the Word document using linked objects and fields, allowing the Word document to display up-to-date pricing information.</li>
             <li><strong>Consistent Styling:</strong> Applied consistent formatting styles across the document, including headers, footers, tables, and product descriptions, to maintain a professional appearance.</li>
         </ul>
-        <h3>3. Efficient Workflow</h3>
+        <h5>Efficient Workflow</h5>
         <ul>
             <li><strong>Automation Scripts:</strong> Developed macros and scripts to automate repetitive tasks, such as updating links and formatting tables, thereby streamlining the document update process.</li>
             <li><strong>PDF Generation:</strong> Configured the document to be easily saved as a PDF, ensuring compatibility and ease of distribution on the company's internal website.</li>
         </ul>
-        <h3>4. Web Integration</h3>
+        <h5>Web Integration</h5>
         <ul>
             <li><strong>Internal Website Deployment:</strong> Coordinated with the IT department to upload the PDF version of the price list to the company's intranet, making it readily accessible to employees and stakeholders.</li>
             <li><strong>Regular Updates:</strong> Established a routine for periodic updates, ensuring that the price list remains accurate and reflects any changes in product pricing.</li>
         </ul>
-        <h3>Technologies Used</h3>
+        <h5>Technologies Used</h5>
         <ul>
             <li><strong>Microsoft Word:</strong> For creating and formatting the price list document.</li>
             <li><strong>Microsoft Excel:</strong> For data retrieval and dynamic linking of pricing information.</li>
