@@ -2,7 +2,7 @@
 layout: default
 modal-id: 8
 date: 2025-02-16
-img: mrr.png
+img: mrr2.png
 alt: image-alt
 project-date: Jul 2023
 title: Development of a microclimate control system / PHD
