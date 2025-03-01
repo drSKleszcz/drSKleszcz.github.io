@@ -5,7 +5,7 @@ date: 2025-02-16
 img: engine.png
 alt: image-alt
 project-date: Jul 2023
-title: 3D model of V6 engine
+title: Model of V6 engine
 client: Frapol
 category: projects
 description: |
