@@ -2,7 +2,7 @@
 layout: default
 modal-id: 17
 date: 2025-02-16
-img: mrr_similation.png
+img: mrr_simulation.png
 alt: image-alt
 project-date: Jul 2023
 title: Heat exchanger simulation
