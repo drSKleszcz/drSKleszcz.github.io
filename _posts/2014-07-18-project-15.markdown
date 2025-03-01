@@ -1,0 +1,67 @@
+---
+layout: default
+modal-id: 15
+date: 2025-02-16
+img: vent.png
+alt: image-alt
+project-date: Jul 2023
+title: Model of V6 engine
+client: Frapol
+category: projects
+description: |
+
+ <div style="text-align: justify;">
+
+    <p>This project explored the design and performance analysis of centrifugal fans with a spiral housing. The study involved both theoretical calculations and numerical simulations to validate the accuracy of design methodologies. The goal was to compare theoretical characteristics with results obtained through numerical methods, ensuring precision in engineering predictions.</p>
+
+    <h5>Theoretical Foundations</h5>
+    <ul>
+        <li><strong>Fan Theory:</strong> Provided an overview of centrifugal fan principles, including definitions, classifications, and key operational parameters.</li>
+        <li><strong>Mathematical Modeling:</strong> Developed theoretical equations to predict fan performance and efficiency.</li>
+        <li><strong>Design Methodologies:</strong> Established guidelines for determining primary operational parameters and performance characteristics.</li>
+    </ul>
+
+    <h5>Numerical Simulation</h5>
+    <ul>
+        <li><strong>Model Creation:</strong> Designed a detailed 3D model of the centrifugal fan based on theoretical calculations.</li>
+        <li><strong>ANSYS Simulation:</strong> Conducted computational fluid dynamics (CFD) analysis to evaluate airflow and pressure distribution.</li>
+        <li><strong>Performance Validation:</strong> Compared numerical results with theoretical predictions to verify calculation accuracy.</li>
+    </ul>
+
+    <h5>Comparison and Results</h5>
+    <ul>
+        <li><strong>Efficiency Analysis:</strong> Evaluated fan efficiency under different operating conditions.</li>
+        <li><strong>Graphical Representation:</strong> Presented performance curves and efficiency graphs for fans designed using various methods.</li>
+        <li><strong>Accuracy Assessment:</strong> Determined the reliability of theoretical calculations by comparing them with numerical simulations.</li>
+    </ul>
+
+    <h5>Software and Tools Used</h5>
+    <ul>
+        <li><strong>ANSYS:</strong> Used for CFD simulations and aerodynamic analysis.</li>
+        <li><strong>Mathematical Modeling:</strong> Applied theoretical equations to predict fan performance.</li>
+        <li><strong>Graphing Tools:</strong> Visualized efficiency variations and comparative analysis.</li>
+    </ul>
+
+    <p>The completion of this project provided a comprehensive understanding of centrifugal fan design and performance analysis. The comparison between theoretical and numerical results ensured the accuracy of engineering calculations, contributing valuable insights into optimizing centrifugal fan efficiency. This project highlights expertise in fluid dynamics, computational simulation, and mechanical design.</p>
+
+
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="img\portfolio\vent2.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+    </div>
+
+ </div>
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+---

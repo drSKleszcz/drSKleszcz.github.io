@@ -1,0 +1,68 @@
+---
+layout: default
+modal-id: 17
+date: 2025-02-16
+img: mrr_similation.png
+alt: image-alt
+project-date: Jul 2023
+title: Heat exchanger simulation
+client: Frapol
+category: projects
+description: |
+
+ <div style="text-align: justify;">
+
+    <p>This project focused on the mathematical and numerical modeling of a **counterflow periodic heat exchanger** used in microclimate control systems. Due to technical limitations, not all aspects of such a system can be easily analyzed experimentally. Therefore, a detailed mathematical model was developed to conduct a multi-parameter analysis of the heat exchanger’s performance. The study accounted for the unsteady nature of heat transfer phenomena, assuming the flow of a Newtonian fluid with negligible compressibility effects.</p>
+
+    <h5>Theoretical Foundations</h5>
+    <ul>
+        <li><strong>Heat Exchanger Modeling:</strong> Formulated a three-dimensional, transient model incorporating **continuity, momentum, and energy equations**.</li>
+        <li><strong>Flow Assumptions:</strong> Assumed laminar flow conditions due to the low Reynolds number, even at the highest air velocities.</li>
+        <li><strong>Phase Change Effects:</strong> Incorporated additional equations to account for **condensation and evaporation** processes.</li>
+    </ul>
+
+    <h5>Numerical Simulation</h5>
+    <ul>
+        <li><strong>Eulerian Wall Film (EWF) Model:</strong> Applied to simulate thin liquid films forming on heat exchanger walls.</li>
+        <li><strong>Species Transport Model:</strong> Used in conjunction with EWF to capture evaporation and condensation dynamics.</li>
+        <li><strong>Thermal and Fluid Flow Analysis:</strong> Simulated heat transfer across walls and airflow distribution within the heat exchanger.</li>
+    </ul>
+
+    <h5>Experimental Validation</h5>
+    <ul>
+        <li><strong>Prototype System:</strong> Designed based on periodic airflow reversal controlled by **guiding vanes and counterflow dampers**.</li>
+        <li><strong>Cycle Switching Analysis:</strong> Evaluated optimal air supply parameters through cyclic phase change effects.</li>
+        <li><strong>Condensation and Evaporation Study:</strong> Assessed water film formation and phase transitions during cyclic operation.</li>
+    </ul>
+
+    <h5>Geometric and Computational Modeling</h5>
+    <ul>
+        <li><strong>Heat Exchanger Geometry:</strong> Designed as alternating plastic panels forming separate airflow channels.</li>
+        <li><strong>Computational Domain:</strong> Reduced to two representative airflow channels due to periodic boundary conditions.</li>
+        <li><strong>Boundary Conditions:</strong> Defined for **velocity inlet, pressure outlet, and periodic sidewalls** to accurately model counterflow behavior.</li>
+    </ul>
+
+    <h5>Results and Insights</h5>
+    <ul>
+        <li><strong>Thermodynamic Dependencies:</strong> Identified the impact of **air velocity, temperature, humidity, and cycle switching time** on heat exchanger efficiency.</li>
+        <li><strong>Algorithm Development:</strong> Data obtained allowed for the creation of a **control algorithm** for optimizing device performance.</li>
+        <li><strong>Computational Efficiency:</strong> Utilized periodic boundary conditions to **reduce computational complexity** while maintaining accuracy.</li>
+    </ul>
+
+    <h5>Software and Tools Used</h5>
+    <ul>
+        <li><strong>Computational Fluid Dynamics (CFD):</strong> Used for modeling heat and mass transfer.</li>
+        <li><strong>Numerical Simulation:</strong> Performed using **Eulerian Wall Film Model** and **Species Transport Model**.</li>
+        <li><strong>Experimental Setup:</strong> Validated numerical findings against real-world prototype testing.</li>
+    </ul>
+
+    <p>This study provided a comprehensive analysis of **counterflow heat exchanger behavior** in periodic operation. The developed numerical model successfully captured the dynamic formation and evaporation of the **water film**, allowing for a deeper understanding of **phase change effects** in ventilation systems. The findings contribute to the **optimization of microclimate control systems**, improving their energy efficiency and operational performance.</p>
+
+ </div>
+
+
+
+
+
+
+---

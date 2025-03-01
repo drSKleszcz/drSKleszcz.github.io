@@ -1,0 +1,67 @@
+---
+layout: default
+modal-id: 16
+date: 2025-02-16
+img: orificle_article.png
+alt: image-alt
+project-date: Jul 2023
+title: Orificle simulation
+client: Frapol
+category: projects
+description: |
+
+ <div style="text-align: justify;">
+
+    <p>This project focused on the metrological analysis of flow rate measurements using orifice plates, a widely utilized method in various industries such as power engineering, fuel industry, and environmental engineering. The study specifically examined a **4-hole orifice plate** with a module **m = 0.25**, installed in a pipeline with an internal diameter of **50 mm**. Both numerical simulations and experimental tests were conducted to assess measurement accuracy and flow characteristics.</p>
+
+    <h5>Theoretical Background</h5>
+    <ul>
+        <li><strong>Orifice Flow Measurement:</strong> Investigated the principles and accuracy of orifice plates as flow measurement devices.</li>
+        <li><strong>Centric vs. Multi-Hole Orifices:</strong> Compared conventional single-hole orifices with multi-hole designs, analyzing their advantages.</li>
+        <li><strong>Pressure Distribution:</strong> Evaluated the impact of hole arrangement on pressure reception and measurement accuracy.</li>
+    </ul>
+
+    <h5>Numerical Simulations</h5>
+    <ul>
+        <li><strong>Turbulence Models:</strong> Performed simulations using **k-ε realizable** and **k-ω BSL** turbulence models.</li>
+        <li><strong>Flow Field Analysis:</strong> Determined static pressure distribution and velocity fields within the pipeline.</li>
+        <li><strong>Model Accuracy Assessment:</strong> Compared numerical results with experimental data to validate simulation reliability.</li>
+    </ul>
+
+    <h5>Experimental Testing</h5>
+    <ul>
+        <li><strong>Flow Rate Range:</strong> Conducted tests for volumetric flow rates **qv = 0.167 - 0.686 dm³/s**, corresponding to Reynolds numbers **Re = 4,200 - 19,000**.</li>
+        <li><strong>Pressure Measurement:</strong> Recorded static pressure variations at different pipeline locations.</li>
+        <li><strong>Statistical Analysis:</strong> Compared deviations **δ** between numerical and experimental results.</li>
+    </ul>
+
+    <h5>Results and Validation</h5>
+    <ul>
+        <li><strong>Accuracy Evaluation:</strong> The parameter **δ** remained below **1.82%** for the **k-ε realizable** model and **-1.54%** for the **k-ω BSL** model.</li>
+        <li><strong>Flow Behavior Insights:</strong> Identified the effects of hole arrangement on pressure loss and turbulence intensity.</li>
+        <li><strong>Measurement Reliability:</strong> Confirmed the suitability of multi-hole orifices for accurate flow rate measurements.</li>
+    </ul>
+
+    <h5>Software and Tools Used</h5>
+    <ul>
+        <li><strong>Computational Fluid Dynamics (CFD):</strong> Utilized for numerical simulation of flow behavior.</li>
+        <li><strong>Experimental Setup:</strong> Conducted real-world testing with controlled flow conditions.</li>
+        <li><strong>Statistical Analysis:</strong> Employed to compare experimental and numerical results for model validation.</li>
+    </ul>
+
+    <p>The findings from this project contributed to a deeper understanding of **multi-hole orifice flow measurements**, confirming their reliability in real-world applications. The combination of numerical and experimental analyses provided valuable insights into optimizing **pressure reception points** and improving **measurement accuracy**. This project highlights expertise in fluid mechanics, CFD modeling, and metrological assessment.</p>
+
+ </div>
+
+
+
+
+
+
+
+ 
+
+
+
+
+---
