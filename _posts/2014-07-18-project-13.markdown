@@ -5,7 +5,7 @@ date: 2025-02-16
 img: cennik3.png
 alt: image-alt
 project-date: Jul 2023
-title: Automated Company-Wide Product Price List
+title: Automated Product Price List
 client: Frapol
 category: Software Development
 description: |

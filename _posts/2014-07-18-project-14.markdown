@@ -1,0 +1,65 @@
+---
+layout: default
+modal-id: 14
+date: 2025-02-16
+img: engine.png
+alt: image-alt
+project-date: Jul 2023
+title: 3D model of V6 engine
+client: Frapol
+category: projects
+description: |
+
+ <div style="text-align: justify;">
+
+    <p>A comprehensive 3D model of a V6 engine was developed in SolidWorks for educational purposes. The project aimed to demonstrate the full assembly process and mechanical synchronization of an internal combustion engine. Every essential component of the V6 engine was meticulously designed and assembled, ensuring accurate representation and functional movement.</p>
+
+    <h5>Component Modeling</h5>
+    <ul>
+        <li><strong>Crankshaft:</strong> Modeled to convert piston motion into rotational energy.</li>
+        <li><strong>Pistons:</strong> Designed to operate within the cylinders, generating power through reciprocating motion.</li>
+        <li><strong>Engine Block:</strong> Constructed as the main structural framework housing all critical engine components.</li>
+        <li><strong>Camshaft:</strong> Developed to control valve timing and engine performance.</li>
+        <li><strong>Rocker Arm and Springs:</strong> Simulated to demonstrate the motion transfer from the camshaft to the valves.</li>
+        <li><strong>Exhaust and Intake Manifolds:</strong> Designed to manage airflow and exhaust gases efficiently.</li>
+        <li><strong>Belt Wheels and Shafts:</strong> Engineered to ensure proper mechanical synchronization.</li>
+    </ul>
+
+    <h5>Assembly Process</h5>
+    <ul>
+        <li><strong>Lower Block Assembly:</strong> Integrated the crankshaft, pistons, and supporting components.</li>
+        <li><strong>Upper Block Assembly:</strong> Assembled the cylinder heads, camshaft, and valve train.</li>
+        <li><strong>Final Synchronization:</strong> Connected the shafts to the belt wheels and synchronized their movement.</li>
+    </ul>
+
+    <h5>Mechanical Synchronization</h5>
+    <ul>
+        <li><strong>Timing Mechanism:</strong> Ensured precise alignment of the camshaft, crankshaft, and belt system.</li>
+        <li><strong>Valve and Piston Coordination:</strong> Modeled to replicate real-world engine operation.</li>
+        <li><strong>Rotational Motion Analysis:</strong> Conducted to validate the functionality of the assembly.</li>
+    </ul>
+
+    <h5>Software and Tools Used</h5>
+    <ul>
+        <li><strong>SolidWorks:</strong> Used for 3D modeling, assembly, and motion simulation.</li>
+        <li><strong>Simulation Tools:</strong> Applied to analyze mechanical motion and synchronization.</li>
+        <li><strong>Animation Features:</strong> Utilized to visualize engine functionality.</li>
+    </ul>
+
+    <p>The successful completion of this project provided an in-depth understanding of V6 engine mechanics, assembly processes, and synchronization principles. The model serves as a valuable educational tool, offering insight into the complexity of automotive engineering. This project highlights expertise in 3D design, mechanical systems, and SolidWorks simulation.</p>
+
+ </div>
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+---
