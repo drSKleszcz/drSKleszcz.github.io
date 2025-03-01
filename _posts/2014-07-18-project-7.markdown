@@ -22,8 +22,6 @@ description: |
 
         <li> <strong> Safety System Design: </strong> Engineered a safety framework for hydrogen storage and utilization, incorporating gas detection, automated shutdown mechanisms, and explosion risk mitigation strategies.</li>
 
-        <li> <strong> Turbine & Engine Adaptation: </strong> Adjusted gas turbines and engines to operate efficiently with hydrogen as a fuel source, ensuring optimal combustion and performance.</li>
-
         <li> <strong> Ventilation & Gas Management: </strong> Designed and implemented a ventilation system for hydrogen storage and operational spaces to maintain safe gas concentration levels.</li>
 
         <li> <strong> Measurement & Monitoring: </strong> Procured and integrated sensors, gas detectors, and measuring devices for real-time monitoring of hydrogen flow, pressure, and combustion parameters.</li>

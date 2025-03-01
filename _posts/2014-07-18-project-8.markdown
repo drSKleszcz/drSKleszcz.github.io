@@ -13,7 +13,7 @@ description: |
  <div style="text-align: justify;">
    
     <p>
-        This project focused on the development of a microclimate control system that addresses a critical challenge in mechanical ventilation systems: preventing the freezing of the Air Handling Unit (AHU) during cold winter conditions. The system, based on a highly efficient periodic counterflow heat exchanger, operates continuously without the need for additional energy-consuming protection, ensuring that the AHU remains functional even in extreme temperatures. This solution provides both energy efficiency and optimal air quality by managing heat and moisture recovery, making it ideal for nearly zero-energy buildings.
+        This project focused on the development of a microclimate control system that addresses a critical challenge in mechanical ventilation systems: preventing the freezing of the Air Handling Unit during cold winter conditions. The system, based on a highly efficient periodic counterflow heat exchanger, operates continuously without the need for additional energy-consuming protection, ensuring that the AHU remains functional even in extreme temperatures. This solution provides both energy efficiency and optimal air quality by managing heat and moisture recovery, making it ideal for nearly zero-energy buildings.
     </p>
 
  
@@ -31,7 +31,6 @@ description: |
 
  
     <ul>
-        <li><strong>Cyclical Airflow Direction Change:</strong> This design prevents freezing in the heat exchanger by alternating the direction of airflow through the exchanger, ensuring that moisture is recovered and air temperature remains stable.</li>
         <li><strong>Energy Efficiency & Environmental Benefits:</strong> The system minimizes additional energy consumption while maintaining optimal air quality, significantly reducing energy costs and contributing to lower carbon emissions.</li>
         <li><strong>Real-World Implementation:</strong> The final prototype was installed and tested in a large-scale hotel facility near Krakow. The system maintained comfortable air conditions for over 92% of the measured time, providing tangible results in reducing energy consumption and improving air quality.</li>
     </ul>

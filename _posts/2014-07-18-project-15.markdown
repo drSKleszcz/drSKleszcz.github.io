@@ -5,9 +5,9 @@ date: 2025-02-16
 img: vent.png
 alt: image-alt
 project-date: Jul 2023
-title: Centrifugal fan simulation
-client: Frapol
-category: projects
+title: Centrifugal fan cfx
+client: AGH
+category: cfd
 description: |
 
  <div style="text-align: justify;">

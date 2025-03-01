@@ -245,6 +245,7 @@ section.success {
     height: 50px; /* Adjust height as needed */
   }
 
+#cfd .portfolio-item,
 #projects .portfolio-item,
 #analysis .portfolio-item,
 #software-development .portfolio-item {
@@ -252,7 +253,7 @@ section.success {
     margin: 0 0 15px;
 }
 
-
+#cfd .portfolio-item .portfolio-link,
 #projects .portfolio-item .portfolio-link,
 #analysis .portfolio-item .portfolio-link,
 #software-development .portfolio-item .portfolio-link {
@@ -262,6 +263,7 @@ section.success {
     max-width: 400px;
 }
 
+#cfd .portfolio-item .portfolio-link .caption,
 #projects .portfolio-item .portfolio-link .caption,
 #analysis .portfolio-item .portfolio-link .caption,
 #software-development .portfolio-item .portfolio-link .caption {
@@ -275,14 +277,14 @@ section.success {
     transition: all ease .5s;
 }
 
-
+#cfd .portfolio-item .portfolio-link .caption:hover,
 #projects .portfolio-item .portfolio-link .caption:hover,
 #analysis .portfolio-item .portfolio-link .caption:hover,
 #software-development .portfolio-item .portfolio-link .caption:hover {
     opacity: 1;
 }
 
-
+#cfd .portfolio-item .portfolio-link .caption .caption-content,
 #projects .portfolio-item .portfolio-link .caption .caption-content,
 #analysis .portfolio-item .portfolio-link .caption .caption-content,
 #software-development .portfolio-item .portfolio-link .caption .caption-content {
@@ -297,14 +299,15 @@ section.success {
 }
 
 
-
+#cfd .portfolio-item .portfolio-link .caption .caption-content i,
 #projects .portfolio-item .portfolio-link .caption .caption-content i,
 #analysis .portfolio-item .portfolio-link .caption .caption-content i,
 #software-development .portfolio-item .portfolio-link .caption .caption-content i {
     margin-top: -12px;
 }
 
-
+#cfd .portfolio-item .portfolio-link .caption .caption-content h3,
+#cfd .portfolio-item .portfolio-link .caption .caption-content h4,
 #projects .portfolio-item .portfolio-link .caption .caption-content h3,
 #projects .portfolio-item .portfolio-link .caption .caption-content h4,
 #analysis .portfolio-item .portfolio-link .caption .caption-content h3,
@@ -314,6 +317,8 @@ section.success {
     margin: 0;
 }
 
+
+#cfd,
 #projects,
 #analysis,
 #software-development * {
@@ -321,6 +326,7 @@ section.success {
 }
 
 @media(min-width:767px) {
+    #cfd .portfolio-item, 
     #analysis .portfolio-item, 
     #software-development .portfolio-item {
         margin: 0 0 30px;

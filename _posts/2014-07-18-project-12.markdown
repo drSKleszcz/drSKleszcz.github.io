@@ -37,11 +37,7 @@ description: |
     <p>
         The successful implementation of this flow control system significantly improved the operational efficiency and reliability of the recuperators, ensuring constant flow volume regardless of external conditions. This innovative solution not only enhanced product performance but also contributed to improved energy efficiency.
     </p>
-    <p>
-        This project highlights advanced expertise in fluid dynamics, sensor integration, and control system calibration, demonstrating a comprehensive approach to solving complex airflow management challenges.
-    </p>
     
-
  </div>
 
 

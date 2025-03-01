@@ -1,66 +1,89 @@
 ---
 layout: default
-modal-id: 4
+modal-id: 9
 date: 2025-02-16
-img: sensitivity.png
+img: tea.png
 alt: image-alt
-project-date: Jan 2024
-title: Techno-Economic Assessment of Underground Gas Storage 
-client: UiS
+project-date: Jul 2023
+title: Techno-economic methodology for energy application assessment
+client: UIS
 category: Techno economical analysis
 description: |
-  <div style="text-align: justify;">
+
+ <div style="text-align: justify;">
     
     <p>
-        This project focused on evaluating the feasibility and economic viability of using CO₂ as a cushion gas for Underground Gas Storage (UGS) in Poland. The assessment included site selection, cost modeling, and sensitivity analysis to key market and operational factors.
+        In response to the rising electricity prices in Norway and Europe, this study presents a novel approach for evaluating the techno-economic feasibility of micro-combined heat and power (m-CHP) systems powered by Micro Gas Turbines (MGTs). This investigation focuses on m-CHP systems fueled by natural gas (NG) and a blend of NG and hydrogen (H2) at a ratio of 23% by volume, offering a sustainable solution to the energy challenges faced in the region. <a href="https://www.sciencedirect.com/science/article/pii/S2590174524000382?via%3Dihub"> Read more </a>
     </p>
 
+  
     <ul>
-        <li><strong>Techno-Economic Model Development:</strong> 
-            A model was developed to analyze capital (CAPEX) and operational (OPEX) expenditures, considering costs related to:
+        <li><strong>Techno-Economic Assessment:</strong> 
             <ul>
-                <li>Drilling</li>
-                <li>CO₂ and natural gas injection</li>
-                <li>Gas processing</li>
-                <li>Site decommissioning</li>
+                <li>Conducting both numerical and experimental analyses to assess the feasibility of MGT-based m-CHP systems.</li>
+                <li>Calculating the Levelized Cost of Electricity (LCoE) over a 20-year operational lifespan and comparing it to grid electricity costs.</li>
             </ul>
         </li>
 
-        <li><strong>Uncertainty Analysis with Monte Carlo Simulation:</strong> 
-            The study incorporated a Monte Carlo simulation with 10,000 iterations to account for uncertainties in:
+        <li><strong>Numerical Modeling & Simulation:</strong> 
             <ul>
-                <li>Gas prices</li>
-                <li>Electricity costs</li>
-                <li>Technical parameters</li>
-            </ul>
-            Results showed that over 90% of the simulated scenarios yielded a positive Net Present Value (NPV), highlighting the strong profitability potential of CO₂-cushioned UGS.
-        </li>
-
-        <li><strong>Economic Drivers and Profitability:</strong> 
-            The main economic driver is the seasonal gas price disparity, supplemented by financial benefits from CO₂ storage under emissions trading schemes. Key findings include:
-            <ul>
-                <li>High profitability potential due to gas price differences</li>
-                <li>Risks from high electricity costs and minimal gas price differences</li>
-                <li>Risk mitigation strategies like optimizing gas procurement and using gas-driven compressors</li>
+                <li>Using experimental data from 3 kW MGT tests alongside IPSEPro® software for numerical system modeling.</li>
+                <li>Developing a detailed cost model and employing a unique methodology for LCoE calculation.</li>
             </ul>
         </li>
 
-        <li><strong>End-of-Life CO₂ Storage Benefits:</strong> 
-            At the end of the project’s lifecycle, the storage site can be fully filled with CO₂, providing:
+        <li><strong>Risk & Uncertainty Analysis:</strong> 
             <ul>
-                <li>Further economic benefits</li>
-                <li>Environmental benefits by contributing to carbon management initiatives</li>
+                <li>Utilizing Monte Carlo simulations to perform a risk and uncertainty analysis, ensuring the reliability of the results.</li>
+                <li>Generating a distribution for LCoE, considering key parameter deviations and assessing the economic consistency of the m-CHP system.</li>
+            </ul>
+        </li>
+
+        <li><strong>Comparison with Grid Electricity:</strong> 
+            <ul>
+                <li>Calculating the LCoE of m-CHP systems and comparing it to grid electricity costs to highlight cost advantages.</li>
+                <li>Demonstrating substantial cost-benefit advantages of m-CHP systems powered by NG and NG-H2 blends.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul>
+        <li><strong>Cost-Benefit Advantages:</strong> 
+            <ul>
+                <li>The analysis demonstrates significant cost savings over grid electricity, with a LCoE of 1.42 NOK/kWh (0.13 USD/kWh) for m-CHP systems running on NG, compared to 2.54 NOK/kWh (0.24 USD/kWh) for grid electricity.</li>
+                <li>Using constant NOK values, the LCoE for m-CHP with NG is 1.19 NOK/kWh (0.11 USD/kWh), which is substantially lower than grid electricity costs (1.78 NOK/kWh or 0.17 USD/kWh).</li>
+            </ul>
+        </li>
+
+        <li><strong>Hydrogen Transition:</strong> 
+            <ul>
+                <li>The methodology offers flexibility for future integration of hydrogen (H2) as a fuel source, with the potential for transitioning to carbon-neutral operations as hydrogen prices decrease.</li>
+            </ul>
+        </li>
+
+        <li><strong>Accuracy of Results:</strong> 
+            <ul>
+                <li>The LCoE analysis provided a 98% accuracy, confirming the reliability of the findings for 100% power operation with NG as the fuel source.</li>
             </ul>
         </li>
     </ul>
 
     <p>
-        Overall, the project demonstrates that integrating CO₂ storage with UGS can enhance financial returns while contributing to carbon management initiatives, making it a viable solution for energy storage and emissions reduction.
+        This study demonstrates the techno-economic viability of m-CHP systems powered by MGTs, highlighting their potential as a cost-effective alternative to grid electricity. The findings emphasize the benefits of integrating these systems into energy strategies, providing substantial economic advantages and supporting future shifts toward more sustainable energy sources. The proposed methodology also paves the way for the adoption of hydrogen fuel, contributing to a carbon-neutral future.
     </p>
 
-    <div style="text-align: center; margin-top: 20px;">
-        <img src="img\portfolio\monte_carlo.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-    </div>
-  </div>
+
+ </div>
+
+
+ 
+
+
+
+
+ 
+
+
+
 
 ---

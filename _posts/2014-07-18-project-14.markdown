@@ -5,9 +5,9 @@ date: 2025-02-16
 img: engine.png
 alt: image-alt
 project-date: Jul 2023
-title: Model of V6 engine
-client: Frapol
-category: projects
+title: V6 engine model
+client: UIS
+category: cfd
 description: |
 
  <div style="text-align: justify;">

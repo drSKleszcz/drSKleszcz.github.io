@@ -6,7 +6,7 @@ img: Silencer.png
 alt: image-alt
 project-date: Jan 2017
 title: Silencers Calculation Software 
-client: Own project
+client: Frapol
 category: Software Development
 description: |
   <div style="text-align: justify;">

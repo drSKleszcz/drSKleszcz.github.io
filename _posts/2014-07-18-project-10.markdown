@@ -34,12 +34,7 @@ description: |
     <p>
         The project lifecycle included the strategic sourcing and procurement of all equipment, ensuring that components met the highest industry standards and were ready for seamless integration during the production phase. 
     </p>
-    <p>
-        Comprehensive technical documentation (DTR) and user manuals were meticulously developed, providing detailed guidance on installation, operation, and maintenance procedures. These documents were crafted to enhance user understanding and ensure safe, efficient utilization of the measurement stand.
-    </p>
-    <p>
-        This project exemplifies a high level of engineering proficiency and commitment to quality, delivering a reliable solution for accurate leakage testing while adhering to stringent industry standards.
-    </p>
+  
 
       <div style="text-align: center; margin-top: 20px;">
         <img src="img\portfolio\norm.png" alt="Software Screenshot" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">

@@ -10,7 +10,7 @@ client: Frapol
 category: Software Development
 description: |
   <div style="text-align: justify;">
-    <p>A comprehensive software solution was developed to estimate the cost of glycol-based heat exchange systems. The tool automates the selection of system components based on technical specifications, ensuring an optimal balance between performance and cost. Designed to streamline the planning, budgeting, and quoting process, it enhances efficiency for sales and engineering teams.
+    <p>A comprehensive software solution was developed to calculate the cost of glycol-based heat exchange systems. The tool automates the selection of system components based on technical specifications, ensuring an optimal balance between performance and cost. Designed to streamline the planning, budgeting, and quoting process, it enhances efficiency for sales and engineering teams.
     </p>
 
     <ul>
