@@ -1,6 +1,6 @@
 ---
 layout: default
-modal-id: 13
+modal-id: 1
 date: 2025-02-16
 img: cennik3.png
 alt: image-alt
