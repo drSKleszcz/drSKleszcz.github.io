@@ -1,66 +1,4 @@
 
-<!-- Projects Section -->
-<section id="projects">
-  <div class="container portfolio-flex-grid">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h3>Projects</h3>
-        <hr class="star-primary">
-      </div>
-    </div>
-    <div class="portfolio-flex-row">
-      {% for post in site.posts %}
-        {% if post.categories contains "projects" %}
-        <div class="portfolio-flex-item portfolio-item">
-          <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
-            <div class="caption">
-              <div class="caption-content">
-                <i class="fa fa-search-plus fa-3x"></i>
-              </div>
-            </div>
-            <div class="portfolio-title">{{ post.title }}</div>
-            <img src="img/portfolio/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
-          </a>
-        </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-
-
-
-<!-- CFD Section -->
-<section id="cfd">
-  <div class="container portfolio-flex-grid">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h3>Simulations & models</h3>
-        <hr class="star-primary">
-      </div>
-    </div>
-    <div class="portfolio-flex-row">
-      {% for post in site.posts %}
-        {% if post.categories contains "cfd" %}
-        <div class="portfolio-flex-item portfolio-item">
-          <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
-            <div class="caption">
-              <div class="caption-content">
-                <i class="fa fa-search-plus fa-3x"></i>
-              </div>
-            </div>
-            <div class="portfolio-title">{{ post.title }}</div>
-            <img src="img/portfolio/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
-          </a>
-        </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-
 <!-- Software Development Section -->
 <section id="software-development">
   <div class="container portfolio-flex-grid">
@@ -124,7 +62,63 @@
 
 
 
+<!-- Projects Section -->
+<section id="projects">
+  <div class="container portfolio-flex-grid">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h3>Projects</h3>
+        <hr class="star-primary">
+      </div>
+    </div>
+    <div class="portfolio-flex-row">
+      {% for post in site.posts %}
+        {% if post.categories contains "projects" %}
+        <div class="portfolio-flex-item portfolio-item">
+          <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
+            <div class="caption">
+              <div class="caption-content">
+                <i class="fa fa-search-plus fa-3x"></i>
+              </div>
+            </div>
+            <div class="portfolio-title">{{ post.title }}</div>
+            <img src="img/portfolio/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+          </a>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
 
 
+<!-- CFD Section -->
+<section id="cfd">
+  <div class="container portfolio-flex-grid">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h3>Simulations & models</h3>
+        <hr class="star-primary">
+      </div>
+    </div>
+    <div class="portfolio-flex-row">
+      {% for post in site.posts %}
+        {% if post.categories contains "cfd" %}
+        <div class="portfolio-flex-item portfolio-item">
+          <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
+            <div class="caption">
+              <div class="caption-content">
+                <i class="fa fa-search-plus fa-3x"></i>
+              </div>
+            </div>
+            <div class="portfolio-title">{{ post.title }}</div>
+            <img src="img/portfolio/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+          </a>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
 
