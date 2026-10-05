@@ -10,18 +10,18 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       JEKYLL_ENV: production
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           bundler-cache: true
       - name: Build
         run: bundle exec jekyll build --trace
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
           cache: pip
@@ -47,18 +47,18 @@ jobs:
           python scripts/audit_accessibility.py http://127.0.0.1:4173 .tools/axe.min.js --full
       - name: Save accessibility report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: portfolio-accessibility
           path: artifacts/accessibility.json
       - name: Save review screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: portfolio-screenshots
           path: artifacts/screenshots/
       - name: Save static preview
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: portfolio-preview
           path: _site/
