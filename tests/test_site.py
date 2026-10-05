@@ -9,7 +9,7 @@ from urllib.parse import urlparse, unquote
 import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
-from playwright.sync_api import sync_playwright, expect
+from playwright.sync_api import sync_playwright, expect, TimeoutError as PlaywrightTimeoutError
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
@@ -71,6 +71,14 @@ class RenderedTests(unittest.TestCase):
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *args):
         pass
+
+    def copyfile(self, source, outputfile):
+        try:
+            super().copyfile(source, outputfile)
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            # Navigating away deliberately cancels in-flight browser requests.
+            # Other server errors must still fail visibly.
+            pass
 
 class BrowserTests(unittest.TestCase):
     @classmethod
@@ -700,7 +708,13 @@ class BrowserTests(unittest.TestCase):
             self.page.locator('[data-menu-toggle]').click()
             self.page.locator('#site-nav a[href$="#' + section + '"]').click()
             expect(self.page.locator('[data-menu-toggle]')).to_have_attribute('aria-expanded', 'false')
-            self.page.wait_for_timeout(1000)
+            # Native smooth-scroll timing differs by platform and CI load.
+            # Wait for the geometry we require, not an assumed animation length.
+            try:
+                self.page.wait_for_function("id=>Math.abs(document.getElementById(id).getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().bottom)<=3", arg=section, timeout=5000)
+            except PlaywrightTimeoutError:
+                geometry = self.page.evaluate("id=>({sectionTop:document.getElementById(id).getBoundingClientRect().top,headerBottom:document.querySelector('.site-header').getBoundingClientRect().bottom,scrollY,maxScroll:document.documentElement.scrollHeight-innerHeight})", section)
+                self.fail(f'{section} did not reach header alignment: {geometry}')
             gap = self.page.evaluate("id=>document.getElementById(id).getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().bottom", section)
             self.assertLessEqual(abs(gap), 3, f'{section}: {gap}')
         self.page.set_viewport_size({'width': 1440, 'height': 900})
