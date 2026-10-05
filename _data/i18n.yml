@@ -85,6 +85,7 @@ en:
   contact_text: For professional opportunities, research collaborations or a conversation about my work, send a message or connect on LinkedIn.
   name: Name
   email: Email address
+  contact_mail: Mail
   message: Message
   send: Send message
   sending: Sending…
@@ -213,6 +214,7 @@ pl:
   contact_text: W sprawie możliwości zawodowych, współpracy badawczej lub pytań o moje projekty - wyślij wiadomość albo skontaktuj się przez LinkedIn.
   name: Imię i nazwisko
   email: Adres e-mail
+  contact_mail: Mail
   message: Wiadomość
   send: Wyślij wiadomość
   sending: Wysyłanie…
