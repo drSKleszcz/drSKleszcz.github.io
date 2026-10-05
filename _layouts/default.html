@@ -1,24 +1,17 @@
+{% assign t = site.data.i18n[page.lang] %}
+{% assign en_url = page.url | remove_first: '/pl' %}
+{% if page.lang == 'en' %}{% assign en_url = page.url %}{% endif %}
+{% assign pl_url = en_url | prepend: '/pl' %}
 <!DOCTYPE html>
-<html>
-{% include head.html %}
-
-<body id="page-top" class="index">
-  {% include nav.html %}
-  {% include header.html %}
-  {% include portfolio_grid_software.html %}
-  {% include about.html %}
-
-  {% if site.contact == "static" %}
-  {% include contact_static.html %}
-  {% elsif site.contact == "disqus" %}
-  {% include contact_disqus.html %}
-  {% else %}
-  {% include contact.html %}
-  {% endif %}
-
-  {% include footer.html %}
-  {% include modals.html %}
-  {% include js.html %}
+<html lang="{{ page.lang }}"{% if page.layout == 'home' %} class="home-page"{% endif %}>
+{% include site-head.html %}
+<body id="page-top">
+  <a class="skip-link" href="#main">{{ t.skip }}</a>
+  {% include site-nav.html %}
+  <main id="main" tabindex="-1">{{ content }}</main>
+  {% include site-footer.html %}
+  <script src="{{ '/assets/motion.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  <script src="{{ '/assets/site.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+  {% if page.layout == 'home' %}<script src="{{ '/assets/legacy.js' | relative_url }}" defer></script>{% endif %}
 </body>
-
 </html>

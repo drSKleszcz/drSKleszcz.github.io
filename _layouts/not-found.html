@@ -1,0 +1,8 @@
+---
+layout: default
+---
+{% assign t = site.data.i18n[page.lang] %}
+<section class="container not-found"><p class="eyebrow">404</p><h1>{{ t.not_found }}</h1><p>{{ t.not_found_text }}</p><div class="hero-actions"><a class="button" href="{{ t.home | relative_url }}">{{ t.return_home }}</a><a class="text-link" href="{{ t.projects_path | relative_url }}">{{ t.back_projects }} ↗</a></div></section>
+{% if page.lang == 'en' %}{% assign polish = site.data.i18n.pl %}
+<section class="container fallback-polish" lang="pl" aria-labelledby="polish-recovery"><h2 id="polish-recovery">{{ polish.not_found }}</h2><p>{{ polish.not_found_text }}</p><div class="hero-actions"><a class="button" href="{{ polish.home | relative_url }}">{{ polish.return_home }}</a><a class="text-link" href="{{ polish.projects_path | relative_url }}">{{ polish.back_projects }} ↗</a></div></section>
+{% endif %}

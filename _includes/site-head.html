@@ -1,0 +1,52 @@
+{% assign social_image = site.data.images['/img/portfolio/mrr_simulation.png'].src %}
+{% if page.project_id %}{% assign project_meta = site.data.projects[page.project_id] %}{% assign social_image = site.data.images[project_meta.image].src %}{% endif %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#182225">
+  <meta name="color-scheme" content="dark light">
+  <script>
+    (() => {
+      // Reserve the enhanced header layout before paint; no-JS keeps all links visible.
+      document.documentElement.dataset.js = '';
+      let theme = 'dark';
+      try { if (localStorage.getItem('portfolio-theme') === 'light') theme = 'light'; } catch (_) {}
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f7f6f2' : '#182225';
+      {% if page.layout == 'home' %}
+      // Decide before first paint; without this flag all text and diagrams stay visible.
+      let keyboardArrival = false;
+      try {
+        keyboardArrival = sessionStorage.getItem('portfolio-navigation-input') === 'keyboard';
+      } catch (_) {}
+      if (!keyboardArrival && !location.hash && !document.hidden &&
+          CSS.supports('clip-path', 'inset(0)')) {
+        document.documentElement.dataset.heroEntrance = '';
+      }
+      {% endif %}
+    })();
+  </script>
+  <title>{{ page.title | escape }} · {{ site.title }}</title>
+  <meta name="description" content="{{ page.description | escape }}">
+  <meta name="author" content="Sławosz Kleszcz">
+  {% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
+  <link rel="canonical" href="{{ page.url | absolute_url }}">
+  <link rel="alternate" hreflang="en" href="{{ en_url | absolute_url }}">
+  <link rel="alternate" hreflang="pl" href="{{ pl_url | absolute_url }}">
+  <link rel="alternate" hreflang="x-default" href="{{ en_url | absolute_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <meta property="og:title" content="{{ page.title | escape }}">
+  <meta property="og:description" content="{{ page.description | escape }}">
+  <meta property="og:url" content="{{ page.url | absolute_url }}">
+  <meta property="og:image" content="{{ social_image | absolute_url }}">
+  <meta property="og:locale" content="{% if page.lang == 'pl' %}pl_PL{% else %}en_GB{% endif %}">
+  <meta property="og:locale:alternate" content="{% if page.lang == 'pl' %}en_GB{% else %}pl_PL{% endif %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title | escape }}">
+  <meta name="twitter:description" content="{{ page.description | escape }}">
+  <meta name="twitter:image" content="{{ social_image | absolute_url }}">
+  <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+</head>

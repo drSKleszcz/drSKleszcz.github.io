@@ -1,0 +1,83 @@
+{% assign w = t.hero_workflow %}
+{% assign workflow_projects = site.projects | where: 'lang', page.lang %}
+{% assign workflow_system = workflow_projects | where: 'project_id', 'hydrogen-hub' | first %}
+{% assign workflow_modeling = workflow_projects | where: 'project_id', 'gas-turbine-digital-twin' | first %}
+{% assign workflow_analysis = workflow_projects | where: 'project_id', 'energy-techno-economics' | first %}
+{% assign workflow_automation = workflow_projects | where: 'project_id', 'orifice-calculation-software' | first %}
+{% assign workflow_decision = workflow_projects | where: 'project_id', 'fedex-pricing' | first %}
+<figure class="hero-workflow" data-hero-workflow aria-labelledby="workflow-caption">
+  <div class="workflow-stages">
+    <span class="workflow-connection" aria-hidden="true"><span></span></span>
+    <a class="workflow-stage workflow-system" href="{{ workflow_system.url | relative_url }}" data-workflow-title="{{ workflow_system.title | escape }}" aria-describedby="workflow-system-description">
+      <span class="workflow-node" aria-hidden="true"></span><span class="workflow-signal" aria-hidden="true"></span>
+      <svg viewBox="0 0 120 116" aria-hidden="true" focusable="false">
+        <g class="workflow-geometry">
+          <path d="M10 63H29M53 63H74M96 63H110M40 51V26H85V52M40 75V94H85V74"/>
+          <circle cx="41" cy="63" r="12"/><path d="m37 57 10 6-10 6Z"/>
+          <path d="M74 52H96V74H74ZM74 52l22 22M74 74l22-22M85 26V17M85 94V103"/>
+          <circle cx="62" cy="26" r="3"/><path d="M62 23V15"/>
+        </g>
+        <g class="workflow-emphasis"><path d="M10 63H29M96 63H110"/><circle cx="62" cy="26" r="3"/></g>
+      </svg>
+      <span class="workflow-label">{{ w.system }}</span>
+      <span id="workflow-system-description" class="visually-hidden">{{ w.system_project }}</span>
+    </a>
+    <a class="workflow-stage workflow-modeling" href="{{ workflow_modeling.url | relative_url }}" data-workflow-title="{{ workflow_modeling.title | escape }}" aria-describedby="workflow-modeling-description">
+      <span class="workflow-node" aria-hidden="true"></span><span class="workflow-signal" aria-hidden="true"></span>
+      <svg viewBox="0 0 120 116" aria-hidden="true" focusable="false">
+        <g class="workflow-geometry">
+          <path d="M16 17V96H112M16 70H112M16 44H112" class="workflow-grid"/>
+          <path d="M20 83C35 80 37 59 54 55S73 48 84 31 101 29 109 23"/>
+          <circle cx="26" cy="82" r="2.5"/><circle cx="41" cy="66" r="2.5"/><circle cx="56" cy="58" r="2.5"/><circle cx="73" cy="47" r="2.5"/><circle cx="87" cy="32" r="2.5"/><circle cx="106" cy="26" r="2.5"/>
+        </g>
+        <g class="workflow-emphasis"><path d="M20 83C35 80 37 59 54 55S73 48 84 31 101 29 109 23"/></g>
+      </svg>
+      <span class="workflow-label">{{ w.modeling }}</span>
+      <span id="workflow-modeling-description" class="visually-hidden">{{ w.modeling_project }}</span>
+    </a>
+    <a class="workflow-stage workflow-analysis" href="{{ workflow_analysis.url | relative_url }}" data-workflow-title="{{ workflow_analysis.title | escape }}" aria-describedby="workflow-analysis-description">
+      <span class="workflow-node" aria-hidden="true"></span><span class="workflow-signal" aria-hidden="true"></span>
+      <svg viewBox="0 0 120 116" aria-hidden="true" focusable="false">
+        <g class="workflow-geometry">
+          <path d="M16 17V96H112M16 70H112M16 44H112" class="workflow-grid"/>
+          <path d="M20 81C40 73 43 41 61 40S87 67 109 25M20 91C42 84 43 63 61 62S89 91 109 53"/>
+        </g>
+        <g class="workflow-emphasis">
+          <path class="workflow-band" d="M20 81C40 73 43 41 61 40S87 67 109 25V53C89 91 79 61 61 62S42 84 20 91Z"/>
+          <path d="M20 86C40 80 43 52 61 51S87 80 109 39"/>
+          <path d="M61 34V69M57 34H65M57 69H65"/>
+        </g>
+      </svg>
+      <span class="workflow-label">{{ w.analysis }}</span>
+      <span id="workflow-analysis-description" class="visually-hidden">{{ w.analysis_project }}</span>
+    </a>
+    <a class="workflow-stage workflow-automation" href="{{ workflow_automation.url | relative_url }}" data-workflow-title="{{ workflow_automation.title | escape }}" aria-describedby="workflow-automation-description">
+      <span class="workflow-node" aria-hidden="true"></span><span class="workflow-signal" aria-hidden="true"></span>
+      <svg viewBox="0 0 120 116" aria-hidden="true" focusable="false">
+        <g class="workflow-geometry">
+          <path d="M12 44H28M12 63H28M12 82H28M28 38V88M28 63H46M71 63H96V37H56V46"/>
+          <path d="M55 51c-6 0-5 5-5 8s-4 4-4 4 4 1 4 4-1 8 5 8M62 51c6 0 5 5 5 8s4 4 4 4-4 1-4 4 1 8-5 8"/>
+          <path d="M96 63V89H80M80 82H96M80 96H96"/>
+        </g>
+        <g class="workflow-emphasis"><path d="M71 63H96V37H56V46M96 63V89H80"/></g>
+      </svg>
+      <span class="workflow-label">{{ w.automation }}</span>
+      <span id="workflow-automation-description" class="visually-hidden">{{ w.automation_project }}</span>
+    </a>
+    <a class="workflow-stage workflow-decision" href="{{ workflow_decision.url | relative_url }}" data-workflow-title="{{ workflow_decision.title | escape }}" aria-describedby="workflow-decision-description">
+      <span class="workflow-node" aria-hidden="true"></span><span class="workflow-signal" aria-hidden="true"></span>
+      <svg viewBox="0 0 120 116" aria-hidden="true" focusable="false">
+        <g class="workflow-geometry">
+          <path d="M16 17V96H112" class="workflow-grid"/>
+          <path d="M23 29C41 34 40 55 61 64S89 77 109 81"/>
+          <path d="M61 17V96M16 64H112" class="workflow-guide"/>
+          <circle cx="31" cy="37" r="2.5"/><circle cx="47" cy="56" r="2.5"/><circle cx="85" cy="78" r="2.5"/><circle cx="103" cy="83" r="2.5"/>
+        </g>
+        <g class="workflow-emphasis"><circle cx="61" cy="64" r="6"/><circle class="workflow-point" cx="61" cy="64" r="2"/></g>
+      </svg>
+      <span class="workflow-label">{{ w.decision }}</span>
+      <span id="workflow-decision-description" class="visually-hidden">{{ w.decision_project }}</span>
+    </a>
+  </div>
+  <figcaption id="workflow-caption">{{ w.caption }}</figcaption>
+</figure>

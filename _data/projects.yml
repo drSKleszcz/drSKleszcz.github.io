@@ -1,0 +1,224 @@
+microclimate-control:
+  legacy_id: 8
+  category: engineering
+  client: AGH/Frapol
+  date: Jul 2023
+  image: /img/portfolio/mrr2.png
+  gallery:
+  - src: /img/portfolio/prototype.png
+    alt:
+      en: Microclimate control system - supporting project figure
+      pl: System kontroli mikroklimatu - ilustracja projektu
+    media_type: photo
+  references: []
+  source: _posts/2014-07-18-project-8.markdown
+  media_type: photo
+gas-turbine-digital-twin:
+  legacy_id: 6
+  category: engineering
+  client: UiS
+  date: Jul 2023
+  image: /img/portfolio/mtt.png
+  gallery:
+  - src: /img/portfolio/mtt_software.png
+    alt:
+      en: Gas turbine & digital twin - supporting project figure
+      pl: Turbina gazowa i cyfrowy bliźniak - ilustracja projektu
+    media_type: technical
+  references: []
+  source: _posts/2014-07-18-project-6.markdown
+  media_type: photo
+energy-techno-economics:
+  legacy_id: 13
+  category: analysis
+  client: UiS
+  date: Jul 2023
+  image: /img/portfolio/tea.png
+  gallery: []
+  references:
+  - https://www.sciencedirect.com/science/article/pii/S2590174524000382?via%3Dihub
+  source: _posts/2014-07-18-project-anlaysis-3.markdown
+  media_type: technical
+orifice-calculation-software:
+  legacy_id: 4
+  category: software
+  client: Own project
+  date: Feb 2025
+  image: /img/portfolio/orficle_2.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-software-5.markdown
+  media_type: screen
+hydrogen-hub:
+  legacy_id: 7
+  category: engineering
+  client: UiS
+  date: Jul 2023
+  image: /img/portfolio/hub2.png
+  gallery:
+  - src: /img/portfolio/hub.png
+    alt:
+      en: Hydrogen Hub Center - supporting project figure
+      pl: Centrum wodorowe Hydrogen Hub - ilustracja projektu
+    media_type: technical
+  - src: /img/portfolio/hub3.png
+    alt:
+      en: Hydrogen Hub Center - supporting project figure
+      pl: Centrum wodorowe Hydrogen Hub - ilustracja projektu
+    media_type: technical
+  references:
+  - https://www.energytransitionnorway.no/blog/risavika-hydrogen-hub-project-partners-go-public-with-plans-to-revitalize-old-gas-center
+  source: _posts/2014-07-18-project-7.markdown
+  media_type: photo
+pressure-test-station:
+  legacy_id: 10
+  category: engineering
+  client: Frapol
+  date: Jul 2023
+  image: /img/portfolio/test_station2.png
+  gallery:
+  - src: /img/portfolio/norm.png
+    alt:
+      en: Pressure test station - supporting project figure
+      pl: Stanowisko do badań szczelności - ilustracja projektu
+    media_type: technical
+  references: []
+  source: _posts/2014-07-18-project-10.markdown
+  media_type: photo
+flow-measurement:
+  legacy_id: 11
+  category: engineering
+  client: Frapol
+  date: Jul 2023
+  image: /img/portfolio/reg1.png
+  gallery:
+  - src: /img/portfolio/reg.png
+    alt:
+      en: Flow measurement system - supporting project figure
+      pl: System pomiaru przepływu - ilustracja projektu
+    media_type: technical
+  references: []
+  source: _posts/2014-07-18-project-11.markdown
+  media_type: photo
+constant-airflow:
+  legacy_id: 12
+  category: engineering
+  client: Frapol
+  date: Jul 2023
+  image: /img/portfolio/const4.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-12.markdown
+  media_type: photo
+heat-exchanger-simulation:
+  legacy_id: 17
+  category: simulation
+  client: Frapol
+  date: Jul 2023
+  image: /img/portfolio/mrr_simulation.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-17.markdown
+  media_type: technical
+four-hole-orifice:
+  legacy_id: 16
+  category: simulation
+  client: AGH
+  date: Jul 2023
+  image: /img/portfolio/orificle_article.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-16.markdown
+  media_type: technical
+centrifugal-fan:
+  legacy_id: 15
+  category: simulation
+  client: AGH
+  date: Jul 2023
+  image: /img/portfolio/vent.png
+  gallery:
+  - src: /img/portfolio/vent2.png
+    alt:
+      en: Centrifugal fan analysis - supporting project figure
+      pl: Analiza wentylatora promieniowego - ilustracja projektu
+    media_type: technical
+  references: []
+  source: _posts/2014-07-18-project-15.markdown
+  media_type: technical
+v6-engine:
+  legacy_id: 14
+  category: simulation
+  client: UiS
+  date: Jul 2023
+  image: /img/portfolio/engine.png
+  crop: engine
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-14.markdown
+  media_type: screen
+underground-gas-storage:
+  legacy_id: 19
+  category: analysis
+  client: UiS
+  date: Jan 2024
+  image: /img/portfolio/sensitivity.png
+  gallery:
+  - src: /img/portfolio/monte_carlo.png
+    alt:
+      en: Underground gas storage assessment - supporting project figure
+      pl: Ocena podziemnego magazynowania gazu - ilustracja projektu
+    media_type: technical
+  references: []
+  source: _posts/2014-07-18-project-analysis-2.markdown
+  media_type: technical
+solar-desalination:
+  legacy_id: 18
+  category: analysis
+  client: UiS
+  date: Jul 2023
+  image: /img/portfolio/deso4.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-analysis-1.markdown
+  media_type: technical
+fedex-pricing:
+  legacy_id: 5
+  category: software
+  client: FedEx
+  date: Jan 2025
+  image: /img/portfolio/fedex_app.png
+  crop: fedex
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-software-4.markdown
+  media_type: screen
+glycol-system-costing:
+  legacy_id: 3
+  category: software
+  client: Frapol
+  date: April 2018
+  image: /img/portfolio/glicol_screen.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-software-3.markdown
+  media_type: technical
+silencer-design:
+  legacy_id: 2
+  category: software
+  client: Frapol
+  date: Jan 2017
+  image: /img/portfolio/Silencer.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-software-2.markdown
+  media_type: technical
+automated-price-list:
+  legacy_id: 1
+  category: software
+  client: Frapol
+  date: Jul 2023
+  image: /img/portfolio/cennik3.png
+  gallery: []
+  references: []
+  source: _posts/2014-07-18-project-software-1.markdown
+  media_type: technical

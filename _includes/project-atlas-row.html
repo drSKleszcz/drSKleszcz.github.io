@@ -1,0 +1,14 @@
+{% assign card = include.project %}
+{% assign meta = site.data.projects[card.project_id] %}
+<article class="atlas-row" data-project data-category="{{ meta.category }}">
+  <a class="atlas-row-link" href="{{ card.url | relative_url }}">
+    <div class="atlas-row-copy">
+      <p class="atlas-row-meta">{% if meta.client == 'Own project' %}{{ t.own_project }}{% else %}{{ meta.client }}{% endif %}</p>
+      <h3>{{ card.title }}</h3>
+    </div>
+    <p class="atlas-row-description">{{ card.description }}</p>
+    {% assign plate_sizes = '(max-width: 600px) 96px, 160px' %}
+    {% if meta.crop == 'fedex' %}{% assign plate_sizes = '(max-width: 600px) 135px, 224px' %}{% endif %}
+    <div class="atlas-row-image media-{{ meta.media_type | default: 'technical' }}">{% include responsive-image.html src=meta.image alt='' sizes=plate_sizes crop=meta.crop %}</div>
+  </a>
+</article>

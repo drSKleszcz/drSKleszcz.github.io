@@ -1,0 +1,9 @@
+{% assign t = site.data.i18n[page.lang] %}
+{% assign figure = site.data.projects[page.project_id].gallery | where: 'src', include.src | first %}
+{% assign figure_alt = figure.alt[page.lang] %}
+{% assign figure_asset = site.data.images[figure.src] %}
+{% assign figure_width = figure_asset.width | times: 720 | divided_by: figure_asset.height | at_most: 960 | at_most: figure_asset.width %}
+<figure style="--figure-width: {{ figure_width }}px" class="article-figure media-{{ figure.media_type | default: 'technical' }}">
+  <div class="figure-image">{% include responsive-image.html src=figure.src alt=figure_alt sizes='(max-width: 1000px) 90vw, 960px' %}</div>
+  <figcaption>{{ figure_alt }}</figcaption>
+</figure>

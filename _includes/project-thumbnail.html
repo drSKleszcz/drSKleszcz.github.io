@@ -1,0 +1,5 @@
+<figure class="media-{{ include.media_type | default: 'technical' }}">
+  {% assign thumbnail_sizes = '(max-width: 600px) 45vw, 220px' %}
+  {% if include.crop == 'fedex' %}{% assign thumbnail_sizes = '(max-width: 600px) 75vw, 335px' %}{% endif %}
+  <a class="image-thumbnail" data-image-preview href="{{ include.src | relative_url }}" aria-label="{{ t.view_image }} - {{ include.alt | escape }}">{% include responsive-image.html src=include.src alt=include.alt sizes=thumbnail_sizes crop=include.crop %}</a>
+</figure>

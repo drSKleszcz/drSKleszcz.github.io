@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{% assign t = site.data.i18n[page.lang] %}
+{% assign meta = site.data.projects[page.project_id] %}
+<article class="container case-study">
+  <a class="back-link" data-project-index-link href="{{ t.projects_path | relative_url }}"><span aria-hidden="true">←</span> {{ t.back_projects }}</a>
+  <div class="case-intro">
+    <header class="case-header"><p class="eyebrow"><a data-project-index-link href="{{ t.projects_path | relative_url }}">{{ t.case_label }}</a> <span aria-hidden="true">/</span> <a href="{{ t.projects_path | relative_url }}#{{ meta.category }}">{{ t.categories[meta.category] }}</a></p><h1>{{ page.title }}</h1><p class="case-description">{{ page.description }}</p></header>
+    <dl class="project-facts"><div><dt>{{ t.organization }}</dt><dd>{% if meta.client == 'Own project' %}{{ t.own_project }}{% else %}{{ meta.client }}{% endif %}</dd></div><div><dt>{{ t.field }}</dt><dd>{{ t.categories[meta.category] }}</dd></div></dl>
+  </div>
+  <div class="case-body">
+    <div class="prose">{{ content }}</div>
+    <section class="project-images" aria-labelledby="project-figures-title">
+      <h2 id="project-figures-title">{{ t.gallery }}</h2>
+      {% include project-thumbnail.html src=meta.image alt=page.title media_type=meta.media_type crop=meta.crop %}
+      {% for figure in meta.gallery %}{% assign figure_alt = figure.alt[page.lang] %}{% include project-thumbnail.html src=figure.src alt=figure_alt media_type=figure.media_type crop=figure.crop %}{% endfor %}
+    </section>
+    <dialog class="image-viewer" aria-label="{{ t.gallery }}"><button type="button" data-close-image aria-label="{{ t.close_image }}" autofocus>×</button><img alt=""><p></p></dialog>
+  </div>
+  {% if meta.references.size > 0 %}<section class="references"><h2>{{ t.references }}</h2><ul>{% for reference in meta.references %}<li><a class="text-link" href="{{ reference }}">{{ t.reference_link }} <span aria-hidden="true">↗</span></a></li>{% endfor %}</ul></section>{% endif %}
+</article>
+<section class="container related section" data-carousel aria-labelledby="related-heading" data-position-label="{{ t.carousel_position }}" {% for heading in t.related_headings %}data-title-{{ heading[0] }}="{{ heading[1] }}" {% endfor %}>
+  <div class="section-heading"><h2 id="related-heading">{{ t.related_headings.all }}</h2><a class="text-link" data-project-index-link href="{{ t.projects_path | relative_url }}">{{ t.back_projects }}</a></div>
+  <div class="related-carousel">
+  <div class="carousel-controls" hidden><button type="button" data-prev aria-label="{{ t.previous_project }}">←</button><span class="visually-hidden" data-position role="status" aria-live="polite" aria-atomic="true"></span><button type="button" data-next aria-label="{{ t.next_project }}">→</button></div>
+  <div class="project-grid related-grid">
+    {% assign ordered = site.projects | where: 'lang', page.lang | sort: 'order' %}
+    {% assign start = page.order | plus: 1 %}
+    {% for project in ordered offset:start %}{% include project-card.html project=project %}{% endfor %}
+    {% for project in ordered limit:page.order %}{% include project-card.html project=project %}{% endfor %}
+  </div>
+  </div>
+</section>

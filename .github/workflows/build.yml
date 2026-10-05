@@ -1,0 +1,63 @@
+name: Build and verify portfolio
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      JEKYLL_ENV: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Build
+        run: bundle exec jekyll build --trace
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install verification tools
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+      - name: Verify translations, links, metadata and browser behavior
+        run: python -m unittest discover -s tests -v
+      - name: Audit WCAG 2.2 and accessible names across both languages and themes
+        run: |
+          mkdir -p .tools
+          curl -fsSL https://cdn.jsdelivr.net/npm/axe-core@4.10.3/axe.min.js -o .tools/axe.min.js
+          echo "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb  .tools/axe.min.js" | sha256sum --check
+          python -m http.server 4173 --bind 127.0.0.1 --directory _site > /tmp/portfolio-preview.log 2>&1 &
+          preview_pid=$!
+          trap 'kill "$preview_pid"' EXIT
+          for attempt in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/audit_accessibility.py http://127.0.0.1:4173 .tools/axe.min.js --full
+      - name: Save accessibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-accessibility
+          path: artifacts/accessibility.json
+      - name: Save review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-screenshots
+          path: artifacts/screenshots/
+      - name: Save static preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-preview
+          path: _site/

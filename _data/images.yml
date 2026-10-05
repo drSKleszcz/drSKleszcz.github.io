@@ -1,0 +1,275 @@
+/img/portfolio/cennik.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/cennik-1024.webp
+  srcset: /assets/images/cennik-160.webp 160w, /assets/images/cennik-320.webp 320w,
+    /assets/images/cennik-480.webp 480w, /assets/images/cennik-640.webp 640w, /assets/images/cennik-768.webp
+    768w, /assets/images/cennik-960.webp 960w, /assets/images/cennik-1024.webp 1024w
+/img/portfolio/cennik3.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/cennik3-1024.webp
+  srcset: /assets/images/cennik3-160.webp 160w, /assets/images/cennik3-320.webp 320w,
+    /assets/images/cennik3-480.webp 480w, /assets/images/cennik3-640.webp 640w, /assets/images/cennik3-768.webp
+    768w, /assets/images/cennik3-960.webp 960w, /assets/images/cennik3-1024.webp 1024w
+/img/portfolio/const4.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/const4-1024.webp
+  srcset: /assets/images/const4-160.webp 160w, /assets/images/const4-320.webp 320w,
+    /assets/images/const4-480.webp 480w, /assets/images/const4-640.webp 640w, /assets/images/const4-768.webp
+    768w, /assets/images/const4-960.webp 960w, /assets/images/const4-1024.webp 1024w
+/img/portfolio/constant.png:
+  width: 1010
+  height: 1026
+  src: /assets/images/constant-1010.webp
+  srcset: /assets/images/constant-160.webp 160w, /assets/images/constant-320.webp
+    320w, /assets/images/constant-480.webp 480w, /assets/images/constant-640.webp
+    640w, /assets/images/constant-768.webp 768w, /assets/images/constant-960.webp
+    960w, /assets/images/constant-1010.webp 1010w
+/img/portfolio/constant2.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/constant2-1024.webp
+  srcset: /assets/images/constant2-160.webp 160w, /assets/images/constant2-320.webp
+    320w, /assets/images/constant2-480.webp 480w, /assets/images/constant2-640.webp
+    640w, /assets/images/constant2-768.webp 768w, /assets/images/constant2-960.webp
+    960w, /assets/images/constant2-1024.webp 1024w
+/img/portfolio/deso.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/deso-1024.webp
+  srcset: /assets/images/deso-160.webp 160w, /assets/images/deso-320.webp 320w, /assets/images/deso-480.webp
+    480w, /assets/images/deso-640.webp 640w, /assets/images/deso-768.webp 768w, /assets/images/deso-960.webp
+    960w, /assets/images/deso-1024.webp 1024w
+/img/portfolio/deso1.png:
+  width: 1000
+  height: 672
+  src: /assets/images/deso1-1000.webp
+  srcset: /assets/images/deso1-160.webp 160w, /assets/images/deso1-320.webp 320w,
+    /assets/images/deso1-480.webp 480w, /assets/images/deso1-640.webp 640w, /assets/images/deso1-768.webp
+    768w, /assets/images/deso1-960.webp 960w, /assets/images/deso1-1000.webp 1000w
+/img/portfolio/deso2.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/deso2-1024.webp
+  srcset: /assets/images/deso2-160.webp 160w, /assets/images/deso2-320.webp 320w,
+    /assets/images/deso2-480.webp 480w, /assets/images/deso2-640.webp 640w, /assets/images/deso2-768.webp
+    768w, /assets/images/deso2-960.webp 960w, /assets/images/deso2-1024.webp 1024w
+/img/portfolio/deso4.png:
+  width: 1023
+  height: 1024
+  src: /assets/images/deso4-1023.webp
+  srcset: /assets/images/deso4-160.webp 160w, /assets/images/deso4-320.webp 320w,
+    /assets/images/deso4-480.webp 480w, /assets/images/deso4-640.webp 640w, /assets/images/deso4-768.webp
+    768w, /assets/images/deso4-960.webp 960w, /assets/images/deso4-1023.webp 1023w
+/img/portfolio/engine.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/engine-1024.webp
+  srcset: /assets/images/engine-160.webp 160w, /assets/images/engine-320.webp 320w,
+    /assets/images/engine-480.webp 480w, /assets/images/engine-640.webp 640w, /assets/images/engine-768.webp
+    768w, /assets/images/engine-960.webp 960w, /assets/images/engine-1024.webp 1024w
+/img/portfolio/fedex_app.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/fedex_app-1024.webp
+  srcset: /assets/images/fedex_app-160.webp 160w, /assets/images/fedex_app-320.webp
+    320w, /assets/images/fedex_app-480.webp 480w, /assets/images/fedex_app-640.webp
+    640w, /assets/images/fedex_app-768.webp 768w, /assets/images/fedex_app-960.webp
+    960w, /assets/images/fedex_app-1024.webp 1024w
+/img/portfolio/glicol_screen.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/glicol_screen-1024.webp
+  srcset: /assets/images/glicol_screen-160.webp 160w, /assets/images/glicol_screen-320.webp
+    320w, /assets/images/glicol_screen-480.webp 480w, /assets/images/glicol_screen-640.webp
+    640w, /assets/images/glicol_screen-768.webp 768w, /assets/images/glicol_screen-960.webp
+    960w, /assets/images/glicol_screen-1024.webp 1024w
+/img/portfolio/hub.png:
+  width: 1319
+  height: 913
+  src: /assets/images/hub-1319.webp
+  srcset: /assets/images/hub-160.webp 160w, /assets/images/hub-320.webp 320w, /assets/images/hub-480.webp
+    480w, /assets/images/hub-640.webp 640w, /assets/images/hub-768.webp 768w, /assets/images/hub-960.webp
+    960w, /assets/images/hub-1319.webp 1319w
+/img/portfolio/hub2.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/hub2-1024.webp
+  srcset: /assets/images/hub2-160.webp 160w, /assets/images/hub2-320.webp 320w, /assets/images/hub2-480.webp
+    480w, /assets/images/hub2-640.webp 640w, /assets/images/hub2-768.webp 768w, /assets/images/hub2-960.webp
+    960w, /assets/images/hub2-1024.webp 1024w
+/img/portfolio/hub3.png:
+  width: 1604
+  height: 846
+  src: /assets/images/hub3-1600.webp
+  srcset: /assets/images/hub3-160.webp 159w, /assets/images/hub3-320.webp 320w, /assets/images/hub3-480.webp
+    480w, /assets/images/hub3-640.webp 640w, /assets/images/hub3-768.webp 768w, /assets/images/hub3-960.webp
+    959w, /assets/images/hub3-1600.webp 1600w
+/img/portfolio/monte_carlo.png:
+  width: 648
+  height: 468
+  src: /assets/images/monte_carlo-648.webp
+  srcset: /assets/images/monte_carlo-160.webp 160w, /assets/images/monte_carlo-320.webp
+    320w, /assets/images/monte_carlo-480.webp 480w, /assets/images/monte_carlo-640.webp
+    640w, /assets/images/monte_carlo-648.webp 648w
+/img/portfolio/mrr.png:
+  width: 1019
+  height: 1024
+  src: /assets/images/mrr-1019.webp
+  srcset: /assets/images/mrr-160.webp 160w, /assets/images/mrr-320.webp 320w, /assets/images/mrr-480.webp
+    480w, /assets/images/mrr-640.webp 640w, /assets/images/mrr-768.webp 768w, /assets/images/mrr-960.webp
+    960w, /assets/images/mrr-1019.webp 1019w
+/img/portfolio/mrr2.png:
+  width: 1016
+  height: 1020
+  src: /assets/images/mrr2-1016.webp
+  srcset: /assets/images/mrr2-160.webp 160w, /assets/images/mrr2-320.webp 320w, /assets/images/mrr2-480.webp
+    480w, /assets/images/mrr2-640.webp 640w, /assets/images/mrr2-768.webp 768w, /assets/images/mrr2-960.webp
+    960w, /assets/images/mrr2-1016.webp 1016w
+/img/portfolio/mrr3.png:
+  width: 511
+  height: 512
+  src: /assets/images/mrr3-511.webp
+  srcset: /assets/images/mrr3-160.webp 160w, /assets/images/mrr3-320.webp 320w, /assets/images/mrr3-480.webp
+    480w, /assets/images/mrr3-511.webp 511w
+/img/portfolio/mrr_simulation.png:
+  width: 1028
+  height: 1024
+  src: /assets/images/mrr_simulation-1028.webp
+  srcset: /assets/images/mrr_simulation-160.webp 160w, /assets/images/mrr_simulation-320.webp
+    320w, /assets/images/mrr_simulation-480.webp 480w, /assets/images/mrr_simulation-640.webp
+    640w, /assets/images/mrr_simulation-768.webp 768w, /assets/images/mrr_simulation-960.webp
+    960w, /assets/images/mrr_simulation-1028.webp 1028w
+/img/portfolio/mrr_wykres.png:
+  width: 698
+  height: 356
+  src: /assets/images/mrr_wykres-698.webp
+  srcset: /assets/images/mrr_wykres-160.webp 160w, /assets/images/mrr_wykres-320.webp
+    320w, /assets/images/mrr_wykres-480.webp 480w, /assets/images/mrr_wykres-640.webp
+    639w, /assets/images/mrr_wykres-698.webp 698w
+/img/portfolio/mtt.png:
+  width: 1024
+  height: 1023
+  src: /assets/images/mtt-1024.webp
+  srcset: /assets/images/mtt-160.webp 160w, /assets/images/mtt-320.webp 320w, /assets/images/mtt-480.webp
+    480w, /assets/images/mtt-640.webp 640w, /assets/images/mtt-768.webp 768w, /assets/images/mtt-960.webp
+    960w, /assets/images/mtt-1024.webp 1024w
+/img/portfolio/mtt_software.png:
+  width: 966
+  height: 667
+  src: /assets/images/mtt_software-966.webp
+  srcset: /assets/images/mtt_software-160.webp 159w, /assets/images/mtt_software-320.webp
+    320w, /assets/images/mtt_software-480.webp 479w, /assets/images/mtt_software-640.webp
+    640w, /assets/images/mtt_software-768.webp 768w, /assets/images/mtt_software-960.webp
+    960w, /assets/images/mtt_software-966.webp 966w
+/img/portfolio/norm.png:
+  width: 507
+  height: 547
+  src: /assets/images/norm-507.webp
+  srcset: /assets/images/norm-160.webp 160w, /assets/images/norm-320.webp 320w, /assets/images/norm-480.webp
+    480w, /assets/images/norm-507.webp 507w
+/img/portfolio/orficle.png:
+  width: 662
+  height: 405
+  src: /assets/images/orficle-662.webp
+  srcset: /assets/images/orficle-160.webp 160w, /assets/images/orficle-320.webp 320w,
+    /assets/images/orficle-480.webp 480w, /assets/images/orficle-640.webp 640w, /assets/images/orficle-662.webp
+    662w
+/img/portfolio/orficle_2.png:
+  width: 1099
+  height: 624
+  src: /assets/images/orficle_2-1099.webp
+  srcset: /assets/images/orficle_2-160.webp 160w, /assets/images/orficle_2-320.webp
+    320w, /assets/images/orficle_2-480.webp 480w, /assets/images/orficle_2-640.webp
+    639w, /assets/images/orficle_2-768.webp 768w, /assets/images/orficle_2-960.webp
+    960w, /assets/images/orficle_2-1099.webp 1099w
+/img/portfolio/orificle_article.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/orificle_article-1024.webp
+  srcset: /assets/images/orificle_article-160.webp 160w, /assets/images/orificle_article-320.webp
+    320w, /assets/images/orificle_article-480.webp 480w, /assets/images/orificle_article-640.webp
+    640w, /assets/images/orificle_article-768.webp 768w, /assets/images/orificle_article-960.webp
+    960w, /assets/images/orificle_article-1024.webp 1024w
+/img/portfolio/prototype.png:
+  width: 1013
+  height: 578
+  src: /assets/images/prototype-1013.webp
+  srcset: /assets/images/prototype-160.webp 159w, /assets/images/prototype-320.webp
+    320w, /assets/images/prototype-480.webp 480w, /assets/images/prototype-640.webp
+    640w, /assets/images/prototype-768.webp 768w, /assets/images/prototype-960.webp
+    960w, /assets/images/prototype-1013.webp 1013w
+/img/portfolio/reg.png:
+  width: 1023
+  height: 518
+  src: /assets/images/reg-1023.webp
+  srcset: /assets/images/reg-160.webp 160w, /assets/images/reg-320.webp 320w, /assets/images/reg-480.webp
+    480w, /assets/images/reg-640.webp 640w, /assets/images/reg-768.webp 768w, /assets/images/reg-960.webp
+    960w, /assets/images/reg-1023.webp 1023w
+/img/portfolio/reg1.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/reg1-1024.webp
+  srcset: /assets/images/reg1-160.webp 160w, /assets/images/reg1-320.webp 320w, /assets/images/reg1-480.webp
+    480w, /assets/images/reg1-640.webp 640w, /assets/images/reg1-768.webp 768w, /assets/images/reg1-960.webp
+    960w, /assets/images/reg1-1024.webp 1024w
+/img/portfolio/sensitivity.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/sensitivity-1024.webp
+  srcset: /assets/images/sensitivity-160.webp 160w, /assets/images/sensitivity-320.webp
+    320w, /assets/images/sensitivity-480.webp 480w, /assets/images/sensitivity-640.webp
+    640w, /assets/images/sensitivity-768.webp 768w, /assets/images/sensitivity-960.webp
+    960w, /assets/images/sensitivity-1024.webp 1024w
+/img/portfolio/Silencer.png:
+  width: 1024
+  height: 1024
+  src: /assets/images/Silencer-1024.webp
+  srcset: /assets/images/Silencer-160.webp 160w, /assets/images/Silencer-320.webp
+    320w, /assets/images/Silencer-480.webp 480w, /assets/images/Silencer-640.webp
+    640w, /assets/images/Silencer-768.webp 768w, /assets/images/Silencer-960.webp
+    960w, /assets/images/Silencer-1024.webp 1024w
+/img/portfolio/tea.png:
+  width: 1034
+  height: 1060
+  src: /assets/images/tea-1034.webp
+  srcset: /assets/images/tea-160.webp 160w, /assets/images/tea-320.webp 320w, /assets/images/tea-480.webp
+    480w, /assets/images/tea-640.webp 640w, /assets/images/tea-768.webp 768w, /assets/images/tea-960.webp
+    960w, /assets/images/tea-1034.webp 1034w
+/img/portfolio/test_station2.png:
+  width: 1021
+  height: 1025
+  src: /assets/images/test_station2-1021.webp
+  srcset: /assets/images/test_station2-160.webp 160w, /assets/images/test_station2-320.webp
+    320w, /assets/images/test_station2-480.webp 480w, /assets/images/test_station2-640.webp
+    640w, /assets/images/test_station2-768.webp 768w, /assets/images/test_station2-960.webp
+    960w, /assets/images/test_station2-1021.webp 1021w
+/img/portfolio/vent.png:
+  width: 1046
+  height: 1024
+  src: /assets/images/vent-1046.webp
+  srcset: /assets/images/vent-160.webp 160w, /assets/images/vent-320.webp 320w, /assets/images/vent-480.webp
+    480w, /assets/images/vent-640.webp 640w, /assets/images/vent-768.webp 768w, /assets/images/vent-960.webp
+    960w, /assets/images/vent-1046.webp 1046w
+/img/portfolio/vent2.png:
+  width: 692
+  height: 541
+  src: /assets/images/vent2-692.webp
+  srcset: /assets/images/vent2-160.webp 160w, /assets/images/vent2-320.webp 320w,
+    /assets/images/vent2-480.webp 480w, /assets/images/vent2-640.webp 640w, /assets/images/vent2-692.webp
+    692w
+/img/profile.png:
+  width: 300
+  height: 303
+  src: /assets/images/profile-300.webp
+  srcset: /assets/images/profile-160.webp 160w, /assets/images/profile-300.webp 300w
+/img/FB_IMG_1790760243979.jpg:
+  width: 950
+  height: 960
+  src: /assets/images/FB_IMG_1790760243979-950.webp
+  srcset: /assets/images/FB_IMG_1790760243979-160.webp 160w, /assets/images/FB_IMG_1790760243979-320.webp
+    320w, /assets/images/FB_IMG_1790760243979-480.webp 480w, /assets/images/FB_IMG_1790760243979-640.webp
+    640w, /assets/images/FB_IMG_1790760243979-768.webp 768w, /assets/images/FB_IMG_1790760243979-950.webp
+    950w

@@ -1,0 +1,26 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{{ t.home | relative_url }}" aria-label="Sławosz Kleszcz {{ t.role | escape }} - {{ t.return_home }}">
+      <span class="monogram" aria-hidden="true">SK<span>_</span></span>
+      <span class="brand-name">Sławosz Kleszcz <span>{{ t.role }}</span></span>
+    </a>
+    <button class="menu-toggle" type="button" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="{{ t.menu }}" hidden><span class="menu-label">{{ t.menu }}</span><span aria-hidden="true">☰</span></button>
+    <nav id="site-nav" aria-label="{{ t.navigation }}">
+      <a data-nav-home href="{% if page.layout == 'home' %}#page-top{% else %}{{ t.home | relative_url }}{% endif %}"{% if page.layout == 'home' %} aria-current="page"{% endif %}>{{ t.home_label }}</a>
+      <a href="{% if page.layout == 'home' %}#expertise{% else %}{{ t.home | relative_url }}#expertise{% endif %}">{{ t.expertise_nav }}</a>
+      <a href="{% if page.layout == 'home' %}#projects{% else %}{{ t.projects_path | relative_url }}{% endif %}" {% if page.layout == 'project' or page.layout == 'projects' %}aria-current="{% if page.layout == 'projects' %}page{% else %}true{% endif %}"{% endif %}>{{ t.work }}</a>
+      <a href="{{ t.home | relative_url }}#about">{{ t.about }}</a>
+      <a href="{{ t.home | relative_url }}#contact">{{ t.contact }}</a>
+    </nav>
+    <div class="header-preferences">
+      <div class="language-links" aria-label="{{ t.language }}">
+        {% if page.lang == 'en' %}<span lang="en" aria-current="true">EN</span><span class="language-divider" aria-hidden="true">/</span><a href="{{ pl_url | relative_url }}" lang="pl" hreflang="pl" data-language-switch aria-label="PL - Przejdź do polskiej wersji">PL</a>
+        {% else %}<a href="{{ en_url | relative_url }}" lang="en" hreflang="en" data-language-switch aria-label="EN - Switch to English">EN</a><span class="language-divider" aria-hidden="true">/</span><span lang="pl" aria-current="true">PL</span>{% endif %}
+      </div>
+      <button type="button" class="theme-toggle" data-theme-toggle data-light="{{ t.switch_light }}" data-dark="{{ t.switch_dark }}" aria-label="{{ t.switch_light }}" title="{{ t.switch_light }}" hidden>
+        <svg class="theme-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.2 4.2l2.1 2.1m11.4 11.4 2.1 2.1M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>
+        <svg class="theme-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.5 14A8.7 8.7 0 0 1 10 3.5 8.8 8.8 0 1 0 20.5 14Z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>

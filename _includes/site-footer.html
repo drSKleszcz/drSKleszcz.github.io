@@ -1,0 +1,6 @@
+<footer class="site-footer"{% if page.layout == 'home' %} data-contact-footer{% endif %}>
+  <div class="container footer-inner">
+    <div><a class="footer-name" href="{{ t.home | relative_url }}">Sławosz Kleszcz<span>_</span></a><p>{{ t.footer }}</p><p class="copyright">© {{ 'now' | date: '%Y' }} Sławosz Kleszcz</p></div>
+    <a href="#page-top" class="back-top">{{ t.back_top }} <span aria-hidden="true">↑</span></a>
+  </div>
+</footer>

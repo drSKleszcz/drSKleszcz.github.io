@@ -1,64 +1,45 @@
-# Site settings
 title: Sławosz Kleszcz
-email: f/mnnjbwzp
-url: https://github.com/drSKleszcz/
-description: "Department of Fundamental Problems of Energy"
-keywords: "ANSYS Fluent, IPSEPro, Python, Excel, VBA,"
-skills: "Researcher - PhD - Simulation Specialist - Developer"
-meta_author: Kleszcz Slawosz
-
-# Google webmaster tools
-google_verify:
-
-# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
-bing_verify:
-
-# Contact form:
-# - static : pass through formspree.io to validate email sending
-# - disqus : replace contact form by disqus thread
-# - comment the line below if you want to stick with the default PHP contact form
-contact: static
-
-# If you use disqus you need disqus shortname
-# https://help.disqus.com/customer/portal/articles/466208
-disqus_shortname: myshortname
-
-# Color settings (hex-codes without the leading hash-tag)
-color:
-  primary: 4e7da1 #80B3FF
-  primary-rgb: "24,288,156" #"128,179,255"
-  secondary: 2c3e50 #FD6E8A
-  secondary-dark: 233140 #A2122F
-
-# Footer settings
-footer:
-  copyright: 
-  location: 
-  social: 
-  credits: 
-
-# Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
-social:
-  - title: orcid
-    url: https://orcid.org/0000-0002-8745-0033
-  - title: linkedin
-    url: https://www.linkedin.com/in/slawosz-kleszcz
-  - title: github
-    url: https://github.com/drSKleszcz/
-
-# Postal address (add as many lines as necessary)
-address:
-  - line:
-# Credits content
-
-# Build settings
+url: https://www.drskleszcz.pl
+baseurl: ""
+timezone: Europe/Oslo
+encoding: utf-8
 markdown: kramdown
 permalink: pretty
-
-#for posts
+form_endpoint: https://formspree.io/f/mnnjbwzp
+collections:
+  projects:
+    output: true
 defaults:
   - scope:
       path: ""
-      type: "posts"
     values:
-      permalink: ""
+      layout: default
+      lang: en
+exclude:
+  - _posts
+  - .tools
+  - .bundle
+  - vendor
+  - artifacts
+  - scripts
+  - tests
+  - docs
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - Rakefile
+  - freelancer-theme-jekyll.gemspec
+  - requirements-dev.txt
+  - css
+  - js
+  - mail
+  - style.css
+  - feed.xml
+  - screenshot.png
+social:
+  - title: LinkedIn
+    url: https://www.linkedin.com/in/slawosz-kleszcz
+  - title: GitHub
+    url: https://github.com/drSKleszcz/
+  - title: ORCID
+    url: https://orcid.org/0000-0002-8745-0033

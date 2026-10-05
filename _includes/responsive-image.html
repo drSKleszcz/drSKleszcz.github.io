@@ -1,0 +1,4 @@
+{% assign asset = site.data.images[include.src] %}
+{% if include.crop %}<span class="image-crop image-crop-{{ include.crop }}">{% endif %}
+<img src="{{ asset.src | relative_url }}" srcset="{{ asset.srcset }}" sizes="{{ include.sizes | default: '(max-width: 700px) 100vw, 50vw' }}" width="{{ asset.width }}" height="{{ asset.height }}" alt="{{ include.alt | escape }}" {% if include.eager %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async"{% if include.class %} class="{{ include.class }}"{% endif %}>
+{% if include.crop %}</span>{% endif %}

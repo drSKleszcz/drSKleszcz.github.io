@@ -1,0 +1,256 @@
+en:
+  close_image: Close image
+  view_image: View image
+  related_headings:
+    all: Continue exploring all projects
+    engineering: Continue exploring engineering projects
+    simulation: Continue exploring simulations and models
+    analysis: Continue exploring techno-economic analysis
+    software: Continue exploring software projects
+  hero_identity: Sławosz Kleszcz, EngD - R&D Engineer
+  switch_light: Light theme
+  switch_dark: Dark theme
+  previous_project: Previous project
+  next_project: Next project
+  carousel_position: Projects
+  home: /
+  projects_path: /projects/
+  skip: Skip to content
+  navigation: Main navigation
+  menu: Menu
+  home_label: Home
+  expertise_nav: Expertise
+  work: Projects
+  about: About
+  contact: Contact
+  language: Change language
+  role: R&D Engineer · EngD
+  eyebrow: Research. Simulation. Development.
+  hero_start: Understanding systems.
+  hero_end: Engineering solutions.
+  hero_workflow:
+    caption: Illustrative workflow - select a stage to explore a project.
+    system: System
+    modeling: Modeling
+    analysis: Analysis
+    automation: Automation
+    decision: Decision
+    system_project: Hydrogen production, energy conversion and control
+    modeling_project: Gas turbine model validated against measurements
+    analysis_project: Energy cost modeling and uncertainty analysis
+    automation_project: Engineering calculations and automated reporting
+    decision_project: Data analysis supporting commercial pricing decisions
+  view_work: Explore my work
+  get_in_touch: Get in touch
+  hero_caption: From the model to the real system
+  hero_figure: Counterflow heat exchanger - numerical model
+  hero_image_alt: Counterflow heat exchanger model with separate supply and exhaust channels
+  discipline: Energy systems / Fluid mechanics / Engineering software
+  selected_label: 02 / Selected work
+  selected_title: Engineering in practice.
+  selected_description: Projects connecting research, simulation and working systems.
+  all_projects: View all projects
+  case_study: Explore project
+  capabilities_label: 01 / Expertise
+  capabilities_title: Across the engineering process.
+  capabilities:
+    - title: Model & simulate
+      text: CFD, heat and mass transfer, and 0D/1D process models to understand system behavior.
+      tools: ANSYS · IPSEpro · SolidWorks
+    - title: Build & validate
+      text: Prototypes, instrumentation and experimental testing to connect calculations with measured performance.
+      tools: Measurement · LabVIEW · Automation
+    - title: Analyze & automate
+      text: Techno-economic assessment, uncertainty analysis and software that makes engineering work repeatable.
+      tools: Python · Excel / VBA · Monte Carlo
+  about_label: 03 / About
+  about_title: Research grounded in real engineering.
+  about_text: I am Sławosz Kleszcz, an R&D engineer with a EngD and experience in universities and industry. My work spans process flow modeling, numerical simulation, techno-economic analysis and engineering software.
+  about_second: From heat recovery and gas turbines to flow measurement and calculation tools, I bring modeling and practical development together to understand how systems perform - and how to improve them.
+  experience_title: Experience
+  experience:
+    - title: Engineering R&D
+      organization: AGH / Frapol
+      text: 'Industrial doctoral research and HVAC development: CFD, heat-transfer modeling, controls and experimental validation.'
+    - title: Energy-systems research
+      organization: UiS
+      text: 'Gas turbines, hydrogen infrastructure and storage: modeling, system development and techno-economic analysis.'
+    - title: Business analytics
+      organization: FedEx
+      text: Data analysis, cost models and Python/Excel tools for pricing, automation and business decisions.
+  portrait_alt: Portrait of Sławosz Kleszcz
+  profile_links: Professional profiles
+  contact_label: 04 / Contact
+  contact_title: Let’s discuss your next engineering challenge.
+  contact_text: For professional opportunities, research collaborations or a conversation about my work, send a message or connect on LinkedIn.
+  name: Name
+  email: Email address
+  message: Message
+  send: Send message
+  sending: Sending…
+  success: Thank you. Your message has been sent.
+  failure: Your message could not be sent. Please try again or contact me on LinkedIn. Your text has been kept.
+  invalid: Please complete the required fields and enter a valid email address.
+  form_note: Your name, email and message are sent through Formspree to handle your enquiry.
+  required_note: All fields are required.
+  footer: R&D engineering, research & software.
+  back_top: Back to top
+  collection_label: Project collection
+  collection_title: Ideas tested. Systems built.
+  collection_description: Explore projects across engineering, simulation, analysis and software development.
+  filters_label: Filter projects
+  all: All projects
+  results_count: projects shown
+  categories:
+    engineering: Engineering
+    simulation: Simulations & models
+    analysis: Techno-economic analysis
+    software: Software
+  back_projects: All projects
+  organization: Organization
+  own_project: Independent project
+  project_date: Project date
+  field: Discipline
+  case_label: Project case study
+  gallery: Project figures
+  open_original: Open original image
+  figure_note: Original project figures; labels within images retain their source language.
+  references: Further reading
+  reference_link: Project reference
+  related_title: Continue exploring
+  not_found: Page not found.
+  not_found_text: This address does not point to a page. Explore the project collection or return to the homepage.
+  return_home: Return home
+  months:
+    Jan: January
+    Feb: February
+    April: April
+    Jul: July
+pl:
+  close_image: Zamknij obraz
+  view_image: Powiększ obraz
+  related_headings:
+    all: Poznaj kolejne projekty
+    engineering: Poznaj kolejne projekty inżynierskie
+    simulation: Poznaj kolejne symulacje i modele
+    analysis: Poznaj kolejne analizy techniczno-ekonomiczne
+    software: Poznaj kolejne projekty oprogramowania
+  hero_identity: Sławosz Kleszcz, EngD - inżynier R&D
+  switch_light: Jasny motyw
+  switch_dark: Ciemny motyw
+  previous_project: Poprzedni projekt
+  next_project: Następny projekt
+  carousel_position: Projekty
+  home: /pl/
+  projects_path: /pl/projects/
+  skip: Przejdź do treści
+  navigation: Nawigacja główna
+  menu: Menu
+  home_label: Strona główna
+  expertise_nav: Kompetencje
+  work: Projekty
+  about: O mnie
+  contact: Kontakt
+  language: Zmień język
+  role: Inżynier R&D · EngD
+  eyebrow: Badania. Symulacja. Rozwój.
+  hero_start: Zrozumieć system.
+  hero_end: Opracować rozwiązanie.
+  hero_workflow:
+    caption: Schemat poglądowy - wybierz etap, aby poznać projekt.
+    system: System
+    modeling: Modelowanie
+    analysis: Analiza
+    automation: Automatyzacja
+    decision: Decyzja
+    system_project: Produkcja wodoru, konwersja energii i sterowanie
+    modeling_project: Model turbiny gazowej zweryfikowany pomiarami
+    analysis_project: Modelowanie kosztów energii i analiza niepewności
+    automation_project: Obliczenia inżynierskie i automatyczne raportowanie
+    decision_project: Analiza danych wspierająca decyzje cenowe
+  view_work: Zobacz moje projekty
+  get_in_touch: Napisz do mnie
+  hero_caption: Od modelu do rzeczywistego systemu
+  hero_figure: Przeciwprądowy wymiennik ciepła - model numeryczny
+  hero_image_alt: Model przeciwprądowego wymiennika ciepła z oddzielnymi kanałami nawiewnymi i wywiewnymi
+  discipline: Systemy energetyczne / Mechanika płynów / Oprogramowanie inżynierskie
+  selected_label: 02 / Wybrane projekty
+  selected_title: Inżynieria w praktyce.
+  selected_description: Projekty łączące badania, symulację i działające systemy.
+  all_projects: Zobacz wszystkie projekty
+  case_study: Zobacz projekt
+  capabilities_label: 01 / Kompetencje
+  capabilities_title: Na każdym etapie prac inżynierskich.
+  capabilities:
+    - title: Modelowanie i symulacja
+      text: CFD, wymiana ciepła i masy oraz modele procesowe 0D/1D pozwalające zrozumieć działanie systemów.
+      tools: ANSYS · IPSEpro · SolidWorks
+    - title: Budowa i weryfikacja
+      text: Prototypy, aparatura pomiarowa i badania eksperymentalne łączące obliczenia z rzeczywistymi wynikami.
+      tools: Pomiary · LabVIEW · Automatyka
+    - title: Analiza i automatyzacja
+      text: Ocena techniczno-ekonomiczna, analiza niepewności i oprogramowanie usprawniające powtarzalną pracę inżynierską.
+      tools: Python · Excel / VBA · Monte Carlo
+  about_label: 03 / O mnie
+  about_title: Badania osadzone w praktyce inżynierskiej.
+  about_text: Nazywam się Sławosz Kleszcz. Jestem inżynierem R&D ze stopniem EngD i doświadczeniem zdobytym na uczelniach oraz w przemyśle. Zajmuję się modelowaniem przepływów, symulacjami numerycznymi, analizą techniczno-ekonomiczną i oprogramowaniem inżynierskim.
+  about_second: Od odzysku ciepła i turbin gazowych po pomiary przepływu i narzędzia obliczeniowe - łączę modelowanie z praktycznym rozwojem, aby zrozumieć działanie systemów i je doskonalić.
+  experience_title: Doświadczenie
+  experience:
+    - title: Badania i rozwój inżynierski
+      organization: AGH / Frapol
+      text: 'Doktorat wdrożeniowy i rozwój HVAC: modelowanie CFD i wymiany ciepła, sterowanie oraz walidacja eksperymentalna.'
+    - title: Badania systemów energetycznych
+      organization: UiS
+      text: 'Turbiny gazowe, infrastruktura wodorowa i magazynowanie: modelowanie, rozwój systemów i analiza techniczno-ekonomiczna.'
+    - title: Analityka biznesowa
+      organization: FedEx
+      text: Analiza danych, modele kosztów i narzędzia Python/Excel do wycen, automatyzacji i decyzji biznesowych.
+  portrait_alt: Portret Sławosza Kleszcza
+  profile_links: Profile zawodowe
+  contact_label: 04 / Kontakt
+  contact_title: Porozmawiajmy o kolejnym wyzwaniu inżynierskim.
+  contact_text: W sprawie możliwości zawodowych, współpracy badawczej lub pytań o moje projekty - wyślij wiadomość albo skontaktuj się przez LinkedIn.
+  name: Imię i nazwisko
+  email: Adres e-mail
+  message: Wiadomość
+  send: Wyślij wiadomość
+  sending: Wysyłanie…
+  success: Dziękuję. Wiadomość została wysłana.
+  failure: Nie udało się wysłać wiadomości. Spróbuj ponownie lub skontaktuj się przez LinkedIn. Wpisana treść została zachowana.
+  invalid: Uzupełnij wymagane pola i podaj poprawny adres e-mail.
+  form_note: Imię i nazwisko, adres e-mail oraz treść wiadomości są przesyłane przez Formspree w celu obsługi zapytania.
+  required_note: Wszystkie pola są wymagane.
+  footer: Inżynieria R&D, badania i oprogramowanie.
+  back_top: Wróć na górę
+  collection_label: Zbiór projektów
+  collection_title: Od pomysłu do działającego systemu.
+  collection_description: Poznaj projekty z zakresu inżynierii, symulacji, analiz i tworzenia oprogramowania.
+  filters_label: Filtruj projekty
+  all: Wszystkie projekty
+  results_count: widocznych projektów
+  categories:
+    engineering: Inżynieria
+    simulation: Symulacje i modele
+    analysis: Analiza techniczno-ekonomiczna
+    software: Oprogramowanie
+  back_projects: Wszystkie projekty
+  organization: Organizacja
+  own_project: Projekt własny
+  project_date: Data projektu
+  field: Dziedzina
+  case_label: Opis projektu
+  gallery: Ilustracje projektu
+  open_original: Otwórz oryginalny obraz
+  figure_note: Oryginalne ilustracje projektowe; oznaczenia na obrazach pozostają w języku źródłowym.
+  references: Więcej informacji
+  reference_link: Materiał źródłowy
+  related_title: Poznaj kolejne projekty
+  not_found: Nie znaleziono strony.
+  not_found_text: Ten adres nie prowadzi do żadnej strony. Przejrzyj projekty lub wróć na stronę główną.
+  return_home: Strona główna
+  months:
+    Jan: styczeń
+    Feb: luty
+    April: kwiecień
+    Jul: lipiec
