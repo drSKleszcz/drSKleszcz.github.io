@@ -161,6 +161,17 @@ class BrowserTests(unittest.TestCase):
         self.page.locator('[data-home-carousel] [data-next]').click()
         expect(self.page.locator('.featured-grid .project-card:visible').first.locator('img')).to_have_js_property('complete', True)
 
+    def test_portrait_requests_a_variant_matching_its_display_size(self):
+        for prefix in ['', '/pl']:
+            for width, expected in [(412, '-480.webp'), (1440, '-640.webp')]:
+                with self.browser.new_context(viewport={'width': width, 'height': 1000}, device_scale_factor=1.75) as context:
+                    page = context.new_page()
+                    page.goto(self.base + prefix + '/#about')
+                    portrait = page.locator('.portrait-panel img')
+                    portrait.scroll_into_view_if_needed()
+                    page.wait_for_function("document.querySelector('.portrait-panel img').complete")
+                    self.assertTrue(portrait.evaluate('image => image.currentSrc').endswith(expected))
+
     def test_navigation_accessible_names_include_visible_text(self):
         for prefix in ['', '/pl']:
             self.page.goto(self.base + prefix + '/projects/')
@@ -1142,6 +1153,29 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/pl/#contact')
         self.page.locator('#contact-form button[type=submit]').click()
         expect(self.page.locator('#contact-status')).to_contain_text('Uzupełnij')
+        self.assertEqual(requests, [])
+
+    def test_form_errors_remain_described_until_corrected(self):
+        requests = []
+        self.page.route('https://formspree.io/**', lambda route: (requests.append(route.request), route.abort()))
+        for prefix in ['', '/pl']:
+            self.page.goto(self.base + prefix + '/#contact')
+            self.page.locator('#contact-form button[type=submit]').click()
+            status = self.page.locator('#contact-status')
+            message = status.inner_text()
+            self.page.locator('#contact-name').fill('Audit')
+            expect(status).to_have_text(message)
+            email = self.page.locator('#contact-email')
+            email.fill('invalid')
+            expect(email).to_have_attribute('aria-invalid', 'true')
+            for field in ['#contact-email', '#contact-message']:
+                expect(self.page.locator(field)).to_have_attribute('aria-describedby', 'contact-status')
+            email.fill('preview@example.com')
+            expect(email).not_to_have_attribute('aria-invalid', 'true')
+            expect(status).to_have_text(message)
+            self.page.locator('#contact-message').fill('Validation only; never sent.')
+            expect(status).to_be_empty()
+            expect(self.page.locator('#contact-form [aria-invalid=true]')).to_have_count(0)
         self.assertEqual(requests, [])
 
     def test_form_success_and_duplicate_prevention(self):

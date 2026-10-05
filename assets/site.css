@@ -139,6 +139,7 @@ p { color: var(--muted); }
 .contact-grid > * { min-width: 0; }
 .contact-intro h2 { margin-bottom: 25px; }
 .contact-intro > p:not(.eyebrow) { font-size: .96rem; margin-bottom: 25px; }
+.contact-links { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
 .form-required { font-size: var(--type-label); margin-bottom: 18px; }
 label { display: block; font-size: .8125rem; margin-bottom: 9px; }
 input, textarea { width: 100%; min-width: 0; background: var(--bg); color: var(--text); border: 1px solid var(--muted); border-radius: 0; padding: 12px 14px; font-size: 1rem; caret-color: var(--accent); }

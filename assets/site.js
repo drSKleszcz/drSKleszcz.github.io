@@ -336,9 +336,12 @@
     let sending = false;
     const report = (message, state) => { status.textContent = message; status.dataset.state = state; };
     fields.forEach(field => field.addEventListener('input', () => {
-      field.removeAttribute('aria-invalid');
-      field.removeAttribute('aria-describedby');
-      if (!sending) report('', '');
+      if (field.value.trim() && field.checkValidity()) {
+        field.removeAttribute('aria-invalid');
+        field.removeAttribute('aria-describedby');
+      }
+      // The shared explanation still belongs to every uncorrected field.
+      if (!sending && !fields.some(input => input.getAttribute('aria-invalid') === 'true')) report('', '');
     }));
     form.addEventListener('submit', async event => {
       event.preventDefault();

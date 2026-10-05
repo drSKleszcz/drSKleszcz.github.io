@@ -31,7 +31,7 @@ layout: default
 <section class="section about-section" id="about" aria-labelledby="about-heading"><div class="container">
   <header class="about-heading"><p class="eyebrow">{{ t.about_label }}</p><h2 id="about-heading">{{ t.about_title }}</h2></header>
   <div class="about-grid">
-  <div class="portrait-panel">{% include responsive-image.html src='/img/FB_IMG_1790760243979.jpg' alt=t.portrait_alt sizes='(max-width: 760px) 300px, 248px' %}</div>
+  <div class="portrait-panel">{% include responsive-image.html src='/img/FB_IMG_1790760243979.jpg' alt=t.portrait_alt sizes='(min-width: 1001px) and (min-height: 650px) clamp(258px, calc(22vw - 2px), 298px), 246px' %}</div>
   <div class="about-copy"><p class="about-lead">{{ t.about_text }}</p><p>{{ t.about_second }}</p><div class="social-links" aria-label="{{ t.profile_links }}">{% for item in site.social %}<a href="{{ item.url }}">{{ item.title }} <span aria-hidden="true">↗</span></a>{% endfor %}</div></div>
   </div>
   <div class="about-experience" aria-labelledby="experience-heading">

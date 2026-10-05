@@ -6,6 +6,7 @@ encoding: utf-8
 markdown: kramdown
 permalink: pretty
 form_endpoint: https://formspree.io/f/mnnjbwzp
+contact_email: kleszcz.slawosz@gmail.com
 collections:
   projects:
     output: true
