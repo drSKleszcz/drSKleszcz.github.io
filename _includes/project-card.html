@@ -4,6 +4,7 @@
   <a href="{{ card.url | relative_url }}" class="project-card-link">
     {% assign card_sizes = include.sizes | default: '(max-width: 600px) 90vw, (max-width: 1000px) 45vw, (max-width: 1440px) 22vw, 293px' %}
     <div class="card-image media-{{ meta.media_type | default: 'technical' }}">{% include responsive-image.html src=meta.image alt='' sizes=card_sizes crop=meta.crop %}</div>
+    <div class="carousel-image-slot" aria-hidden="true"></div>
     <div class="card-body">
       <div class="card-meta"><span>{{ t.categories[meta.category] }}</span><span>{% if meta.client == 'Own project' %}{{ t.own_project }}{% else %}{{ meta.client }}{% endif %}</span></div>
       <h3>{{ card.title }}</h3>

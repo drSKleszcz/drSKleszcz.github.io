@@ -156,7 +156,16 @@
     const tablet = window.matchMedia('(max-width: 1000px)');
     let index = 0;
     const grid = carousel.querySelector('.project-grid');
+    const controls = carousel.querySelector('.carousel-controls');
+    let gesture = null;
+    let suppressTouchClickUntil = 0;
     let measuredSize = '';
+    const positionControls = () => {
+      if (!mobile.matches || controls.hidden) return;
+      const image = cards[index].querySelector('.card-image').getBoundingClientRect();
+      const wrapper = controls.parentElement.getBoundingClientRect();
+      controls.style.setProperty('--carousel-controls-top', image.bottom - wrapper.top + 12 + 'px');
+    };
     // Reserve the tallest card in this collection without truncating any copy.
     // All measurements happen synchronously, before the browser paints.
     const measureHeight = () => {
@@ -171,10 +180,12 @@
       const height = Math.max(0, ...cards.map(card => card.getBoundingClientRect().height));
       cards.forEach((card, i) => { card.hidden = hidden[i]; });
       grid.style.minHeight = Math.ceil(height) + 'px';
+      positionControls();
     };
     const render = () => {
       const count = Math.min(cards.length, mobile.matches ? 1 : tablet.matches ? 2 : 4);
-      carousel.querySelector('.carousel-controls').hidden = cards.length <= count;
+      controls.hidden = cards.length <= count;
+      carousel.classList.toggle('has-carousel-controls', !controls.hidden);
       cards.forEach((card, i) => {
         const offset = (i - index + cards.length) % cards.length;
         card.hidden = offset >= count;
@@ -182,11 +193,13 @@
       });
       for (let step = 0; step < cards.length; step++) grid.append(cards[(index + step) % cards.length]);
       measureHeight();
+      positionControls();
       carousel.querySelector('[data-position]').textContent = `${carousel.dataset.positionLabel}: ${index + 1}${count > 1 ? '–' + ((index + count - 1) % cards.length + 1) : ''} / ${cards.length}`;
     };
     carousel.classList.add('enhanced-carousel');
     carousel.querySelector('.carousel-controls').hidden = false;
     const move = (direction, event) => {
+      cancelSwipe();
       const before = new Map(cards.filter(card => !card.hidden).map(card => [card, {
         left: card.getBoundingClientRect().left,
         opacity: getComputedStyle(card).opacity
@@ -206,8 +219,107 @@
     };
     carousel.querySelector('[data-prev]').addEventListener('click', event => move(-1, event));
     carousel.querySelector('[data-next]').addEventListener('click', event => move(1, event));
-    mobile.addEventListener('change', render);
-    tablet.addEventListener('change', render);
+    const clearSwipeCard = card => {
+      if (motion) motion.stop(card);
+      card.classList.remove('swipe-adjacent');
+      card.style.removeProperty('transform');
+      card.inert = false;
+      card.removeAttribute('aria-hidden');
+    };
+    const cancelSwipe = () => {
+      if (!gesture) return;
+      const previous = gesture;
+      gesture = null;
+      if (previous.horizontal) suppressTouchClickUntil = performance.now() + 600;
+      if (grid.hasPointerCapture(previous.pointerId)) grid.releasePointerCapture(previous.pointerId);
+      cards.forEach(clearSwipeCard);
+      grid.classList.remove('is-swiping');
+      render();
+    };
+    const settleSwipe = commit => {
+      const current = gesture;
+      if (!current) return;
+      if (!current.horizontal) { gesture = null; return; }
+      current.settling = true;
+      suppressTouchClickUntil = performance.now() + 600;
+      if (grid.hasPointerCapture(current.pointerId)) grid.releasePointerCapture(current.pointerId);
+      if (commit) index = (index + current.direction + cards.length) % cards.length;
+      const finish = () => {
+        if (gesture !== current) return;
+        gesture = null;
+        cards.forEach(clearSwipeCard);
+        grid.classList.remove('is-swiping');
+        render();
+      };
+      if (!motion || !motion.canPlay()) { finish(); return; }
+      const outgoing = motion.play(current.card, [
+        {transform: `translateX(${current.dx}px)`},
+        {transform: `translateX(${commit ? -current.direction * current.width : 0}px)`}
+      ], 'change');
+      const incoming = motion.play(current.adjacent, [
+        {transform: `translateX(${current.dx + current.direction * current.width}px)`},
+        {transform: `translateX(${commit ? 0 : current.direction * current.width}px)`}
+      ], 'change');
+      Promise.all([outgoing, incoming].filter(Boolean).map(animation => animation.finished.catch(() => {}))).then(finish);
+    };
+    grid.addEventListener('pointerdown', event => {
+      if (!mobile.matches || cards.length < 2 || event.pointerType !== 'touch' || !event.isPrimary) return;
+      cancelSwipe();
+      suppressTouchClickUntil = 0;
+      if (motion) cards.forEach(card => motion.stop(card));
+      gesture = {pointerId: event.pointerId, x: event.clientX, y: event.clientY, card: cards[index], width: grid.getBoundingClientRect().width, dx: 0, horizontal: false};
+    });
+    grid.addEventListener('pointermove', event => {
+      const current = gesture;
+      if (!current || current.settling || current.pointerId !== event.pointerId) return;
+      const dx = event.clientX - current.x;
+      const dy = event.clientY - current.y;
+      if (!current.horizontal) {
+        if (Math.max(Math.abs(dx), Math.abs(dy)) < 10) return;
+        if (Math.abs(dx) <= Math.abs(dy) * 1.2) { gesture = null; return; }
+        current.horizontal = true;
+        grid.setPointerCapture(event.pointerId);
+        grid.classList.add('is-swiping');
+        current.card.inert = true;
+        current.card.setAttribute('aria-hidden', 'true');
+      }
+      event.preventDefault();
+      current.dx = Math.max(-current.width, Math.min(current.width, dx));
+      const direction = dx < 0 ? 1 : -1;
+      if (current.direction !== direction) {
+        if (current.adjacent) { clearSwipeCard(current.adjacent); current.adjacent.hidden = true; }
+        current.direction = direction;
+        current.adjacent = cards[(index + direction + cards.length) % cards.length];
+        current.adjacent.hidden = false;
+        current.adjacent.inert = true;
+        current.adjacent.setAttribute('aria-hidden', 'true');
+        current.adjacent.classList.add('swipe-adjacent');
+      }
+      current.card.style.transform = `translateX(${current.dx}px)`;
+      current.adjacent.style.transform = `translateX(${current.dx + direction * current.width}px)`;
+    });
+    grid.addEventListener('pointerup', event => {
+      if (gesture && gesture.pointerId === event.pointerId) settleSwipe(Math.abs(gesture.dx) >= 48);
+    });
+    grid.addEventListener('pointercancel', cancelSwipe);
+    grid.addEventListener('lostpointercapture', event => {
+      // Touch starts with implicit capture on the image/link. Its transfer
+      // to this grid bubbles a separate loss event from that original target.
+      if (event.target === grid && gesture && !gesture.settling) cancelSwipe();
+    });
+    grid.addEventListener('click', event => {
+      if (event.detail > 0 && performance.now() < suppressTouchClickUntil) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    }, {capture: true});
+    const resizeCarousel = () => { cancelSwipe(); render(); };
+    mobile.addEventListener('change', resizeCarousel);
+    tablet.addEventListener('change', resizeCarousel);
+    window.addEventListener('resize', resizeCarousel);
+    document.addEventListener('keydown', cancelSwipe);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) cancelSwipe(); });
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', cancelSwipe);
     render();
     if (window.ResizeObserver) new ResizeObserver(measureHeight).observe(grid);
     document.fonts.ready.then(() => { measuredSize = ''; measureHeight(); });
@@ -262,28 +374,57 @@
   if (toggle && nav) {
     toggle.hidden = false;
     nav.classList.add('enhanced-nav');
-    const close = () => {
+    const compact = window.matchMedia('(max-width: 900px)');
+    let menuSequence = 0;
+    const close = (event, immediate = false) => {
+      const sequence = ++menuSequence;
+      const visible = nav.classList.contains('is-open');
+      const style = visible ? getComputedStyle(nav) : null;
+      const clipPath = style ? style.clipPath : 'none';
+      const transform = style ? style.transform : 'none';
       if (motion) motion.stop(nav);
       toggle.setAttribute('aria-expanded', 'false');
-      nav.classList.remove('is-open');
-      updateHeaderHeight();
+      nav.inert = compact.matches;
+      const finish = () => {
+        if (sequence !== menuSequence) return;
+        if (motion) motion.stop(nav);
+        nav.classList.remove('is-open');
+      };
+      const animation = visible && compact.matches && !immediate && motion && motion.canPlay(event)
+        ? motion.play(nav, [{clipPath, transform}, {clipPath: 'inset(0 0 100% 0)', transform: 'translateY(-6px)'}], 'exit')
+        : null;
+      if (animation) animation.finished.then(finish, finish);
+      else finish();
     };
+    nav.inert = compact.matches;
     toggle.addEventListener('click', event => {
       const open = toggle.getAttribute('aria-expanded') !== 'true';
-      if (!open) { close(); return; }
+      if (!open) { close(event); return; }
+      const visible = nav.classList.contains('is-open');
+      const style = visible ? getComputedStyle(nav) : null;
+      const clipPath = style ? style.clipPath : 'inset(0 0 100% 0)';
+      const transform = style ? style.transform : 'translateY(-6px)';
+      ++menuSequence;
+      if (motion) motion.stop(nav);
       toggle.setAttribute('aria-expanded', 'true');
+      nav.inert = false;
       nav.classList.add('is-open');
-      updateHeaderHeight();
-      if (motion && motion.canPlay(event)) motion.play(nav, [{opacity: .7, transform: 'translateY(-4px)'}, {opacity: 1, transform: 'none'}], 'change');
+      if (motion && motion.canPlay(event)) motion.play(nav, [{clipPath, transform}, {clipPath: 'inset(0)', transform: 'none'}], 'change');
     });
-    nav.addEventListener('click', event => { if (event.target.closest('a')) close(); });
+    nav.addEventListener('click', event => { if (event.target.closest('a')) close(undefined, true); });
+    document.addEventListener('pointerdown', event => {
+      if (toggle.getAttribute('aria-expanded') === 'true' && !nav.contains(event.target) && !toggle.contains(event.target)) close();
+    });
+    nav.addEventListener('focusout', event => {
+      if (!nav.contains(event.relatedTarget) && !toggle.contains(event.relatedTarget)) close(undefined, true);
+    });
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-        close();
-        toggle.focus();
+        close(undefined, true);
+        toggle.focus({preventScroll: true});
       }
     });
-    window.matchMedia('(min-width: 901px)').addEventListener('change', close);
+    compact.addEventListener('change', () => close(undefined, true));
   }
 
   const controls = document.querySelector('[data-filter-controls]');

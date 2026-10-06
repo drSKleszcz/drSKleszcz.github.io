@@ -144,6 +144,148 @@ class BrowserTests(unittest.TestCase):
         self.page.set_viewport_size({'width': 768, 'height': 844})
         expect(self.page.locator('#site-nav')).not_to_be_visible()
 
+    def test_mobile_dropdown_overlays_without_changing_header_or_scroll(self):
+        for prefix in ['', '/pl']:
+            for width in [320, 390, 900]:
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(self.base + prefix + '/#projects')
+                header = self.page.locator('.site-header')
+                before = header.bounding_box()
+                scroll = self.page.evaluate('scrollY')
+                toggle = self.page.locator('[data-menu-toggle]')
+                toggle.click()
+                expect(self.page.locator('#site-nav')).to_be_visible()
+                self.assertAlmostEqual(header.bounding_box()['height'], before['height'], delta=.5)
+                self.assertAlmostEqual(self.page.evaluate('scrollY'), scroll, delta=1)
+                self.page.wait_for_function("!document.querySelector('#site-nav').getAnimations().some(a=>a.playState==='running')")
+                box = self.page.locator('#site-nav').bounding_box()
+                self.assertAlmostEqual(box['y'], before['height'], delta=1)
+                links = self.page.locator('#site-nav a').all()
+                self.assertTrue(all(a.bounding_box()['y'] < b.bounding_box()['y'] for a, b in zip(links, links[1:])))
+                self.page.mouse.click(10, 700)
+                expect(toggle).to_have_attribute('aria-expanded', 'false')
+                expect(self.page.locator('#site-nav')).not_to_be_visible()
+                toggle.click()
+                links[0].focus()
+                self.page.locator('.brand').focus()
+                expect(toggle).to_have_attribute('aria-expanded', 'false')
+
+    def test_phone_arrows_reserve_space_between_image_and_copy(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        for path in ['/#projects', '/pl/#projects', '/projects/microclimate-control/', '/pl/projects/microclimate-control/']:
+            self.page.goto(self.base + path)
+            carousel = self.page.locator('[data-carousel]')
+            photo = carousel.locator('.project-card:visible .card-image').first.bounding_box()
+            controls = carousel.locator('.carousel-controls').bounding_box()
+            copy = carousel.locator('.project-card:visible .card-body').first.bounding_box()
+            self.assertAlmostEqual(controls['y'] - photo['y'] - photo['height'], 12, delta=1)
+            self.assertGreaterEqual(copy['y'] - controls['y'] - controls['height'], 11)
+            self.assertTrue(carousel.locator('.carousel-controls button').evaluate_all('buttons => buttons.every(b => !b.closest("a") && b.getBoundingClientRect().height >= 44)'))
+            first_url = carousel.locator('.project-card:visible a').first.get_attribute('href')
+            carousel.locator('[data-next]').click()
+            self.assertNotEqual(carousel.locator('.project-card:visible a').first.get_attribute('href'), first_url)
+            carousel.locator('[data-prev]').click()
+            self.assertEqual(carousel.locator('.project-card:visible a').first.get_attribute('href'), first_url)
+
+    def test_phone_arrow_space_is_reserved_before_enhancement(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        self.page.route('**/assets/site.js*', lambda route: route.abort())
+        for path in ['/#projects', '/projects/microclimate-control/']:
+            self.page.goto(self.base + path)
+            slot = self.page.locator('[data-carousel] .carousel-image-slot').first
+            self.assertEqual(slot.evaluate('el => el.getBoundingClientRect().height'), 68)
+
+    def test_stacked_portrait_is_centered_without_resizing(self):
+        for prefix in ['', '/pl']:
+            for width in [320, 390, 760]:
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(self.base + prefix + '/#about')
+                portrait = self.page.locator('.portrait-panel').bounding_box()
+                self.assertAlmostEqual(portrait['x'] + portrait['width'] / 2, width / 2, delta=1)
+                self.assertAlmostEqual(portrait['width'], 248, delta=1)
+
+    def touch_drag(self, dx, dy=0, end=True):
+        grid = self.page.locator('[data-carousel] .project-grid')
+        grid.scroll_into_view_if_needed()
+        box = grid.bounding_box()
+        x, y = box['x'] + box['width'] / 2, max(120, box['y'] + 90)
+        session = self.context.new_cdp_session(self.page)
+        session.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': x, 'y': y}]})
+        for step in range(1, 5):
+            session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': [{'x': x + dx * step / 4, 'y': y + dy * step / 4}]})
+            self.page.wait_for_timeout(25)
+        if end:
+            session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+            session.detach()
+        return session
+
+    def test_phone_swipes_wrap_and_keep_taps_and_vertical_scroll_native(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        self.page.emulate_media(reduced_motion='reduce')
+        for path in ['/#projects', '/pl/#projects', '/projects/microclimate-control/?category=engineering', '/pl/projects/microclimate-control/?category=engineering']:
+            self.page.goto(self.base + path)
+            carousel = self.page.locator('[data-carousel]')
+            links = carousel.locator('.project-card a').evaluate_all('links => links.map(a => a.getAttribute("href"))')
+            if 'category=engineering' in path:
+                links = carousel.locator('.project-card[data-category=engineering] a').evaluate_all('links => links.map(a => a.getAttribute("href"))')
+            current = lambda: carousel.locator('.project-card:visible a').first.get_attribute('href')
+            original_url = self.page.url
+            self.assertEqual(current(), links[0])
+            self.touch_drag(-90)
+            self.assertEqual(current(), links[1])
+            self.assertEqual(self.page.url, original_url)
+            self.touch_drag(90)
+            self.assertEqual(current(), links[0])
+            self.touch_drag(90)
+            self.assertEqual(current(), links[-1])
+            self.touch_drag(-90)
+            self.assertEqual(current(), links[0])
+            self.touch_drag(-30)
+            self.assertEqual(current(), links[0])
+            self.touch_drag(0, -90)
+            self.assertEqual(current(), links[0])
+            self.assertEqual(self.page.url, original_url)
+        # An ordinary touch tap is still a native project link.
+        with self.browser.new_context(has_touch=True, viewport={'width':390, 'height':844}) as context:
+            page = context.new_page()
+            page.goto(self.base + '/#projects')
+            page.locator('.project-card:visible a').first.tap()
+            expect(page).to_have_url(self.base + '/projects/microclimate-control/')
+
+    def test_swipe_tracks_finger_and_cleans_up_on_interruptions(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        for interrupt in ['cancel', 'keyboard', 'resize', 'hidden']:
+            self.page.goto(self.base + '/#projects')
+            grid = self.page.locator('[data-carousel] .project-grid')
+            grid.scroll_into_view_if_needed()
+            first = self.page.locator('.project-card:visible').first
+            initial = first.bounding_box()['x']
+            original = first.locator('a').get_attribute('href')
+            session = self.touch_drag(-80, end=False)
+            self.assertLess(first.bounding_box()['x'], initial - 30)
+            if interrupt == 'keyboard':
+                self.page.keyboard.press('Tab')
+            elif interrupt == 'resize':
+                self.page.set_viewport_size({'width': 601, 'height': 844})
+            elif interrupt == 'hidden':
+                self.page.evaluate("Object.defineProperty(document, 'hidden', {configurable:true, value:true}); document.dispatchEvent(new Event('visibilitychange'))")
+            session.send('Input.dispatchTouchEvent', {'type':'touchCancel', 'touchPoints':[]})
+            session.detach()
+            self.assertEqual(self.page.locator('.project-card:visible a').first.get_attribute('href'), original)
+            self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.inert && !c.hasAttribute("aria-hidden") && !c.style.transform)'))
+            self.page.set_viewport_size({'width': 390, 'height': 844})
+
+    def test_animated_swipe_settles_without_retaining_finished_effects(self):
+        self.page.set_viewport_size({'width':390, 'height':844})
+        self.page.goto(self.base + '/#projects')
+        for _ in range(2):
+            session = self.touch_drag(-80, end=False)
+            self.assertTrue(self.page.locator('.project-grid').evaluate("g=>g.classList.contains('is-swiping')"))
+            session.send('Input.dispatchTouchEvent', {'type':'touchEnd', 'touchPoints':[]})
+            session.detach()
+            self.page.wait_for_function("!document.querySelector('.project-grid').classList.contains('is-swiping')")
+            self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.getAnimations().length && !c.style.transform && !c.inert)'))
+
     def test_mobile_carousel_does_not_download_hidden_opening_cards(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
         requested = []
