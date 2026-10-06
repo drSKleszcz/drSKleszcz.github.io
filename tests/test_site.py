@@ -516,6 +516,10 @@ class BrowserTests(unittest.TestCase):
         for width in [1440, 390]:
             self.page.set_viewport_size({'width': width, 'height': 1000})
             self.page.goto(self.base + '/pl/#projects')
+            # The second goto can be same-document navigation. CSS changes
+            # columns before the asynchronous resize handler hides extra cards.
+            # Measure browsing only after the requested layout is ready.
+            expect(self.page.locator('[data-home-carousel] .project-card:visible')).to_have_count(4 if width > 1000 else 1)
             grid = self.page.locator('.featured-grid')
             heights = []
             for _ in range(18):
