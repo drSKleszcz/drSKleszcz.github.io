@@ -149,6 +149,10 @@ class BrowserTests(unittest.TestCase):
             for width in [320, 390, 900]:
                 self.page.set_viewport_size({'width': width, 'height': 844})
                 self.page.goto(self.base + prefix + '/#projects')
+                # Repeated fragment arrivals after resizing can still be scrolling;
+                # fresh arrivals also align in a load-time animation frame.
+                # Take the menu baseline only once the target reaches the header.
+                self.page.wait_for_function("Math.abs(document.querySelector('#projects').getBoundingClientRect().top-document.querySelector('.site-header').getBoundingClientRect().bottom)<=1")
                 header = self.page.locator('.site-header')
                 before = header.bounding_box()
                 scroll = self.page.evaluate('scrollY')
@@ -156,8 +160,8 @@ class BrowserTests(unittest.TestCase):
                 toggle.click()
                 expect(self.page.locator('#site-nav')).to_be_visible()
                 self.assertAlmostEqual(header.bounding_box()['height'], before['height'], delta=.5)
-                self.assertAlmostEqual(self.page.evaluate('scrollY'), scroll, delta=1)
                 self.page.wait_for_function("!document.querySelector('#site-nav').getAnimations().some(a=>a.playState==='running')")
+                self.assertAlmostEqual(self.page.evaluate('scrollY'), scroll, delta=1)
                 box = self.page.locator('#site-nav').bounding_box()
                 self.assertAlmostEqual(box['y'], before['height'], delta=1)
                 links = self.page.locator('#site-nav a').all()
