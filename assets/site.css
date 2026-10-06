@@ -367,7 +367,8 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 /* Five links need the existing menu at tablet widths; content keeps its own breakpoints. */
 @media (max-width: 900px) {
   .header-inner { flex-wrap: wrap; gap: 10px; min-height: 80px; }
-  .brand { order: 0; padding-block: 14px; }
+  /* Let enlarged text reflow without pushing the fixed-size controls out. */
+  .brand { order: 0; padding-block: 14px; min-width: 0; flex-shrink: 1; }
   .monogram { padding: 10px 8px; font-size: 19px; }
   .brand-name { font-size: .86rem; }
   .brand-name > span { font-size: .6875rem; }

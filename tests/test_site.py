@@ -525,12 +525,20 @@ class BrowserTests(unittest.TestCase):
 
     def test_enlarged_polish_text_does_not_overflow(self):
         self.page.set_viewport_size({'width': 320, 'height': 844})
-        self.page.goto(self.base + '/pl/')
-        self.page.locator('html').evaluate("el => el.style.fontSize = '200%'")
-        for section in self.page.locator('main > section').all():
-            section.scroll_into_view_if_needed()
-            self.assertLessEqual(section.evaluate('el => el.getBoundingClientRect().right'), 320)
-        self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 320)
+        for fallback_font in [False, True]:
+            self.page.goto(self.base + '/pl/')
+            self.page.locator('html').evaluate("el => el.style.fontSize = '200%'")
+            if fallback_font:
+                # Linux falls back from Consolas to a wider monospace font.
+                self.page.add_style_tag(content='.language-links {font-family: "Courier New", monospace}')
+            for section in self.page.locator('main > section').all():
+                section.scroll_into_view_if_needed()
+                self.assertLessEqual(section.evaluate('el => el.getBoundingClientRect().right'), 320)
+            self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 320)
+            # All header controls must fit inside its gutters, even at 200% text.
+            self.assertTrue(self.page.locator('.header-inner').evaluate('''header =>
+                [...header.children].filter(el => getComputedStyle(el).display !== 'none' && el.id !== 'site-nav')
+                  .every(el => el.getBoundingClientRect().right <= header.getBoundingClientRect().right + .1)'''))
 
     def test_filtered_project_return_and_language_switch(self):
         self.page.goto(self.base + '/projects/#engineering')
@@ -1005,21 +1013,27 @@ class BrowserTests(unittest.TestCase):
             self.page.emulate_media(reduced_motion='no-preference')
 
     def test_rounded_carousel_surfaces_do_not_change_layout_or_swipe_layer(self):
+        # Hover may scroll an offscreen card into view. Compare document
+        # geometry so scrolling cannot be mistaken for a layout change.
+        document_box = '''el => {const r = el.getBoundingClientRect();
+            return {x:r.left + scrollX, y:r.top + scrollY, width:r.width, height:r.height};}'''
         for route, selector in [('/#projects', '[data-home-carousel]'), ('/projects/microclimate-control/#related-heading', '.related[data-carousel]')]:
             self.page.goto(self.base + route)
             carousel = self.page.locator(selector)
             grid = carousel.locator('.project-grid')
             outer = grid.locator('.project-card:visible').first
             surface = outer.locator('.project-card-link')
+            # Exercise the automatic scroll that triggered the CI failure.
+            self.page.evaluate('scrollTo({top:0, behavior:"instant"})')
             self.page.mouse.move(0, 0)
-            before = outer.bounding_box()
+            before = outer.evaluate(document_box)
             height = grid.bounding_box()['height']
             surface.hover()
             self.page.wait_for_timeout(200)
             self.assertEqual(surface.evaluate('el => getComputedStyle(el).borderTopLeftRadius'), '24px')
             self.assertNotEqual(surface.evaluate('el => getComputedStyle(el).boxShadow'), 'none')
             self.assertEqual(outer.evaluate('el => getComputedStyle(el).transform'), 'none')
-            self.assertEqual(before, outer.bounding_box())
+            self.assertEqual(before, outer.evaluate(document_box))
             self.assertAlmostEqual(height, grid.bounding_box()['height'], delta=1)
             self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 1440)
             self.page.keyboard.press('Tab')
