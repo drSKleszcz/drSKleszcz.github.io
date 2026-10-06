@@ -48,7 +48,16 @@
     if (url.origin !== location.origin || (url.pathname === location.pathname && url.search === location.search) || !(url.pathname.endsWith('/') || url.pathname.endsWith('.html'))) return;
     try { sessionStorage.setItem('portfolio-navigation-input', keyboard || event.detail === 0 ? 'keyboard' : 'pointer'); } catch (_) {}
   });
-  reduced.addEventListener('change', () => { if (reduced.matches) stopAll(); else updateHeroIdle(); });
+  reduced.addEventListener('change', () => {
+    if (reduced.matches) {
+      stopAll();
+      // Settle an existing pickup immediately; later pointer hovers use the
+      // shorter CSS profile without inheriting the old zoom transition.
+      document.querySelectorAll('.project-card-link').forEach(card => {
+        card.getAnimations().forEach(animation => animation.finish());
+      });
+    } else updateHeroIdle();
+  });
   document.addEventListener('visibilitychange', () => { if (document.hidden) stopAll(); else updateHeroIdle(); });
   window.addEventListener('pageswap', event => {
     if (event.viewTransition && (keyboard || reduced.matches || coarse.matches)) event.viewTransition.skipTransition();

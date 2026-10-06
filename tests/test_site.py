@@ -81,6 +81,51 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
 class BrowserTests(unittest.TestCase):
+    def test_rounded_buttons_preserve_targets_and_form_fields(self):
+        for prefix in ['', '/pl']:
+            for width in [390, 768, 1440]:
+                self.page.set_viewport_size({'width': width, 'height': 960})
+                self.page.goto(self.base + prefix + '/')
+                expect(self.page.locator('.theme-toggle')).to_be_visible()
+                for selector in ['.theme-toggle'] + (['.menu-toggle'] if width <= 900 else []):
+                    control = self.page.locator(selector)
+                    self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '50%')
+                    box = control.bounding_box()
+                    self.assertEqual((box['width'], box['height']), (44, 44))
+                    control.focus()
+                    self.assertEqual(control.evaluate('el => getComputedStyle(el).outlineStyle'), 'solid')
+                self.assertEqual(self.page.locator('.theme-toggle').evaluate('el => getComputedStyle(el).backgroundColor'), 'rgba(0, 0, 0, 0)')
+                for selector in ['.hero-actions .button', 'form .button', '.back-top', '.skip-link']:
+                    self.assertEqual(self.page.locator(selector).evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+                for field in self.page.locator('form input:not([type=hidden]), form textarea').all():
+                    self.assertEqual(field.evaluate('el => getComputedStyle(el).borderRadius'), '0px')
+                self.page.goto(self.base + prefix + '/projects/')
+                expect(self.page.locator('[data-filter="all"]')).to_be_visible()
+                for control in self.page.locator('.filters button').all():
+                    self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+                    self.assertGreaterEqual(control.bounding_box()['height'], 44)
+                    self.assertTrue(control.evaluate('el => el.scrollWidth <= el.clientWidth'))
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+
+    def test_circular_dialog_and_carousel_controls_remain_operable(self):
+        self.page.goto(self.base + '/projects/microclimate-control/')
+        self.page.locator('[data-image-preview]').first.click()
+        close = self.page.locator('[data-close-image]')
+        expect(close).to_be_focused()
+        self.page.wait_for_function('document.querySelector(".image-viewer").getAnimations().every(a => a.playState === "finished")')
+        self.assertEqual(close.evaluate('el => getComputedStyle(el).borderRadius'), '50%')
+        box = close.bounding_box()
+        self.assertEqual((box['width'], box['height']), (44, 44))
+        close.click()
+        expect(self.page.locator('.image-viewer')).not_to_be_visible()
+        for control in self.page.locator('.carousel-controls button').all():
+            self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '50%')
+            box = control.bounding_box()
+            self.assertEqual((box['width'], box['height']), (44, 44))
+        self.page.goto(self.base + '/404.html')
+        for control in self.page.locator('.not-found .button, .fallback-polish .button').all():
+            self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+
     @classmethod
     def setUpClass(cls):
         if not (SITE / 'index.html').exists():
@@ -363,7 +408,8 @@ class BrowserTests(unittest.TestCase):
             session.detach()
             self.assertEqual(self.page.locator('.project-card:visible a').first.get_attribute('href'), original)
             self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.inert && !c.hasAttribute("aria-hidden") && !c.style.transform)'))
-            self.assertEqual(grid.evaluate('el => getComputedStyle(el).overflowClipMargin'), '32px')
+            ink_space = '32px' if interrupt == 'resize' else '20px'
+            self.assertEqual(grid.evaluate('el => getComputedStyle(el).overflowClipMargin'), ink_space)
             self.page.set_viewport_size({'width': 390, 'height': 844})
 
     def test_animated_swipe_settles_without_retaining_finished_effects(self):
@@ -927,7 +973,7 @@ class BrowserTests(unittest.TestCase):
             card = self.page.locator(f'.featured-grid .project-card-link:has(.{media})').first
             image = card.locator('img')
             card.hover()
-            self.page.wait_for_timeout(200)
+            self.page.wait_for_timeout(330)
             matrix = card.evaluate('el => { const m = new DOMMatrix(getComputedStyle(el).transform); return [m.a, m.d, m.f]; }')
             self.assertAlmostEqual(matrix[0], 1.02, delta=.001)
             self.assertAlmostEqual(matrix[1], 1.02, delta=.001)
@@ -937,11 +983,15 @@ class BrowserTests(unittest.TestCase):
             self.page.wait_for_timeout(250)
             self.page.emulate_media(reduced_motion='reduce')
             card.hover()
-            self.page.wait_for_timeout(50)
-            halfway = card.evaluate('el => new DOMMatrix(getComputedStyle(el).transform).f')
+            halfway = card.evaluate('''el => {
+                const travel = el.getAnimations().find(a => a.transitionProperty === 'transform');
+                if (travel) { travel.pause(); travel.currentTime = travel.effect.getTiming().duration * .4; }
+                return new DOMMatrix(getComputedStyle(el).transform).f;
+            }''')
             self.assertGreater(halfway, -6)
             self.assertLess(halfway, 0)
-            self.page.wait_for_timeout(180)
+            card.evaluate('el => el.getAnimations().forEach(a => a.play())')
+            self.page.wait_for_timeout(240)
             reduced = card.evaluate('''el => {
                 const style = getComputedStyle(el), matrix = new DOMMatrix(style.transform);
                 return {scale: matrix.a, lift: matrix.f, duration: style.transitionDuration,
@@ -949,7 +999,7 @@ class BrowserTests(unittest.TestCase):
             }''')
             self.assertEqual(reduced['scale'], 1)
             self.assertEqual(reduced['lift'], -6)
-            self.assertEqual(reduced['duration'].split(',')[0], '0.16s')
+            self.assertEqual(reduced['duration'].split(',')[0], '0.2s')
             self.assertNotEqual(reduced['shadow'], 'none')
             self.assertEqual(reduced['animations'], 0)
             self.page.emulate_media(reduced_motion='no-preference')
@@ -980,6 +1030,18 @@ class BrowserTests(unittest.TestCase):
             self.assertEqual(surface.evaluate('el => getComputedStyle(el).borderTopLeftRadius'), '20px')
             self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 390)
             self.page.set_viewport_size({'width': 1440, 'height': 1000})
+
+    def test_sliding_carousel_ink_stays_inside_tablet_gutters(self):
+        for route, selector in [('/#projects', '[data-home-carousel]'), ('/projects/microclimate-control/#related-heading', '.related[data-carousel]')]:
+            self.page.set_viewport_size({'width': 768, 'height': 1000})
+            self.page.goto(self.base + route)
+            carousel = self.page.locator(selector)
+            carousel.locator('[data-next]').click()
+            carousel.locator('.project-grid').evaluate('''grid => grid.getAnimations({subtree:true}).forEach(a => {
+                a.pause(); a.currentTime = a.effect.getTiming().duration * .4;
+            })''')
+            self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 768)
+            carousel.locator('[data-next]').click()
 
     def test_image_preview_motion_preserves_escape_and_focus(self):
         self.page.goto(self.base + '/projects/hydrogen-hub/')

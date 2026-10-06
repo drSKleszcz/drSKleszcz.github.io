@@ -14,13 +14,17 @@
   --header: #263337f5;
   --button-text: #10201e;
   --accent-hover: #b1f3e5;
-  --card-hover-shadow: 0 12px 22px #00000070;
-  --motion-card-reduced: 160ms;
+  --card-hover-shadow: 0 16px 26px #00000080, 0 4px 8px #00000038;
+  --motion-card-reduced: 200ms;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
   --type-label: .75rem;
   --ease-ui: cubic-bezier(.23, 1, .32, 1);
+  --ease-card: cubic-bezier(.2, .6, .25, 1);
   --ease-trace: cubic-bezier(.77, 0, .175, 1);
   --motion-feedback: 120ms;
   --motion-hover: 180ms;
+  --motion-card: 280ms;
   --motion-change: 220ms;
   --motion-overlay: 240ms;
   --motion-exit: 100ms;
@@ -63,6 +67,8 @@ p { color: var(--muted); }
 .button:focus-visible { outline-color: var(--text); }
 .skip-link { position: fixed; left: 20px; top: -100px; z-index: 100; background: var(--accent); color: var(--bg); padding: 12px 20px; }
 .skip-link:focus { top: 12px; }
+.button, .filters button, .back-top, .skip-link { border-radius: var(--radius-pill); }
+.carousel-controls button, .menu-toggle, .theme-toggle, .image-viewer button { border-radius: var(--radius-circle); }
 .site-header { position: sticky; top: 0; z-index: 30; background: var(--header); border-bottom: 1px solid var(--line); backdrop-filter: blur(16px); }
 /* Root anchor padding must not scroll the page when a pinned control focuses. */
 .site-header :is(a, button) { scroll-margin-block-start: calc(-1 * var(--header-height, 95px)); }
@@ -98,7 +104,7 @@ p { color: var(--muted); }
   display: flex; flex-direction: column; height: 100%;
   border: 1px solid var(--line); border-radius: 24px;
   background: var(--panel); overflow: hidden;
-  transition: transform var(--motion-change) var(--ease-ui), box-shadow var(--motion-change) var(--ease-ui), border-color var(--motion-feedback);
+  transition: transform var(--motion-card) var(--ease-card), box-shadow var(--motion-card) var(--ease-card), border-color var(--motion-feedback);
 }
 .project-card-link:focus-visible { outline-offset: 5px; }
 .card-image { position: relative; display: flex; align-items: center; justify-content: center; container-type: size; aspect-ratio: 1.7; background: var(--panel); overflow: hidden; border-bottom: 1px solid var(--line); padding: 20px; }
@@ -291,7 +297,7 @@ input:focus, textarea:focus { border-color: var(--accent); }
   --bg: #f7f6f2; --panel: #ffffff; --panel-light: #eeeee8;
   --text: #202d30; --muted: #526466; --reading: #344548;
   --accent: #096c61; --accent-hover: #075c53; --line: #c8d2cf; --header: #e4eae6f5; --button-text: #ffffff;
-  --card-hover-shadow: 0 12px 22px #18222533;
+  --card-hover-shadow: 0 16px 26px #1822252e, 0 4px 8px #18222514;
 }
 .theme-toggle { margin-left: auto; border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 9px 12px; min-height: 44px; font-size: .8rem; }
 .button, .filters button[aria-pressed=true] { color: var(--button-text); }
@@ -367,7 +373,8 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
   .brand-name > span { font-size: .6875rem; }
   .header-preferences { order: 1; margin-left: auto; gap: 5px; }
   .header-preferences .language-links { border: 0; padding: 0; gap: 5px; }
-  .menu-toggle { display: flex; order: 2; align-items: center; gap: 10px; border: 1px solid var(--line); background: transparent; color: var(--text); padding: 10px 13px; min-height: 44px; font-size: .75rem; }
+  .menu-toggle { display: flex; order: 2; align-items: center; justify-content: center; width: 44px; height: 44px; flex-shrink: 0; border: 1px solid var(--line); background: transparent; color: var(--text); padding: 0; min-height: 44px; font-size: .75rem; }
+  .menu-label { display: none; }
   #site-nav { order: 3; width: 100%; margin-left: 0; padding-block: 12px 22px; gap: 0; flex-wrap: wrap; }
   #site-nav > a { margin-right: 26px; padding-block: 12px; }
   html[data-js] #site-nav:not(.is-open), #site-nav.enhanced-nav { display: none; }
@@ -380,10 +387,6 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 @media (max-width: 760px) {
   .monogram { display: none; }
   .brand-name { font-size: .78rem; }
-}
-@media (max-width: 400px) {
-  .menu-label { display: none; }
-  .menu-toggle { width: 44px; padding: 0; justify-content: center; }
 }
 .theme-toggle { border: 0; background: transparent; color: var(--muted); }
 .theme-toggle:hover { color: var(--accent); }
@@ -527,7 +530,7 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .image-viewer { max-width: 94vw; max-height: 94svh; width: fit-content; padding: 54px 16px 16px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
 .image-viewer::backdrop { background: #000b; }
 .image-viewer img { max-width: 88vw; max-height: 76svh; width: min(var(--image-width, 88vw), 88vw, calc(76svh * var(--image-ratio, 1))); height: auto; aspect-ratio: var(--image-ratio, auto); object-fit: contain; }
-.image-viewer button { position: absolute; top: 8px; right: 12px; min-width: 44px; min-height: 40px; border: 0; background: transparent; color: var(--text); font-size: 1.4rem; }
+.image-viewer button { position: absolute; top: 8px; right: 12px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--text); font-size: 1.4rem; }
 .image-viewer p { margin-top: 12px; font-size: .85rem; max-width: 70ch; }
 @media (max-width: 900px) {
   .atlas-chapter { display: block; padding-block: 36px 15px; }
@@ -569,7 +572,7 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .featured-grid h3 { font-size: 1.25rem; line-height: 1.25; }
 .featured-grid .card-meta { display: block; }
 .featured-grid .card-meta span { display: block; text-align: left; }
-.featured-carousel .carousel-controls, .related-carousel .carousel-controls { position: absolute; inset: 0 -56px; display: flex; justify-content: space-between; align-items: center; margin: 0; pointer-events: none; }
+.featured-carousel .carousel-controls, .related-carousel .carousel-controls { position: absolute; z-index: 1; inset: 0 -56px; display: flex; justify-content: space-between; align-items: center; margin: 0; pointer-events: none; }
 .featured-carousel .carousel-controls button, .related-carousel .carousel-controls button { pointer-events: auto; }
 @media (max-width: 1370px) {
   .featured-carousel { margin-top: 54px; }
@@ -680,7 +683,9 @@ html[data-hero-entrance] .workflow-decision { animation-delay: 2140ms; }
   .workflow-signal { top: 27px; left: calc(50% - 15px); width: 30px; height: 30px; border-width: 1.5px; }
   .hero-workflow figcaption { margin-top: 20px; font-size: .8125rem; text-align: left; }
 }
-.enhanced-carousel .project-grid { overflow: clip; overflow-clip-margin: 32px; }
+.enhanced-carousel .project-grid { overflow: clip; overflow-clip-margin: 40px; }
+@media (max-width: 1100px) { .enhanced-carousel .project-grid { overflow-clip-margin: 32px; } }
+@media (max-width: 600px) { .enhanced-carousel .project-grid { overflow-clip-margin: 20px; } }
 .enhanced-carousel .project-grid.is-swiping { overflow-clip-margin: 8px; }
 .project-grid.is-swiping .project-card-link { transform: none; box-shadow: none; transition: none !important; }
 #site-nav > a, .text-link, .social-links a, .discipline-links a { position: relative; }
@@ -707,7 +712,7 @@ html[data-theme-changing] body *, html[data-theme-changing] body *::before, html
 @media (prefers-reduced-motion: reduce) {
   a, button, .project-card, .project-card h3, .workflow-label { transition: color 100ms, border-color 100ms, background-color 100ms !important; }
   a::after { transition: none !important; }
-  .project-card-link { transition: transform var(--motion-card-reduced) var(--ease-ui), box-shadow var(--motion-card-reduced) var(--ease-ui), border-color 100ms !important; }
+  .project-card-link { transition: transform var(--motion-card-reduced) var(--ease-card), box-shadow var(--motion-card-reduced) var(--ease-card), border-color 100ms !important; }
 }
 /* A shorter, smaller pointer cue; keyboard and touch remain still. */
 @media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
