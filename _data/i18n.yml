@@ -13,6 +13,8 @@ en:
   previous_project: Previous project
   next_project: Next project
   carousel_position: Projects
+  select_project: Choose a project
+  swipe_hint: Swipe to explore
   home: /
   projects_path: /projects/
   skip: Skip to content
@@ -142,6 +144,8 @@ pl:
   previous_project: Poprzedni projekt
   next_project: Następny projekt
   carousel_position: Projekty
+  select_project: Wybierz projekt
+  swipe_hint: Przesuń, aby zobaczyć projekty
   home: /pl/
   projects_path: /pl/projects/
   skip: Przejdź do treści

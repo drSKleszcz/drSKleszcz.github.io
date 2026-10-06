@@ -157,6 +157,37 @@
     let index = 0;
     const grid = carousel.querySelector('.project-grid');
     const controls = carousel.querySelector('.carousel-controls');
+    const pagination = carousel.querySelector('[data-carousel-pagination]');
+    let focusedControl = null;
+    if (pagination) {
+      // CSS may hide a focused control before the breakpoint callback runs.
+      // Remember it so focus can move to the newly visible control set.
+      document.addEventListener('focusin', event => {
+        focusedControl = pagination.contains(event.target) || controls.contains(event.target) ? event.target : null;
+      });
+      document.addEventListener('pointerdown', event => {
+        if (!pagination.contains(event.target) && !controls.contains(event.target)) focusedControl = null;
+      }, {passive: true});
+      window.addEventListener('blur', () => { focusedControl = null; });
+    }
+    const dotButtons = pagination ? Array.from({length: Math.min(5, cards.length)}, () => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'carousel-dot';
+      pagination.querySelector('[data-carousel-dots]').append(button);
+      return button;
+    }) : [];
+    const updatePagination = () => {
+      const start = Math.max(0, Math.min(index - 2, cards.length - dotButtons.length));
+      dotButtons.forEach((button, offset) => {
+        const slide = start + offset;
+        button.dataset.slideIndex = slide;
+        button.setAttribute('aria-label', `${carousel.dataset.selectProject}: ${cards[slide].querySelector('h3').textContent}`);
+        if (slide === index) button.setAttribute('aria-current', 'true');
+        else button.removeAttribute('aria-current');
+        button.toggleAttribute('data-more', (offset === 0 && start > 0) || (offset === dotButtons.length - 1 && start + dotButtons.length < cards.length));
+      });
+    };
     let gesture = null;
     let suppressTouchClickUntil = 0;
     let measuredSize = '';
@@ -184,7 +215,12 @@
     };
     const render = () => {
       const count = Math.min(cards.length, mobile.matches ? 1 : tablet.matches ? 2 : 4);
-      controls.hidden = cards.length <= count;
+      const focusTarget = focusedControl || document.activeElement;
+      const focusWasInDots = pagination && pagination.contains(focusTarget);
+      const focusWasInArrows = controls.contains(focusTarget);
+      const showPagination = pagination && mobile.matches && cards.length > 1;
+      controls.hidden = cards.length <= count || showPagination;
+      if (pagination) pagination.hidden = !showPagination;
       carousel.classList.toggle('has-carousel-controls', !controls.hidden);
       cards.forEach((card, i) => {
         const offset = (i - index + cards.length) % cards.length;
@@ -194,6 +230,9 @@
       for (let step = 0; step < cards.length; step++) grid.append(cards[(index + step) % cards.length]);
       measureHeight();
       positionControls();
+      updatePagination();
+      if (showPagination && focusWasInArrows) dotButtons.find(button => Number(button.dataset.slideIndex) === index).focus({preventScroll: true});
+      else if (!showPagination && focusWasInDots && !controls.hidden) controls.querySelector('[data-next]').focus({preventScroll: true});
       carousel.querySelector('[data-position]').textContent = `${carousel.dataset.positionLabel}: ${index + 1}${count > 1 ? '–' + ((index + count - 1) % cards.length + 1) : ''} / ${cards.length}`;
     };
     carousel.classList.add('enhanced-carousel');
@@ -219,6 +258,11 @@
     };
     carousel.querySelector('[data-prev]').addEventListener('click', event => move(-1, event));
     carousel.querySelector('[data-next]').addEventListener('click', event => move(1, event));
+    dotButtons.forEach(button => button.addEventListener('click', event => {
+      const target = Number(button.dataset.slideIndex);
+      if (target !== index) move(target - index, event);
+      dotButtons.find(dot => Number(dot.dataset.slideIndex) === index).focus({preventScroll: true});
+    }));
     const clearSwipeCard = card => {
       if (motion) motion.stop(card);
       card.classList.remove('swipe-adjacent');

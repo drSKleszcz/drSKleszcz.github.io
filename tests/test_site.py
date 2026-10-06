@@ -176,7 +176,7 @@ class BrowserTests(unittest.TestCase):
 
     def test_phone_arrows_reserve_space_between_image_and_copy(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
-        for path in ['/#projects', '/pl/#projects', '/projects/microclimate-control/', '/pl/projects/microclimate-control/']:
+        for path in ['/#projects', '/pl/#projects']:
             self.page.goto(self.base + path)
             carousel = self.page.locator('[data-carousel]')
             photo = carousel.locator('.project-card:visible .card-image').first.bounding_box()
@@ -194,10 +194,94 @@ class BrowserTests(unittest.TestCase):
     def test_phone_arrow_space_is_reserved_before_enhancement(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
         self.page.route('**/assets/site.js*', lambda route: route.abort())
-        for path in ['/#projects', '/projects/microclimate-control/']:
+        for path in ['/#projects']:
             self.page.goto(self.base + path)
             slot = self.page.locator('[data-carousel] .carousel-image-slot').first
             self.assertEqual(slot.evaluate('el => el.getBoundingClientRect().height'), 68)
+
+    def test_related_phone_pagination_replaces_arrows_below_card(self):
+        self.page.emulate_media(reduced_motion='reduce')
+        for prefix, hint in [('', 'Swipe to explore'), ('/pl', 'Przesuń, aby zobaczyć projekty')]:
+            for width in [320, 390, 600]:
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(self.base + prefix + '/projects/microclimate-control/')
+                carousel = self.page.locator('[data-carousel]')
+                pagination = carousel.locator('[data-carousel-pagination]')
+                self.assertEqual(pagination.count(), 1)
+                expect(pagination).to_be_visible()
+                expect(carousel.locator('.carousel-controls')).to_be_hidden()
+                expect(pagination.locator('.swipe-hint')).to_have_text(hint)
+                dots = pagination.locator('button')
+                expect(dots).to_have_count(5)
+                self.assertTrue(dots.evaluate_all('els => els.every(el => !el.closest("a") && el.getBoundingClientRect().width >= 44 && el.getBoundingClientRect().height >= 44)'))
+                expect(pagination.locator('[aria-current=true]')).to_have_attribute('data-slide-index', '0')
+                grid = carousel.locator('.project-grid')
+                height = grid.bounding_box()['height']
+                self.assertAlmostEqual(pagination.bounding_box()['y'] - grid.bounding_box()['y'] - height, 12, delta=1)
+                self.assertEqual(carousel.locator('.project-card:visible .carousel-image-slot').evaluate('el => el.getBoundingClientRect().height'), 0)
+                first_url = carousel.locator('.project-card:visible a').get_attribute('href')
+                dots.nth(1).click()
+                self.assertNotEqual(carousel.locator('.project-card:visible a').get_attribute('href'), first_url)
+                expect(pagination.locator('[aria-current=true]')).to_have_attribute('data-slide-index', '1')
+                expect(carousel.locator('[data-position]')).to_contain_text('2 / 17')
+                self.assertFalse(carousel.locator('[data-position]').evaluate('el => !!el.closest("[hidden]")'))
+                self.assertAlmostEqual(grid.bounding_box()['height'], height, delta=1)
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            for width in [601, 1440]:
+                self.page.set_viewport_size({'width': width, 'height': 1000})
+                expect(pagination).to_be_hidden()
+                expect(carousel.locator('.carousel-controls')).to_be_visible()
+
+    def test_related_pagination_tracks_swipes_and_wraps(self):
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        for prefix in ['', '/pl']:
+            self.page.goto(self.base + prefix + '/projects/microclimate-control/?category=engineering')
+            carousel = self.page.locator('[data-carousel]')
+            total = carousel.locator('.project-card[data-category=engineering]').count()
+            active = carousel.locator('[data-carousel-pagination] [aria-current=true]')
+            self.assertEqual(active.count(), 1)
+            first_url = carousel.locator('.project-card:visible a').get_attribute('href')
+            self.touch_drag(-80)
+            expect(active).to_have_attribute('data-slide-index', '1')
+            self.touch_drag(30)
+            expect(active).to_have_attribute('data-slide-index', '1')
+            self.touch_drag(80)
+            expect(active).to_have_attribute('data-slide-index', '0')
+            self.touch_drag(80)
+            expect(active).to_have_attribute('data-slide-index', str(total - 1))
+            self.touch_drag(-80)
+            expect(active).to_have_attribute('data-slide-index', '0')
+            self.assertEqual(carousel.locator('.project-card:visible a').get_attribute('href'), first_url)
+            self.assertEqual(carousel.locator('.project-card:visible').get_attribute('data-category'), 'engineering')
+
+    def test_related_pagination_preserves_keyboard_focus_and_single_project_state(self):
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        self.page.goto(self.base + '/projects/microclimate-control/')
+        pagination = self.page.locator('[data-carousel-pagination]')
+        self.assertEqual(pagination.count(), 1)
+        pagination.locator('button').last.focus()
+        self.page.keyboard.press('Enter')
+        active = pagination.locator('[aria-current=true]')
+        expect(active).to_have_attribute('data-slide-index', '4')
+        expect(active).to_be_focused()
+        self.assertEqual(self.page.locator('.project-card:visible').evaluate('el => el.getAnimations().length'), 0)
+        self.page.set_viewport_size({'width': 601, 'height': 844})
+        expect(self.page.locator('[data-next]')).to_be_focused()
+        self.page.set_viewport_size({'width': 390, 'height': 844})
+        expect(active).to_be_focused()
+        # Exercise the one-recommendation edge case without changing project data.
+        def single_card(route):
+            response = route.fetch()
+            soup = BeautifulSoup(response.text(), 'html.parser')
+            for card in soup.select('[data-carousel] .project-card')[1:]:
+                card.decompose()
+            route.fulfill(response=response, body=str(soup))
+        self.page.route('**/projects/microclimate-control/', single_card)
+        self.page.goto(self.base + '/projects/microclimate-control/')
+        expect(self.page.locator('[data-carousel] .project-card:visible')).to_have_count(1)
+        expect(self.page.locator('[data-carousel-pagination]')).to_be_hidden()
+        expect(self.page.locator('.carousel-controls')).to_be_hidden()
 
     def test_stacked_portrait_is_centered_without_resizing(self):
         for prefix in ['', '/pl']:
@@ -652,7 +736,7 @@ class BrowserTests(unittest.TestCase):
     def test_compact_hero_replays_complete_stages_on_every_homepage_load(self):
         self.page.goto(self.base + '/')
         stages = self.page.locator('.workflow-stage')
-        delays = [1650, 2010, 2370, 2730, 3090]
+        delays = [1100, 1360, 1620, 1880, 2140]
         self.assertEqual(stages.evaluate_all('els => els.map(el => Math.round(el.getAnimations().find(a => a.animationName === "portfolio-stage-fade")?.effect.getTiming().delay))'), delays)
         self.page.reload()
         self.assertEqual(stages.evaluate_all('els => els.map(el => Math.round(el.getAnimations().find(a => a.animationName === "portfolio-stage-fade")?.effect.getTiming().delay))'), delays)
@@ -676,19 +760,21 @@ class BrowserTests(unittest.TestCase):
                     window.stageSamples=[...document.querySelectorAll('.workflow-stage')].map(el => el.getAnimations()[0]);
                     [...headlineSamples,...stageSamples].forEach(a => a.pause());
                 }''')
-                self.assertEqual([a['duration'] for a in lines.evaluate_all('els => els.map(el => el.getAnimations()[0].effect.getTiming())')], [720,720])
-                self.assertEqual([a['delay'] for a in lines.evaluate_all('els => els.map(el => el.getAnimations()[0].effect.getTiming())')], [0,780])
-                for time, opacity in [(0,[0,0]), (720,[1,0]), (780,[1,0]), (1500,[1,1])]:
+                self.assertEqual([a['duration'] for a in lines.evaluate_all('els => els.map(el => el.getAnimations()[0].effect.getTiming())')], [480,480])
+                self.assertEqual([a['delay'] for a in lines.evaluate_all('els => els.map(el => el.getAnimations()[0].effect.getTiming())')], [0,540])
+                self.assertEqual(stages.evaluate_all('els => els.map(el => el.getAnimations()[0].effect.getTiming().duration)'), [240]*5)
+                self.assertEqual(page.locator('.workflow-connection').evaluate('el => {const t=el.getAnimations()[0].effect.getTiming();return [t.delay,t.duration]}'), [1100,1280])
+                for time, opacity in [(0,[0,0]), (480,[1,0]), (540,[1,0]), (1020,[1,1])]:
                     page.evaluate('time => headlineSamples.forEach(a => a.currentTime=time)', time)
                     self.assertEqual(lines.evaluate_all('els => els.map(el => parseFloat(getComputedStyle(el).opacity))'), opacity)
                     self.assertEqual(page.locator('h1').bounding_box()['height'], initial_height)
-                for time, index in [(360,0),(1140,1)]:
+                for time, index in [(240,0),(780,1)]:
                     page.evaluate('time => headlineSamples.forEach(a => a.currentTime=time)', time)
                     faded = float(lines.nth(index).evaluate('el => getComputedStyle(el).opacity'))
                     self.assertGreater(faded, .25)
                     self.assertLess(faded, .75)
                     self.assertEqual(lines.nth(index).evaluate('el => getComputedStyle(el).clipPath'), 'none')
-                for time, visible in [(0,0), (1970,1), (2330,2), (2690,3), (3050,4), (3410,5)]:
+                for time, visible in [(0,0), (1340,1), (1600,2), (1860,3), (2120,4), (2380,5)]:
                     page.evaluate('time => stageSamples.forEach(a => a.currentTime=time)', time)
                     self.assertEqual(stages.evaluate_all('els => els.filter(el => parseFloat(getComputedStyle(el).opacity) === 1).length'), visible)
                 page.evaluate('[...headlineSamples,...stageSamples].forEach(a => a.finish())')
@@ -697,7 +783,7 @@ class BrowserTests(unittest.TestCase):
         self.page.set_viewport_size({'width':390, 'height':844})
         self.page.goto(self.base + '/pl/')
         self.page.locator('h1').evaluate('el => { window.inkSamples=el.getAnimations({subtree:true}); inkSamples.forEach(a => a.pause()); }')
-        for index,time in enumerate([360,1140]):
+        for index,time in enumerate([240,780]):
             self.page.evaluate('time => inkSamples.forEach(a => a.currentTime=time)', time)
             faded = float(self.page.locator('[data-hero-line]').nth(index).evaluate('el => getComputedStyle(el).opacity'))
             self.assertGreater(faded, .25)
@@ -759,7 +845,7 @@ class BrowserTests(unittest.TestCase):
         self.assertEqual(self.page.locator('[data-hero-line]').evaluate_all('els => els.map(el => el.getAnimations()[0]?.animationName)'), ['portfolio-sentence-fade']*2)
         self.assertEqual(self.page.locator('.workflow-stage').evaluate_all('els => els.map(el => el.getAnimations()[0]?.animationName)'), ['portfolio-stage-fade']*5)
         first = self.page.locator('[data-hero-line]').first
-        first.evaluate('el => {window.entranceSample=el.getAnimations()[0]; entranceSample.pause(); entranceSample.currentTime=360}')
+        first.evaluate('el => {window.entranceSample=el.getAnimations()[0]; entranceSample.pause(); entranceSample.currentTime=240}')
         faded = float(first.evaluate('el => getComputedStyle(el).opacity'))
         self.assertGreater(faded, .25)
         self.assertLess(faded, .75)

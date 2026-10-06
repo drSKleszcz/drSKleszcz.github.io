@@ -22,8 +22,8 @@
   --motion-change: 220ms;
   --motion-overlay: 240ms;
   --motion-exit: 100ms;
-  --motion-hero: 720ms;
-  --motion-hero-stage: 320ms;
+  --motion-hero: 480ms;
+  --motion-hero-stage: 240ms;
   --duration-ui: var(--motion-feedback);
   font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
   font-synthesis: none;
@@ -54,6 +54,7 @@ p { color: var(--muted); }
 .container { width: min(var(--max), calc(100% - 96px)); margin-inline: auto; }
 .section { padding-block: 100px; }
 .eyebrow { color: var(--accent); font: 500 var(--type-label)/1.6 Consolas, "Courier New", monospace; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 20px; }
+.home-page .eyebrow { font-size: clamp(.875rem, 1vw, 1rem); font-weight: 700; }
 .text-link { display: inline-flex; align-items: center; gap: 18px; padding-block: 10px; font-size: .92rem; font-weight: 500; border-bottom: 1px solid var(--line); transition: color var(--motion-feedback), border-color var(--motion-feedback); }
 .text-link:hover { color: var(--accent); border-color: var(--accent); }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 28px; padding: 15px 23px; min-height: 52px; max-width: 100%; background: var(--accent); color: var(--button-text); border: 1px solid var(--accent); font-weight: 600; font-size: .9rem; line-height: 1.4; transition: background var(--duration-ui), transform var(--duration-ui) var(--ease-ui); }
@@ -570,14 +571,26 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 @media (max-width: 1000px) { .featured-carousel .featured-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .featured-carousel .featured-grid { grid-template-columns: 1fr; } }
 .carousel-image-slot { display: none; }
+.carousel-pagination { display: none; }
 @media (max-width: 600px) {
   .featured-carousel { margin-top: 0; }
   .enhanced-carousel .project-grid { position: relative; touch-action: pan-y pinch-zoom; }
-  html[data-js] [data-carousel]:not(.enhanced-carousel) .carousel-image-slot,
+  html[data-js] [data-home-carousel]:not(.enhanced-carousel) .carousel-image-slot,
   .enhanced-carousel.has-carousel-controls .carousel-image-slot { display: block; height: 68px; flex-shrink: 0; }
   .featured-carousel .carousel-controls, .related-carousel .carousel-controls { position: absolute; z-index: 1; inset: var(--carousel-controls-top, 0px) 12px auto; height: 44px; margin: 0; }
   .project-card.swipe-adjacent { position: absolute; inset: 0; width: 100%; height: 100%; }
   .project-grid.is-swiping { user-select: none; }
+  .carousel-pagination { min-height: 68px; margin-top: 12px; text-align: center; }
+  .carousel-pagination:not([hidden]) { display: block; }
+  html[data-js] .related:not(.enhanced-carousel) .carousel-pagination[hidden] { display: block !important; visibility: hidden; }
+  .carousel-dots { display: flex; justify-content: center; }
+  .carousel-dot { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; }
+  .carousel-dot::after { content: ''; width: 6px; height: 6px; border-radius: 999px; background: var(--muted); transition: background var(--motion-feedback); }
+  .carousel-dot[data-more]::after { width: 4px; height: 4px; }
+  .carousel-dot[aria-current=true]::after { width: 20px; height: 6px; background: var(--accent); }
+  .carousel-dot:focus-visible { outline-offset: -3px; }
+  .carousel-dot:active::after { opacity: .7; }
+  .carousel-pagination .swipe-hint { margin-top: 4px; font-size: .8rem; line-height: 1.5; }
 }
 
 /* Quiet feedback: pointer presses respond, keyboard navigation stays immediate. */
@@ -598,7 +611,7 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .hero h1 > .hero-line:first-child { margin-top: 0; color: var(--text); }
 html[data-hero-entrance] [data-hero-line] { animation: portfolio-sentence-fade var(--motion-hero) var(--ease-trace) backwards; }
 html[data-hero-entrance] .workflow-stage { animation: portfolio-stage-fade var(--motion-hero-stage) var(--ease-trace) backwards; }
-html[data-hero-entrance] .workflow-connection { animation: portfolio-connection-fade 1760ms var(--ease-trace) 1650ms backwards; }
+html[data-hero-entrance] .workflow-connection { animation: portfolio-connection-fade 1280ms var(--ease-trace) 1100ms backwards; }
 @media (prefers-reduced-motion: no-preference) {
   .hero-workflow[data-idle-pulse] .workflow-signal { animation: workflow-signal 7s linear 600ms infinite; }
   .hero-workflow[data-idle-pulse] .workflow-modeling .workflow-signal { animation-delay: 820ms; }
@@ -606,12 +619,12 @@ html[data-hero-entrance] .workflow-connection { animation: portfolio-connection-
   .hero-workflow[data-idle-pulse] .workflow-automation .workflow-signal { animation-delay: 1260ms; }
   .hero-workflow[data-idle-pulse] .workflow-decision .workflow-signal { animation-delay: 1480ms; }
 }
-html[data-hero-entrance] [data-hero-line]:nth-child(2) { animation-delay: 780ms; }
-html[data-hero-entrance] .workflow-system { animation-delay: 1650ms; }
-html[data-hero-entrance] .workflow-modeling { animation-delay: 2010ms; }
-html[data-hero-entrance] .workflow-analysis { animation-delay: 2370ms; }
-html[data-hero-entrance] .workflow-automation { animation-delay: 2730ms; }
-html[data-hero-entrance] .workflow-decision { animation-delay: 3090ms; }
+html[data-hero-entrance] [data-hero-line]:nth-child(2) { animation-delay: 540ms; }
+html[data-hero-entrance] .workflow-system { animation-delay: 1100ms; }
+html[data-hero-entrance] .workflow-modeling { animation-delay: 1360ms; }
+html[data-hero-entrance] .workflow-analysis { animation-delay: 1620ms; }
+html[data-hero-entrance] .workflow-automation { animation-delay: 1880ms; }
+html[data-hero-entrance] .workflow-decision { animation-delay: 2140ms; }
 @keyframes portfolio-sentence-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes portfolio-stage-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes portfolio-connection-fade { from { opacity: 0; } to { opacity: 1; } }
