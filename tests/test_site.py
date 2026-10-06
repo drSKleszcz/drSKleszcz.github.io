@@ -81,6 +81,38 @@ class QuietHandler(http.server.SimpleHTTPRequestHandler):
             pass
 
 class BrowserTests(unittest.TestCase):
+    def test_rounded_project_links_and_figures_keep_navigation_and_previews(self):
+        self.page.emulate_media(reduced_motion='reduce')
+        for prefix in ['', '/pl']:
+            for width in [390, 1440]:
+                self.page.set_viewport_size({'width': width, 'height': 960})
+                self.page.goto(self.base + prefix + '/#projects')
+                index_link = self.page.locator('#projects .section-heading > a')
+                self.assertEqual(index_link.evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+                self.assertGreaterEqual(index_link.bounding_box()['height'], 44)
+                index_link.click()
+                expect(self.page).to_have_url(self.base + prefix + '/projects/')
+                self.page.goto(self.base + prefix + '/projects/energy-techno-economics/')
+                for link in self.page.locator('.back-link, .related .section-heading > a').all():
+                    self.assertEqual(link.evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+                    self.assertGreaterEqual(link.bounding_box()['height'], 44)
+                thumbnail = self.page.locator('.image-thumbnail').first
+                self.assertEqual(thumbnail.evaluate('el => getComputedStyle(el).borderRadius'), '20px' if width <= 600 else '24px')
+                self.assertEqual(thumbnail.locator('img').evaluate('el => getComputedStyle(el).objectFit'), 'contain')
+                self.assertLessEqual(thumbnail.bounding_box()['width'], 220)
+                self.assertLessEqual(thumbnail.bounding_box()['height'], 165)
+                self.page.keyboard.press('Tab')
+                thumbnail.focus()
+                self.assertEqual(thumbnail.evaluate('el => getComputedStyle(el).outlineStyle'), 'solid')
+                self.page.keyboard.press('Enter')
+                expect(self.page.locator('dialog')).to_be_visible()
+                self.page.keyboard.press('Escape')
+                expect(thumbnail).to_be_focused()
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+                self.page.goto(self.base + prefix + '/404.html')
+                for link in self.page.locator('.hero-actions a').all():
+                    self.assertEqual(link.evaluate('el => getComputedStyle(el).borderRadius'), '999px')
+
     def test_rounded_buttons_preserve_targets_and_form_fields(self):
         for prefix in ['', '/pl']:
             for width in [390, 768, 1440]:
@@ -219,30 +251,54 @@ class BrowserTests(unittest.TestCase):
                 self.page.locator('.brand').focus()
                 expect(toggle).to_have_attribute('aria-expanded', 'false')
 
-    def test_phone_arrows_reserve_space_between_image_and_copy(self):
-        self.page.set_viewport_size({'width': 390, 'height': 844})
-        for path in ['/#projects', '/pl/#projects']:
-            self.page.goto(self.base + path)
-            carousel = self.page.locator('[data-carousel]')
-            photo = carousel.locator('.project-card:visible .card-image').first.bounding_box()
-            controls = carousel.locator('.carousel-controls').bounding_box()
-            copy = carousel.locator('.project-card:visible .card-body').first.bounding_box()
-            self.assertAlmostEqual(controls['y'] - photo['y'] - photo['height'], 12, delta=1)
-            self.assertGreaterEqual(copy['y'] - controls['y'] - controls['height'], 11)
-            self.assertTrue(carousel.locator('.carousel-controls button').evaluate_all('buttons => buttons.every(b => !b.closest("a") && b.getBoundingClientRect().height >= 44)'))
-            first_url = carousel.locator('.project-card:visible a').first.get_attribute('href')
-            carousel.locator('[data-next]').click()
-            self.assertNotEqual(carousel.locator('.project-card:visible a').first.get_attribute('href'), first_url)
-            carousel.locator('[data-prev]').click()
-            self.assertEqual(carousel.locator('.project-card:visible a').first.get_attribute('href'), first_url)
+    def test_home_phone_pagination_replaces_arrows_below_card(self):
+        self.page.emulate_media(reduced_motion='reduce')
+        for prefix, hint in [('', 'Swipe to explore'), ('/pl', 'Przesuń, aby zobaczyć projekty')]:
+            for width in [320, 390, 600]:
+                self.page.set_viewport_size({'width': width, 'height': 844})
+                self.page.goto(self.base + prefix + '/#projects')
+                self.page.reload()
+                carousel = self.page.locator('[data-home-carousel]')
+                pagination = carousel.locator('[data-carousel-pagination]')
+                expect(pagination).to_be_visible()
+                expect(carousel.locator('.carousel-controls')).to_be_hidden()
+                expect(pagination.locator('.swipe-hint')).to_have_text(hint)
+                dots = pagination.locator('button')
+                expect(dots).to_have_count(5)
+                self.assertTrue(dots.evaluate_all('els => els.every(el => !el.closest("a") && el.getBoundingClientRect().width >= 44 && el.getBoundingClientRect().height >= 44)'))
+                grid = carousel.locator('.project-grid')
+                height = grid.bounding_box()['height']
+                self.assertAlmostEqual(pagination.bounding_box()['y'] - grid.bounding_box()['y'] - height, 12, delta=1)
+                self.assertEqual(carousel.locator('.project-card:visible .carousel-image-slot').evaluate('el => el.getBoundingClientRect().height'), 0)
+                first_url = carousel.locator('.project-card:visible a').get_attribute('href')
+                dots.nth(1).click()
+                self.assertNotEqual(carousel.locator('.project-card:visible a').get_attribute('href'), first_url)
+                expect(pagination.locator('[aria-current=true]')).to_have_attribute('data-slide-index', '1')
+                expect(carousel.locator('[data-position]')).to_contain_text('2 / 18')
+                self.assertFalse(carousel.locator('[data-position]').evaluate('el => !!el.closest("[hidden]")'))
+                self.assertAlmostEqual(grid.bounding_box()['height'], height, delta=1)
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            self.page.set_viewport_size({'width': 601, 'height': 844})
+            expect(pagination).to_be_hidden()
+            expect(carousel.locator('[data-next]')).to_be_focused()
+            self.page.set_viewport_size({'width': 390, 'height': 844})
+            expect(pagination.locator('[aria-current=true]')).to_be_focused()
+            self.page.keyboard.press('Enter')
+            self.assertEqual(grid.evaluate('el => el.getAnimations({subtree:true}).length'), 0)
+            self.page.set_viewport_size({'width': 1440, 'height': 1000})
+            expect(pagination).to_be_hidden()
+            expect(carousel.locator('.carousel-controls')).to_be_visible()
 
-    def test_phone_arrow_space_is_reserved_before_enhancement(self):
+    def test_phone_pagination_space_is_reserved_before_enhancement(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
         self.page.route('**/assets/site.js*', lambda route: route.abort())
-        for path in ['/#projects']:
+        for path in ['/#projects', '/projects/microclimate-control/']:
             self.page.goto(self.base + path)
             slot = self.page.locator('[data-carousel] .carousel-image-slot').first
-            self.assertEqual(slot.evaluate('el => el.getBoundingClientRect().height'), 68)
+            self.assertEqual(slot.evaluate('el => el.getBoundingClientRect().height'), 0)
+            pagination = self.page.locator('[data-carousel-pagination]')
+            self.assertGreaterEqual(pagination.evaluate('el => el.getBoundingClientRect().height'), 68)
+            expect(pagination).to_be_hidden()
 
     def test_related_phone_pagination_replaces_arrows_below_card(self):
         self.page.emulate_media(reduced_motion='reduce')
@@ -437,7 +493,7 @@ class BrowserTests(unittest.TestCase):
         for stem in ['mtt-', 'tea-', 'orficle_2-']:
             self.assertFalse(any('/assets/images/' + stem in url for url in requested), requested)
         self.page.unroute('**/assets/site.js*', delay_script)
-        self.page.locator('[data-home-carousel] [data-next]').click()
+        self.page.locator('[data-home-carousel] [data-carousel-pagination] button').nth(1).click()
         expect(self.page.locator('.featured-grid .project-card:visible').first.locator('img')).to_have_js_property('complete', True)
 
     def test_portrait_requests_a_variant_matching_its_display_size(self):
@@ -524,7 +580,10 @@ class BrowserTests(unittest.TestCase):
             heights = []
             for _ in range(18):
                 heights.append(grid.bounding_box()['height'])
-                self.page.locator('[data-home-carousel] [data-next]').click()
+                if width <= 600:
+                    self.touch_drag(-80)
+                else:
+                    self.page.locator('[data-home-carousel] [data-next]').click()
             self.assertLessEqual(max(heights) - min(heights), 1, str(heights))
 
     def test_enlarged_polish_text_does_not_overflow(self):
