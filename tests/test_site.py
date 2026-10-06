@@ -351,6 +351,8 @@ class BrowserTests(unittest.TestCase):
             original = first.locator('a').get_attribute('href')
             session = self.touch_drag(-80, end=False)
             self.assertLess(first.bounding_box()['x'], initial - 30)
+            self.assertEqual(first.locator('.project-card-link').evaluate('el => getComputedStyle(el).transform'), 'none')
+            self.assertEqual(grid.evaluate('el => getComputedStyle(el).overflowClipMargin'), '8px')
             if interrupt == 'keyboard':
                 self.page.keyboard.press('Tab')
             elif interrupt == 'resize':
@@ -361,6 +363,7 @@ class BrowserTests(unittest.TestCase):
             session.detach()
             self.assertEqual(self.page.locator('.project-card:visible a').first.get_attribute('href'), original)
             self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.inert && !c.hasAttribute("aria-hidden") && !c.style.transform)'))
+            self.assertEqual(grid.evaluate('el => getComputedStyle(el).overflowClipMargin'), '32px')
             self.page.set_viewport_size({'width': 390, 'height': 844})
 
     def test_animated_swipe_settles_without_retaining_finished_effects(self):
@@ -569,15 +572,15 @@ class BrowserTests(unittest.TestCase):
 
     def test_hover_resumes_after_keyboard_use_and_real_mouse_movement(self):
         self.page.goto(self.base + '/#projects')
-        photo = self.page.locator('.featured-grid .media-photo img').first
-        photo.hover()
+        card = self.page.locator('.featured-grid .project-card-link').first
+        card.hover()
         self.page.keyboard.press('Shift')
-        self.assertEqual(photo.evaluate('el => getComputedStyle(el).transform'), 'none')
-        box = photo.bounding_box()
+        self.assertEqual(card.evaluate('el => getComputedStyle(el).transform'), 'none')
+        box = card.bounding_box()
         self.page.mouse.move(box['x'] + box['width'] / 2 + 5, box['y'] + box['height'] / 2)
         expect(self.page.locator('html')).to_have_attribute('data-input', 'pointer')
         self.page.wait_for_timeout(200)
-        self.assertNotEqual(photo.evaluate('el => getComputedStyle(el).transform'), 'none')
+        self.assertNotEqual(card.evaluate('el => getComputedStyle(el).transform'), 'none')
 
     def test_closing_mobile_menu_cancels_its_entrance(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
@@ -917,19 +920,66 @@ class BrowserTests(unittest.TestCase):
         self.assertFalse(self.page.locator('html').evaluate('el => el.hasAttribute("data-hero-entrance")'))
         self.assertEqual(self.page.locator('.workflow-stage').evaluate_all('els => els.map(el => getComputedStyle(el).clipPath)'), ['none']*5)
 
-    def test_photo_hover_moves_but_diagrams_remain_complete(self):
+    def test_whole_card_hover_keeps_images_still_and_respects_reduced_motion(self):
         self.page.emulate_media(reduced_motion='no-preference')
         self.page.goto(self.base + '/#projects')
-        photo = self.page.locator('.featured-grid .media-photo img').first
-        photo.hover()
-        self.page.wait_for_timeout(300)
-        self.assertNotEqual(photo.evaluate('el => getComputedStyle(el).transform'), 'none')
-        diagram = self.page.locator('.featured-grid .media-technical img').first
-        diagram.hover()
-        self.assertEqual(diagram.evaluate('el => getComputedStyle(el).transform'), 'none')
-        self.page.emulate_media(reduced_motion='reduce')
-        photo.hover()
-        self.assertEqual(photo.evaluate('el => getComputedStyle(el).transform'), 'none')
+        for media in ['media-photo', 'media-technical']:
+            card = self.page.locator(f'.featured-grid .project-card-link:has(.{media})').first
+            image = card.locator('img')
+            card.hover()
+            self.page.wait_for_timeout(200)
+            matrix = card.evaluate('el => { const m = new DOMMatrix(getComputedStyle(el).transform); return [m.a, m.d, m.f]; }')
+            self.assertAlmostEqual(matrix[0], 1.02, delta=.001)
+            self.assertAlmostEqual(matrix[1], 1.02, delta=.001)
+            self.assertAlmostEqual(matrix[2], -8, delta=.1)
+            self.assertEqual(image.evaluate('el => getComputedStyle(el).transform'), 'none')
+            self.page.mouse.move(0, 0)
+            self.page.wait_for_timeout(250)
+            self.page.emulate_media(reduced_motion='reduce')
+            card.hover()
+            self.page.wait_for_timeout(50)
+            halfway = card.evaluate('el => new DOMMatrix(getComputedStyle(el).transform).f')
+            self.assertGreater(halfway, -6)
+            self.assertLess(halfway, 0)
+            self.page.wait_for_timeout(180)
+            reduced = card.evaluate('''el => {
+                const style = getComputedStyle(el), matrix = new DOMMatrix(style.transform);
+                return {scale: matrix.a, lift: matrix.f, duration: style.transitionDuration,
+                        shadow: style.boxShadow, animations: el.getAnimations().length};
+            }''')
+            self.assertEqual(reduced['scale'], 1)
+            self.assertEqual(reduced['lift'], -6)
+            self.assertEqual(reduced['duration'].split(',')[0], '0.16s')
+            self.assertNotEqual(reduced['shadow'], 'none')
+            self.assertEqual(reduced['animations'], 0)
+            self.page.emulate_media(reduced_motion='no-preference')
+
+    def test_rounded_carousel_surfaces_do_not_change_layout_or_swipe_layer(self):
+        for route, selector in [('/#projects', '[data-home-carousel]'), ('/projects/microclimate-control/#related-heading', '.related[data-carousel]')]:
+            self.page.goto(self.base + route)
+            carousel = self.page.locator(selector)
+            grid = carousel.locator('.project-grid')
+            outer = grid.locator('.project-card:visible').first
+            surface = outer.locator('.project-card-link')
+            self.page.mouse.move(0, 0)
+            before = outer.bounding_box()
+            height = grid.bounding_box()['height']
+            surface.hover()
+            self.page.wait_for_timeout(200)
+            self.assertEqual(surface.evaluate('el => getComputedStyle(el).borderTopLeftRadius'), '24px')
+            self.assertNotEqual(surface.evaluate('el => getComputedStyle(el).boxShadow'), 'none')
+            self.assertEqual(outer.evaluate('el => getComputedStyle(el).transform'), 'none')
+            self.assertEqual(before, outer.bounding_box())
+            self.assertAlmostEqual(height, grid.bounding_box()['height'], delta=1)
+            self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 1440)
+            self.page.keyboard.press('Tab')
+            surface.focus()
+            self.assertEqual(surface.evaluate('el => getComputedStyle(el).transform'), 'none')
+            self.assertEqual(surface.evaluate('el => getComputedStyle(el).outlineStyle'), 'solid')
+            self.page.set_viewport_size({'width': 390, 'height': 844})
+            self.assertEqual(surface.evaluate('el => getComputedStyle(el).borderTopLeftRadius'), '20px')
+            self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), 390)
+            self.page.set_viewport_size({'width': 1440, 'height': 1000})
 
     def test_image_preview_motion_preserves_escape_and_focus(self):
         self.page.goto(self.base + '/projects/hydrogen-hub/')
@@ -1111,7 +1161,7 @@ class BrowserTests(unittest.TestCase):
                 const content = about.querySelector('.container').getBoundingClientRect();
                 const work = document.querySelector('#projects').getBoundingClientRect();
                 return {
-                    base: color('body'), panel: color('.project-card'), about: color('#about'),
+                    base: color('body'), panel: color('.project-card-link'), about: color('#about'),
                     contact: color('#contact'), field: color('#contact-name'),
                     aboutWidth: about.getBoundingClientRect().width, contentLeft: content.left,
                     workLeft: work.left, viewportWidth: innerWidth,
@@ -1156,7 +1206,7 @@ class BrowserTests(unittest.TestCase):
                         self.assertLessEqual(preview['x'] + preview['width'], frame['x'] + frame['width'] + 1)
                         self.assertLessEqual(preview['height'], frame['height'])
                         self.assertEqual(thumb.evaluate('el => getComputedStyle(el).backgroundColor'),
-                                         self.page.locator('.project-card').first.evaluate('el => getComputedStyle(el).backgroundColor'))
+                                         self.page.locator('.project-card-link').first.evaluate('el => getComputedStyle(el).backgroundColor'))
                 thumb.click()
                 expect(self.page.locator('dialog[open] img')).to_have_attribute('src', self.base + original)
                 self.page.keyboard.press('Escape')

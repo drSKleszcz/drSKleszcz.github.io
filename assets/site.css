@@ -14,6 +14,8 @@
   --header: #263337f5;
   --button-text: #10201e;
   --accent-hover: #b1f3e5;
+  --card-hover-shadow: 0 12px 22px #00000070;
+  --motion-card-reduced: 160ms;
   --type-label: .75rem;
   --ease-ui: cubic-bezier(.23, 1, .32, 1);
   --ease-trace: cubic-bezier(.77, 0, .175, 1);
@@ -90,9 +92,14 @@ p { color: var(--muted); }
 .anchor-alias { display: block; scroll-margin-top: 110px; }
 .project-grid { display: grid; gap: 40px 28px; }
 .featured-grid, .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.project-card { min-width: 0; border: 1px solid var(--line); background: var(--panel); transition: border-color var(--motion-feedback); }
-.project-card:hover { border-color: var(--accent); }
-.project-card-link { display: flex; flex-direction: column; height: 100%; }
+.project-card { min-width: 0; }
+/* Keep the visual surface separate from the outer carousel/swipe layer. */
+.project-card-link {
+  display: flex; flex-direction: column; height: 100%;
+  border: 1px solid var(--line); border-radius: 24px;
+  background: var(--panel); overflow: hidden;
+  transition: transform var(--motion-change) var(--ease-ui), box-shadow var(--motion-change) var(--ease-ui), border-color var(--motion-feedback);
+}
 .project-card-link:focus-visible { outline-offset: 5px; }
 .card-image { position: relative; display: flex; align-items: center; justify-content: center; container-type: size; aspect-ratio: 1.7; background: var(--panel); overflow: hidden; border-bottom: 1px solid var(--line); padding: 20px; }
 .card-image img { width: 100%; height: 100%; object-fit: contain; }
@@ -275,7 +282,7 @@ input:focus, textarea:focus { border-color: var(--accent); }
 }
 @media (prefers-reduced-motion: reduce) {
   :root { scroll-behavior: auto; }
-  *:not([data-hero-line]):not(.workflow-stage):not(.workflow-connection), *::before, *::after { transition: none !important; animation: none !important; }
+  *:not([data-hero-line]):not(.workflow-stage):not(.workflow-connection):not(.project-card-link), *::before, *::after { transition: none !important; animation: none !important; }
 }
 
 /* Theme palettes and the refined reading layout. */
@@ -284,6 +291,7 @@ input:focus, textarea:focus { border-color: var(--accent); }
   --bg: #f7f6f2; --panel: #ffffff; --panel-light: #eeeee8;
   --text: #202d30; --muted: #526466; --reading: #344548;
   --accent: #096c61; --accent-hover: #075c53; --line: #c8d2cf; --header: #e4eae6f5; --button-text: #ffffff;
+  --card-hover-shadow: 0 12px 22px #18222533;
 }
 .theme-toggle { margin-left: auto; border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 9px 12px; min-height: 44px; font-size: .8rem; }
 .button, .filters button[aria-pressed=true] { color: var(--button-text); }
@@ -573,6 +581,7 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .carousel-image-slot { display: none; }
 .carousel-pagination { display: none; }
 @media (max-width: 600px) {
+  .project-card-link { border-radius: 20px; }
   .featured-carousel { margin-top: 0; }
   .enhanced-carousel .project-grid { position: relative; touch-action: pan-y pinch-zoom; }
   html[data-js] [data-home-carousel]:not(.enhanced-carousel) .carousel-image-slot,
@@ -671,7 +680,9 @@ html[data-hero-entrance] .workflow-decision { animation-delay: 2140ms; }
   .workflow-signal { top: 27px; left: calc(50% - 15px); width: 30px; height: 30px; border-width: 1.5px; }
   .hero-workflow figcaption { margin-top: 20px; font-size: .8125rem; text-align: left; }
 }
-.enhanced-carousel .project-grid { overflow: clip; overflow-clip-margin: 8px; }
+.enhanced-carousel .project-grid { overflow: clip; overflow-clip-margin: 32px; }
+.enhanced-carousel .project-grid.is-swiping { overflow-clip-margin: 8px; }
+.project-grid.is-swiping .project-card-link { transform: none; box-shadow: none; transition: none !important; }
 #site-nav > a, .text-link, .social-links a, .discipline-links a { position: relative; }
 #site-nav > a::after, .text-link::after, .social-links a::after, .discipline-links a::after {
   content: ""; position: absolute; inset: auto 0 0; height: 1px; background: var(--accent);
@@ -681,23 +692,26 @@ html[data-hero-entrance] .workflow-decision { animation-delay: 2140ms; }
 #site-nav > a::after { bottom: 8px; }
 #site-nav > a[aria-current]::after, a:focus-visible::after { transform: scaleX(1); }
 .project-card h3 { transition: color var(--motion-feedback); }
-.project-card:focus-within { border-color: var(--accent); }
+.project-card-link:focus-visible { border-color: var(--accent); }
 .project-card:focus-within h3 { color: var(--accent); }
-.card-image.media-photo img { transition: transform var(--motion-hover) ease; }
 @media (hover: hover) and (pointer: fine) {
   #site-nav > a:hover::after, .text-link:hover::after, .social-links a:hover::after, .discipline-links a:hover::after { transform: scaleX(1); }
   .project-card:hover h3 { color: var(--accent); }
-  .project-card:hover .card-image.media-photo img { transform: scale(1.025); }
+  .project-card-link:hover { border-color: var(--accent); transform: translateY(-8px) scale(1.02); box-shadow: var(--card-hover-shadow); }
 }
 html[data-input="keyboard"] a, html[data-input="keyboard"] button,
 html[data-input="keyboard"] .project-card, html[data-input="keyboard"] .project-card h3,
 html[data-input="keyboard"] .workflow-label, html[data-input="keyboard"] a::after { transition: none !important; }
-html[data-input="keyboard"] .project-card .card-image.media-photo img { transform: none; transition: none; }
+html[data-input="keyboard"] .project-card-link { transform: none; box-shadow: none; }
 html[data-theme-changing] body *, html[data-theme-changing] body *::before, html[data-theme-changing] body *::after { transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
   a, button, .project-card, .project-card h3, .workflow-label { transition: color 100ms, border-color 100ms, background-color 100ms !important; }
   a::after { transition: none !important; }
-  .project-card:hover .card-image.media-photo img { transform: none; }
+  .project-card-link { transition: transform var(--motion-card-reduced) var(--ease-ui), box-shadow var(--motion-card-reduced) var(--ease-ui), border-color 100ms !important; }
+}
+/* A shorter, smaller pointer cue; keyboard and touch remain still. */
+@media (prefers-reduced-motion: reduce) and (hover: hover) and (pointer: fine) {
+  .project-card-link:hover { transform: translateY(-6px); }
 }
 
 /* Progressive enhancement for Jekyll's normal same-origin page navigation.
