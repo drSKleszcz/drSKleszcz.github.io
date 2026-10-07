@@ -18,7 +18,7 @@ Silencer selection involves competing acoustic, aerodynamic and cost requirement
 
 Software was developed to model acoustic attenuation, estimate pressure drop and optimize silencer configurations.
 
-## Engineering approach
+## Approach
 
 Calculations consider frequency bands, geometry, airflow, baffle membranes and material options. The selection routine evaluates baffle count, materials, weight and cost for specified dimensions.
 

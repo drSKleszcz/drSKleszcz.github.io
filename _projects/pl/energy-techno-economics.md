@@ -7,7 +7,7 @@ description: Pomiary, symulacja procesowa i analiza niepewności w ocenie mikrok
 permalink: /pl/projects/energy-techno-economics/
 translation_key: energy-techno-economics
 order: 2
-featured: 3
+featured: 2
 ---
 
 ## Wyzwanie
@@ -18,7 +18,7 @@ Ocena mikrokogeneracji wymaga spójnego porównania kosztów wytwarzania, energi
 
 W badaniu opracowano metodykę techniczno-ekonomiczną dla mikroturbin gazowych zasilanych gazem ziemnym oraz mieszaniną zawierającą 23% objętościowych wodoru.
 
-## Podejście inżynierskie
+## Podejście
 
 Pomiary turbiny o mocy 3 kW wykorzystano w modelu procesowym IPSEpro. Obliczenia uśrednionego kosztu energii elektrycznej dla okresu 20 lat oraz analiza Monte Carlo pozwoliły ocenić rozkłady kosztów i wrażliwość na założenia wejściowe.
 

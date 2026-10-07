@@ -19,7 +19,7 @@ Wycena glikolowych układów wymiany ciepła wymaga powiązania obliczeń hydrau
 
 Opracowano aplikację dobierającą elementy instalacji i szacującą koszty na podstawie specyfikacji technicznej oraz firmowej bazy cen.
 
-## Podejście inżynierskie
+## Podejście
 
 Dane wejściowe obejmują płyn, przepływ, opory i objętość wymiennika, materiał rur oraz konfigurację układu. Obliczenia uwzględniają średnice, prędkość, liczbę Reynoldsa i straty ciśnienia, a następnie dobór pomp, zaworów i naczyń wzbiorczych.
 

@@ -18,7 +18,7 @@ Wyjaśnienie działania silnika wymaga modelu pokazującego sposób montażu i w
 
 W SolidWorks opracowano kompletny model dydaktyczny silnika V6, obejmujący blok, wał korbowy, tłoki, wałek rozrządu, mechanizm zaworowy i kolektory.
 
-## Podejście inżynierskie
+## Podejście
 
 Dolny i górny zespół połączono za pomocą wałów i kół pasowych. Analiza ruchu i animacja pokazały fazy rozrządu oraz współpracę zaworów i tłoków.
 

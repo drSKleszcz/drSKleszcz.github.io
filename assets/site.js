@@ -158,6 +158,64 @@
     const grid = carousel.querySelector('.project-grid');
     const controls = carousel.querySelector('.carousel-controls');
     const pagination = carousel.querySelector('[data-carousel-pagination]');
+    let refreshImages = () => {};
+    if (carousel.hasAttribute('data-home-carousel')) {
+      const prepared = new WeakSet();
+      const connection = navigator.connection;
+      let ready = false;
+      let busy = false;
+      let scheduled = false;
+      let queue = [];
+      const canPrepare = () => ready && !document.hidden &&
+        !connection?.saveData && !['slow-2g', '2g'].includes(connection?.effectiveType);
+      const schedule = () => {
+        if (busy || scheduled || !queue.length || !canPrepare()) return;
+        scheduled = true;
+        const prepare = () => {
+          scheduled = false;
+          if (!canPrepare() || busy) return;
+          const image = queue.shift();
+          if (!image) return;
+          busy = true;
+          prepared.add(image);
+          image.fetchPriority = 'low';
+          image.loading = 'eager';
+          const decoded = typeof image.decode === 'function' ? image.decode() :
+            image.complete ? Promise.resolve() : new Promise(resolve => {
+              image.addEventListener('load', resolve, {once: true});
+              image.addEventListener('error', resolve, {once: true});
+            });
+          // A failed image must not stall the queue or reject into the page.
+          decoded.catch(() => {}).finally(() => { busy = false; schedule(); });
+        };
+        if (window.requestIdleCallback) window.requestIdleCallback(prepare, {timeout: 1500});
+        else window.setTimeout(prepare, 0);
+      };
+      refreshImages = (urgent = false) => {
+        if (urgent && !document.hidden) cards.filter(card => !card.hidden).forEach(card => {
+          const image = card.querySelector('img');
+          prepared.add(image);
+          image.fetchPriority = 'auto';
+          image.loading = 'eager';
+        });
+        const count = Math.min(cards.length, mobile.matches ? 1 : tablet.matches ? 2 : 4);
+        const offsets = [...Array(count).keys(), count, -1];
+        queue = [...new Set(offsets.map(offset => cards[(index + offset + cards.length) % cards.length].querySelector('img')))]
+          .filter(image => !prepared.has(image));
+        schedule();
+      };
+      const afterLoad = () => window.setTimeout(() => { ready = true; refreshImages(); }, 500);
+      if (document.readyState === 'complete') afterLoad();
+      else window.addEventListener('load', afterLoad, {once: true});
+      document.addEventListener('visibilitychange', () => {
+        const bounds = carousel.getBoundingClientRect();
+        refreshImages(!document.hidden && bounds.top < window.innerHeight && bounds.bottom > 0);
+      });
+      connection?.addEventListener('change', () => refreshImages());
+      if (window.IntersectionObserver) new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && !document.hidden) refreshImages(true);
+      }).observe(carousel);
+    }
     let focusedControl = null;
     if (pagination) {
       // CSS may hide a focused control before the breakpoint callback runs.
@@ -213,7 +271,7 @@
       grid.style.minHeight = Math.ceil(height) + 'px';
       positionControls();
     };
-    const render = () => {
+    const render = (prepareVisible = false) => {
       const count = Math.min(cards.length, mobile.matches ? 1 : tablet.matches ? 2 : 4);
       const focusTarget = focusedControl || document.activeElement;
       const focusWasInDots = pagination && pagination.contains(focusTarget);
@@ -231,6 +289,7 @@
       measureHeight();
       positionControls();
       updatePagination();
+      refreshImages(prepareVisible);
       if (showPagination && focusWasInArrows) dotButtons.find(button => Number(button.dataset.slideIndex) === index).focus({preventScroll: true});
       else if (!showPagination && focusWasInDots && !controls.hidden) controls.querySelector('[data-next]').focus({preventScroll: true});
       carousel.querySelector('[data-position]').textContent = `${carousel.dataset.positionLabel}: ${index + 1}${count > 1 ? '–' + ((index + count - 1) % cards.length + 1) : ''} / ${cards.length}`;
@@ -245,7 +304,7 @@
       }]));
       if (motion) cards.forEach(card => motion.stop(card));
       index = (index + direction + cards.length) % cards.length;
-      render();
+      render(true);
       if (!motion || !motion.canPlay(event)) return;
       cards.filter(card => !card.hidden).forEach(card => {
         const previous = before.get(card);
@@ -293,7 +352,7 @@
         gesture = null;
         cards.forEach(clearSwipeCard);
         grid.classList.remove('is-swiping');
-        render();
+        render(true);
       };
       if (!motion || !motion.canPlay()) { finish(); return; }
       const outgoing = motion.play(current.card, [
@@ -338,6 +397,7 @@
         current.adjacent.inert = true;
         current.adjacent.setAttribute('aria-hidden', 'true');
         current.adjacent.classList.add('swipe-adjacent');
+        refreshImages(true);
       }
       current.card.style.transform = `translateX(${current.dx}px)`;
       current.adjacent.style.transform = `translateX(${current.dx + direction * current.width}px)`;
@@ -357,7 +417,7 @@
         event.stopPropagation();
       }
     }, {capture: true});
-    const resizeCarousel = () => { cancelSwipe(); render(); };
+    const resizeCarousel = () => { cancelSwipe(); render(true); };
     mobile.addEventListener('change', resizeCarousel);
     tablet.addEventListener('change', resizeCarousel);
     window.addEventListener('resize', resizeCarousel);

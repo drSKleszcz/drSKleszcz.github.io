@@ -29,7 +29,7 @@ en:
   role: R&D Engineer · EngD
   eyebrow: Research. Simulation. Development.
   hero_start: Understanding systems.
-  hero_end: Engineering solutions.
+  hero_end: Informing decisions.
   hero_workflow:
     caption: Illustrative workflow - select a stage to explore a project.
     system: System
@@ -49,26 +49,26 @@ en:
   hero_image_alt: Counterflow heat exchanger model with separate supply and exhaust channels
   discipline: Energy systems / Fluid mechanics / Engineering software
   selected_label: 02 / Selected work
-  selected_title: Engineering in practice.
-  selected_description: Projects connecting research, simulation and working systems.
+  selected_title: Models, data & practical solutions.
+  selected_description: Projects connecting engineering models, data analysis, business decisions and software.
   all_projects: View all projects
   case_study: Explore project
   capabilities_label: 01 / Expertise
-  capabilities_title: Across the engineering process.
+  capabilities_title: Engineering, data & business decisions.
   capabilities:
-    - title: Model & simulate
-      text: CFD, heat and mass transfer, and 0D/1D process models to understand system behavior.
+    - title: Engineering modeling & simulation
+      text: CFD, heat and mass transfer, and 0D/1D process models, connected with prototypes, measurements and experimental validation.
       tools: ANSYS · IPSEpro · SolidWorks
-    - title: Build & validate
-      text: Prototypes, instrumentation and experimental testing to connect calculations with measured performance.
-      tools: Measurement · LabVIEW · Automation
-    - title: Analyze & automate
-      text: Techno-economic assessment, uncertainty analysis and software that makes engineering work repeatable.
+    - title: Data science & business analytics
+      text: Data analysis, pricing and cost models, techno-economic assessment and uncertainty analysis to support engineering and business decisions.
       tools: Python · Excel / VBA · Monte Carlo
+    - title: Software & automation
+      text: Python applications, measurement tools and automation that turn models and analyses into repeatable workflows.
+      tools: Python · LabVIEW · Automation
   about_label: 03 / About
-  about_title: Research grounded in real engineering.
-  about_text: I am Sławosz Kleszcz, an R&D engineer with a EngD and experience in universities and industry. My work spans process flow modeling, numerical simulation, techno-economic analysis and engineering software.
-  about_second: From heat recovery and gas turbines to flow measurement and calculation tools, I bring modeling and practical development together to understand how systems perform - and how to improve them.
+  about_title: From complex systems to clear decisions.
+  about_text: I am Sławosz Kleszcz, an R&D engineer with an EngD and experience in universities and industry. I work across numerical modeling, data analysis and software development, connecting engineering research with practical and business applications.
+  about_second: My projects range from energy systems and experimental validation to pricing, cost modeling and Python tools. I combine simulation, measurements and analysis to understand how systems perform and support informed decisions.
   experience_title: Experience
   experience:
     - title: Engineering R&D
@@ -83,8 +83,8 @@ en:
   portrait_alt: Portrait of Sławosz Kleszcz
   profile_links: Professional profiles
   contact_label: 04 / Contact
-  contact_title: Let’s discuss your next engineering challenge.
-  contact_text: For professional opportunities, research collaborations or a conversation about my work, send a message or connect on LinkedIn.
+  contact_title: Let’s discuss your next challenge.
+  contact_text: For professional opportunities, collaborations or questions about my work in engineering modeling, data analysis, business analytics and software, send a message or connect on LinkedIn.
   name: Name
   email: Email address
   contact_mail: Mail
@@ -96,11 +96,11 @@ en:
   invalid: Please complete the required fields and enter a valid email address.
   form_note: Your name, email and message are sent through Formspree to handle your enquiry.
   required_note: All fields are required.
-  footer: R&D engineering, research & software.
+  footer: Engineering, analytics & software.
   back_top: Back to top
   collection_label: Project collection
   collection_title: Ideas tested. Systems built.
-  collection_description: Explore projects across engineering, simulation, analysis and software development.
+  collection_description: Explore projects connecting engineering modeling, data analysis, business decisions and software development.
   filters_label: Filter projects
   all: All projects
   results_count: projects shown
@@ -160,7 +160,7 @@ pl:
   role: Inżynier R&D · EngD
   eyebrow: Badania. Symulacja. Rozwój.
   hero_start: Zrozumieć system.
-  hero_end: Opracować rozwiązanie.
+  hero_end: Wspierać decyzje.
   hero_workflow:
     caption: Schemat poglądowy - wybierz etap, aby poznać projekt.
     system: System
@@ -180,26 +180,26 @@ pl:
   hero_image_alt: Model przeciwprądowego wymiennika ciepła z oddzielnymi kanałami nawiewnymi i wywiewnymi
   discipline: Systemy energetyczne / Mechanika płynów / Oprogramowanie inżynierskie
   selected_label: 02 / Wybrane projekty
-  selected_title: Inżynieria w praktyce.
-  selected_description: Projekty łączące badania, symulację i działające systemy.
+  selected_title: Modele, dane i praktyczne rozwiązania.
+  selected_description: Projekty łączące modele inżynierskie, analizę danych, decyzje biznesowe i oprogramowanie.
   all_projects: Zobacz wszystkie projekty
   case_study: Zobacz projekt
   capabilities_label: 01 / Kompetencje
-  capabilities_title: Na każdym etapie prac inżynierskich.
+  capabilities_title: Inżynieria, dane i decyzje biznesowe.
   capabilities:
-    - title: Modelowanie i symulacja
-      text: CFD, wymiana ciepła i masy oraz modele procesowe 0D/1D pozwalające zrozumieć działanie systemów.
+    - title: Modelowanie i symulacje inżynierskie
+      text: CFD, wymiana ciepła i masy oraz modele procesowe 0D/1D, połączone z prototypami, pomiarami i walidacją eksperymentalną.
       tools: ANSYS · IPSEpro · SolidWorks
-    - title: Budowa i weryfikacja
-      text: Prototypy, aparatura pomiarowa i badania eksperymentalne łączące obliczenia z rzeczywistymi wynikami.
-      tools: Pomiary · LabVIEW · Automatyka
-    - title: Analiza i automatyzacja
-      text: Ocena techniczno-ekonomiczna, analiza niepewności i oprogramowanie usprawniające powtarzalną pracę inżynierską.
+    - title: Data science i analityka biznesowa
+      text: Analiza danych, modele cenowe i kosztowe, ocena techniczno-ekonomiczna oraz analiza niepewności wspierające decyzje inżynierskie i biznesowe.
       tools: Python · Excel / VBA · Monte Carlo
+    - title: Oprogramowanie i automatyzacja
+      text: Aplikacje w Pythonie, narzędzia pomiarowe i automatyzacja przekształcające modele oraz analizy w powtarzalne procesy.
+      tools: Python · LabVIEW · Automatyka
   about_label: 03 / O mnie
-  about_title: Badania osadzone w praktyce inżynierskiej.
-  about_text: Nazywam się Sławosz Kleszcz. Jestem inżynierem R&D ze stopniem EngD i doświadczeniem zdobytym na uczelniach oraz w przemyśle. Zajmuję się modelowaniem przepływów, symulacjami numerycznymi, analizą techniczno-ekonomiczną i oprogramowaniem inżynierskim.
-  about_second: Od odzysku ciepła i turbin gazowych po pomiary przepływu i narzędzia obliczeniowe - łączę modelowanie z praktycznym rozwojem, aby zrozumieć działanie systemów i je doskonalić.
+  about_title: Od złożonych systemów do świadomych decyzji.
+  about_text: Nazywam się Sławosz Kleszcz. Jestem inżynierem R&D ze stopniem EngD i doświadczeniem zdobytym na uczelniach oraz w przemyśle. Łączę modelowanie numeryczne, analizę danych i rozwój oprogramowania z badaniami inżynierskimi oraz zastosowaniami biznesowymi.
+  about_second: Moje projekty obejmują systemy energetyczne, walidację eksperymentalną, analizę cen, modelowanie kosztów i narzędzia w Pythonie. Wykorzystuję symulacje, pomiary i analizę, aby zrozumieć działanie systemów i wspierać świadome decyzje.
   experience_title: Doświadczenie
   experience:
     - title: Badania i rozwój inżynierski
@@ -214,8 +214,8 @@ pl:
   portrait_alt: Portret Sławosza Kleszcza
   profile_links: Profile zawodowe
   contact_label: 04 / Kontakt
-  contact_title: Porozmawiajmy o kolejnym wyzwaniu inżynierskim.
-  contact_text: W sprawie możliwości zawodowych, współpracy badawczej lub pytań o moje projekty - wyślij wiadomość albo skontaktuj się przez LinkedIn.
+  contact_title: Porozmawiajmy o kolejnym wyzwaniu.
+  contact_text: W sprawie możliwości zawodowych, współpracy lub pytań o moje projekty związane z modelowaniem inżynierskim, analizą danych, analityką biznesową i oprogramowaniem wyślij wiadomość albo skontaktuj się przez LinkedIn.
   name: Imię i nazwisko
   email: Adres e-mail
   contact_mail: Mail
@@ -227,11 +227,11 @@ pl:
   invalid: Uzupełnij wymagane pola i podaj poprawny adres e-mail.
   form_note: Imię i nazwisko, adres e-mail oraz treść wiadomości są przesyłane przez Formspree w celu obsługi zapytania.
   required_note: Wszystkie pola są wymagane.
-  footer: Inżynieria R&D, badania i oprogramowanie.
+  footer: Inżynieria, analityka i oprogramowanie.
   back_top: Wróć na górę
   collection_label: Zbiór projektów
   collection_title: Od pomysłu do działającego systemu.
-  collection_description: Poznaj projekty z zakresu inżynierii, symulacji, analiz i tworzenia oprogramowania.
+  collection_description: Poznaj projekty łączące modelowanie inżynierskie, analizę danych, decyzje biznesowe i rozwój oprogramowania.
   filters_label: Filtruj projekty
   all: Wszystkie projekty
   results_count: widocznych projektów

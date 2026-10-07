@@ -19,7 +19,7 @@ Orifice flow measurement involves interdependent fluid-property, geometry and un
 
 An engineering calculation tool was developed for orifice flow measurement and uncertainty assessment based on PN EN ISO 5167.
 
-## Engineering approach
+## Approach
 
 The software calculates discharge coefficients, real-gas properties and pressure drop using models including Redlich–Kwong, IAPWS-95 and Sutherland viscosity with Wilke mixing rules. Geometry and operating inputs feed absolute and relative uncertainty calculations.
 

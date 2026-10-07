@@ -18,7 +18,7 @@ Maintaining a large product price list manually creates repeated work and a risk
 
 A 140-page Word price list was connected to an Excel workbook that retrieves pricing from the company database.
 
-## Engineering approach
+## Approach
 
 Linked Word and Excel content, SQL data connections and VBA automation updated prices and formatting. PDF output was prepared for distribution through the company intranet.
 

@@ -18,7 +18,7 @@ Design methods for centrifugal fans with spiral housings need to be checked agai
 
 The study combined theoretical fan calculations, three-dimensional modeling and ANSYS CFD analysis.
 
-## Engineering approach
+## Approach
 
 Geometry was built from theoretical design calculations. Numerical performance curves and efficiency predictions were compared with the corresponding analytical characteristics across operating conditions.
 

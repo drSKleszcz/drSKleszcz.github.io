@@ -8,7 +8,7 @@ description: Combining experiments, process simulation and uncertainty analysis 
 permalink: /projects/energy-techno-economics/
 translation_key: energy-techno-economics
 order: 2
-featured: 3
+featured: 2
 ---
 
 ## The challenge
@@ -19,7 +19,7 @@ Assessing micro-combined heat and power requires a consistent comparison of gene
 
 The study developed a techno-economic methodology for micro gas turbines fueled by natural gas and a blend containing 23% hydrogen by volume.
 
-## Engineering approach
+## Approach
 
 Measurements from a 3 kW turbine informed an IPSEpro process model. A 20-year levelized cost of electricity calculation and Monte Carlo analysis assessed cost distributions and sensitivity to input assumptions.
 

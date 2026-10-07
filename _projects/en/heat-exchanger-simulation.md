@@ -18,7 +18,7 @@ Experiments alone cannot capture every process inside a periodically reversing c
 
 A three-dimensional transient model was developed to investigate heat and mass transfer and support the microclimate control system design.
 
-## Engineering approach
+## Approach
 
 The model coupled continuity, momentum and energy equations with Eulerian Wall Film and species transport models. Periodic boundaries reduced the domain to two representative channels; prototype tests supported validation.
 

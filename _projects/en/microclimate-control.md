@@ -18,7 +18,7 @@ Conventional heat recovery units can freeze in winter, while dry supply air make
 
 The doctoral project covered development of a periodic counterflow heat exchanger, prototype testing and numerical evaluation, followed by a hotel installation near Kraków.
 
-## Engineering approach
+## Approach
 
 Cyclic changes in airflow direction enable heat and moisture recovery without a separate energy-consuming frost protection system. Laboratory measurements and simulations assessed performance under changing inlet conditions.
 

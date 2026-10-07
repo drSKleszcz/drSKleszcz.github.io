@@ -18,7 +18,7 @@ Regulatory przepływu wymagają stabilnego współczynnika przepływu w całym z
 
 Prace łączyły projektowanie rozmieszczenia punktów odbioru ciśnienia, analizę CFD i badania prototypów układu pomiarowego VAV.
 
-## Podejście inżynierskie
+## Podejście
 
 Punkty odbioru ciśnienia rozmieszczono metodą log-liniową, odnosząc się do ISO 3966:2008. Prototypy badano w zakresie 2–20 m/s, za zaworami, pojedynczymi i podwójnymi kolanami oraz przy różnych długościach prostych odcinków kanału.
 

@@ -18,7 +18,7 @@ Airflow regulators need a stable flow coefficient over their measurement range w
 
 The work combined pressure-port design, CFD analysis and prototype testing for a VAV flow measurement system.
 
-## Engineering approach
+## Approach
 
 Pressure ports were positioned using a log-linear traverse method referenced to ISO 3966:2008. Prototypes were evaluated over 2–20 m/s and after valves, single and double bends, and different straight duct lengths.
 

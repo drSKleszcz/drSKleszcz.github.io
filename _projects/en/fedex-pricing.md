@@ -7,7 +7,7 @@ description: Bringing proposal analysis and commercial pricing rules into one wo
 permalink: /projects/fedex-pricing/
 translation_key: fedex-pricing
 order: 14
-featured: 0
+featured: 3
 ---
 
 ## The challenge
@@ -18,7 +18,7 @@ Analysts needed to connect ePAT files with sales-proposal evaluation and commerc
 
 Software was developed to ingest the required files, analyze sales proposals and adjust pricing against the applicable commercial rates.
 
-## Engineering approach
+## Approach
 
 Uploaded files remain visible in the interface so that analysts can identify input issues. The application highlights modifications made during the pricing process.
 

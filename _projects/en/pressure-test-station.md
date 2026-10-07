@@ -18,7 +18,7 @@ Heat recovery units require controlled internal and external leakage measurement
 
 The project covered the design of a leakage test stand, specification of components and procurement for integration into the production environment.
 
-## Engineering approach
+## Approach
 
 Calibrated orifices, fans, differential-pressure sensors, ductwork, dampers and actuators formed the measurement system. An HMI and automation provided control and monitoring.
 

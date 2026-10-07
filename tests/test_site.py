@@ -1,6 +1,7 @@
 """Exercise rendered pages and real browser behavior; mock only remote form delivery."""
 import functools
 import http.server
+import json
 import os
 import struct
 from pathlib import Path
@@ -16,6 +17,22 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
 
 class RenderedTests(unittest.TestCase):
+    def test_homepage_prioritizes_balanced_work_without_losing_projects(self):
+        expected = [
+            'microclimate-control', 'energy-techno-economics', 'fedex-pricing',
+            'orifice-calculation-software', 'gas-turbine-digital-twin',
+            'hydrogen-hub', 'pressure-test-station', 'flow-measurement',
+            'constant-airflow', 'heat-exchanger-simulation', 'four-hole-orifice',
+            'centrifugal-fan', 'v6-engine', 'underground-gas-storage',
+            'solar-desalination', 'glycol-system-costing', 'silencer-design',
+            'automated-price-list',
+        ]
+        for prefix in ['', 'pl/']:
+            soup = BeautifulSoup((SITE / prefix / 'index.html').read_text(encoding='utf-8'), 'html.parser')
+            links = soup.select('[data-home-carousel] .project-card-link')
+            self.assertEqual([urlparse(link['href']).path.rstrip('/').split('/')[-1] for link in links], expected)
+            self.assertEqual(len(soup.select('[data-home-carousel] [data-featured-project]')), 4)
+
     def test_search_favicon_is_a_published_square_png(self):
         for path in SITE.rglob('*.html'):
             soup = BeautifulSoup(path.read_text(encoding='utf-8'), 'html.parser')
@@ -493,7 +510,7 @@ class BrowserTests(unittest.TestCase):
             self.page.wait_for_function("!document.querySelector('.project-grid').classList.contains('is-swiping')")
             self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.getAnimations().length && !c.style.transform && !c.inert)'))
 
-    def test_mobile_carousel_does_not_download_hidden_opening_cards(self):
+    def test_home_images_wait_until_after_load_then_prepare_only_neighbours(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
         requested = []
         self.page.on('request', lambda request: requested.append(request.url))
@@ -504,11 +521,111 @@ class BrowserTests(unittest.TestCase):
         self.page.route('**/assets/site.js*', delay_script)
         self.page.goto(self.base + '/')
         self.page.wait_for_timeout(200)
-        for stem in ['mtt-', 'tea-', 'orficle_2-']:
+        for stem in ['mtt-', 'tea-', 'fedex_app-', 'orficle_2-']:
             self.assertFalse(any('/assets/images/' + stem in url for url in requested), requested)
         self.page.unroute('**/assets/site.js*', delay_script)
+        self.page.wait_for_function('''() => ['microclimate-control', 'energy-techno-economics', 'automated-price-list'].every(slug => {
+            const image = document.querySelector(`[data-home-carousel] a[href="/projects/${slug}/"] img`);
+            return image.complete && image.naturalWidth > 0;
+        })''', timeout=5000)
+        self.assertEqual(self.page.locator('.featured-grid .project-card:visible').count(), 1)
+        self.page.wait_for_timeout(100)
+        for stem in ['mtt-', 'fedex_app-', 'orficle_2-']:
+            self.assertFalse(any('/assets/images/' + stem in url for url in requested), requested)
+        tea_requests = [url for url in requested if '/assets/images/tea-' in url]
+        self.assertEqual(len(tea_requests), 1)
+        self.assertIn('tea-480.webp', tea_requests[0])
         self.page.locator('[data-home-carousel] [data-carousel-pagination] button').nth(1).click()
-        expect(self.page.locator('.featured-grid .project-card:visible').first.locator('img')).to_have_js_property('complete', True)
+        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img => img.complete && img.naturalWidth > 0'))
+        self.page.wait_for_timeout(100)
+        self.assertEqual(len([url for url in requested if '/assets/images/tea-' in url]), 1)
+
+    def test_background_images_respect_data_saving_and_slow_connections(self):
+        for connection in [{'saveData': True, 'effectiveType': '4g'}, {'saveData': False, 'effectiveType': '2g'}, {'saveData': False, 'effectiveType': 'slow-2g'}]:
+            with self.browser.new_context(viewport={'width':390,'height':844}) as context:
+                page = context.new_page()
+                page.add_init_script('Object.defineProperty(navigator, "connection", {value: Object.assign(new EventTarget(), '+json.dumps(connection)+')})')
+                page.on('pageerror', lambda error: self.errors.append(str(error)))
+                requested = []
+                page.on('request', lambda request: requested.append(request.url))
+                page.goto(self.base + '/')
+                page.wait_for_timeout(1000)
+                self.assertFalse(any('/assets/images/tea-' in url or '/assets/images/cennik3-' in url for url in requested), requested)
+                page.locator('.hero-actions a[href="#projects"]').click()
+                page.locator('[data-carousel-pagination] button').nth(1).click()
+                page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] .project-card:not([hidden]) img');return img.complete&&img.naturalWidth>0}''')
+
+    def test_background_queue_is_serial_and_continues_after_image_failure(self):
+        self.page.set_viewport_size({'width':390,'height':844})
+        self.page.add_init_script('''window.testHidden=false;
+            Object.defineProperty(document,'hidden',{get:()=>window.testHidden});''')
+        pending = []
+        requested = []
+        def hold_first(route):
+            requested.append(route.request.url)
+            if '/mrr2-' in route.request.url:
+                pending.append(route)
+            else:
+                route.continue_()
+        self.page.route('**/assets/images/*.webp', hold_first)
+        self.page.goto(self.base + '/')
+        self.page.wait_for_timeout(1000)
+        self.assertEqual(len(pending), 1)
+        self.assertFalse(any('/tea-' in url or '/cennik3-' in url for url in requested), requested)
+        self.assertEqual(self.page.locator('[data-home-carousel] .project-card:visible img').get_attribute('fetchpriority'), 'low')
+        self.page.evaluate('window.testHidden=true;document.dispatchEvent(new Event("visibilitychange"))')
+        pending[0].abort()
+        self.page.wait_for_timeout(150)
+        self.assertFalse(any('/tea-' in url or '/cennik3-' in url for url in requested), requested)
+        self.page.evaluate('window.testHidden=false;document.dispatchEvent(new Event("visibilitychange"))')
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''')
+        self.assertTrue(any('/tea-' in url for url in requested))
+        self.assertTrue(any('/cennik3-' in url for url in requested))
+
+    def test_background_window_matches_desktop_and_tablet_without_loading_all_cards(self):
+        for width, slugs in [(768, ['microclimate-control','energy-techno-economics','fedex-pricing','automated-price-list']), (1440, ['microclimate-control','energy-techno-economics','fedex-pricing','orifice-calculation-software','gas-turbine-digital-twin','automated-price-list'])]:
+            with self.browser.new_context(viewport={'width':width,'height':900}) as context:
+                page = context.new_page()
+                page.goto(self.base + '/pl/')
+                page.wait_for_function('''slugs=>slugs.every(slug=>{const img=document.querySelector(`[data-home-carousel] a[href="/pl/projects/${slug}/"] img`);return img.complete&&img.naturalWidth>0})''', arg=slugs, timeout=5000)
+                eager = page.locator('[data-home-carousel] img[loading="eager"]').evaluate_all('imgs=>imgs.map(img=>img.closest("a").getAttribute("href").split("/").filter(Boolean).pop())')
+                self.assertCountEqual(eager, slugs)
+
+    def test_visible_home_images_are_prioritized_even_before_background_start(self):
+        self.page.set_viewport_size({'width':390,'height':844})
+        self.page.goto(self.base + '/')
+        self.page.locator('.hero-actions a[href="#projects"]').click()
+        expect(self.page.locator('.project-card:visible img')).to_have_attribute('fetchpriority', 'auto')
+
+    def test_background_queue_pauses_while_hidden_and_refreshes_after_resize(self):
+        self.page.set_viewport_size({'width':390,'height':844})
+        self.page.add_init_script('''window.testHidden=true;
+            Object.defineProperty(document,'hidden',{get:()=>window.testHidden});''')
+        requested = []
+        self.page.on('request', lambda request: requested.append(request.url))
+        self.page.goto(self.base + '/')
+        self.page.wait_for_timeout(1000)
+        self.assertFalse(any('/assets/images/tea-' in url for url in requested), requested)
+        self.page.set_viewport_size({'width':768,'height':1024})
+        self.page.wait_for_timeout(150)
+        self.assertEqual(self.page.locator('[data-home-carousel] a[href="/projects/energy-techno-economics/"] img').get_attribute('loading'), 'lazy')
+        self.page.evaluate('window.testHidden=false;document.dispatchEvent(new Event("visibilitychange"))')
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/fedex-pricing/"] img');return img.complete&&img.naturalWidth>0}''')
+        self.page.wait_for_timeout(100)
+        self.assertFalse(any('/assets/images/mtt-' in url or '/assets/images/orficle_2-' in url for url in requested), requested)
+
+    def test_background_images_wrap_and_work_without_idle_or_connection_apis(self):
+        self.page.set_viewport_size({'width':390,'height':844})
+        self.page.add_init_script('''window.requestIdleCallback=undefined;Object.defineProperty(navigator,'connection',{value:undefined});''')
+        self.page.goto(self.base + '/')
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
+        self.page.locator('.hero-actions a[href="#projects"]').click()
+        self.page.locator('[data-prev]').evaluate('button=>button.click()')
+        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/silencer-design/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
+        self.page.locator('[data-next]').evaluate('button=>button.click()')
+        self.page.locator('[data-next]').evaluate('button=>button.click()')
+        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
 
     def test_portrait_requests_a_variant_matching_its_display_size(self):
         for prefix in ['', '/pl']:
@@ -566,6 +683,10 @@ class BrowserTests(unittest.TestCase):
             expect(carousel).to_have_count(1)
             cards = carousel.locator('.project-card:visible')
             expect(cards).to_have_count(4)
+            self.assertEqual(
+                cards.locator('a').evaluate_all('links => links.map(link => new URL(link.href).pathname.split("/").filter(Boolean).pop())'),
+                ['microclimate-control', 'energy-techno-economics', 'fedex-pricing', 'orifice-calculation-software'],
+            )
             first = cards.first.locator('a').get_attribute('href')
             self.assertIn('microclimate-control', first)
             seen = set()
@@ -682,7 +803,7 @@ class BrowserTests(unittest.TestCase):
         next_button.click()
         self.assertTrue(self.page.locator('.featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
         next_button.click()
-        self.assertIn('energy-techno-economics', self.page.locator('.featured-grid .project-card:visible a').first.get_attribute('href'))
+        self.assertIn('fedex-pricing', self.page.locator('.featured-grid .project-card:visible a').first.get_attribute('href'))
         next_button.focus()
         self.page.keyboard.press('Enter')
         self.assertFalse(self.page.locator('.featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
@@ -916,6 +1037,8 @@ class BrowserTests(unittest.TestCase):
     def test_wrapped_polish_sentence_fades_as_one_block(self):
         self.page.set_viewport_size({'width':390, 'height':844})
         self.page.goto(self.base + '/pl/')
+        # The shorter headline wraps with enlarged text; verify the whole block still fades.
+        self.page.add_style_tag(content=':root { font-size: 200%; }')
         self.page.locator('h1').evaluate('el => { window.inkSamples=el.getAnimations({subtree:true}); inkSamples.forEach(a => a.pause()); }')
         for index,time in enumerate([240,780]):
             self.page.evaluate('time => inkSamples.forEach(a => a.currentTime=time)', time)

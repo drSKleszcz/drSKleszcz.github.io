@@ -18,7 +18,7 @@ Ocena szczelności rekuperatorów wymaga kontrolowanych pomiarów przecieków we
 
 Projekt obejmował zaprojektowanie stanowiska, specyfikację elementów oraz ich zakup w celu integracji w środowisku produkcyjnym.
 
-## Podejście inżynierskie
+## Podejście
 
 Układ pomiarowy tworzyły wzorcowane kryzy, wentylatory, czujniki różnicy ciśnień, kanały, przepustnice i siłowniki. Panel HMI oraz automatyka zapewniały sterowanie i monitoring.
 

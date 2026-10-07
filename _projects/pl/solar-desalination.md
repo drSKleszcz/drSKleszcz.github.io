@@ -18,7 +18,7 @@ Thirasia jest zależna od wody odsalanej, a energia elektryczna z paliw kopalnyc
 
 Projekt obejmował ocenę istniejącej instalacji odsalania oraz systemu fotowoltaicznego o mocy 60 kW rozliczanego w net meteringu, we współpracy z przedsiębiorstwem wodociągowym Thiry i Uniwersytetem w Stavanger.
 
-## Podejście inżynierskie
+## Podejście
 
 Python posłużył do czyszczenia i analizy danych. W IPSEpro modelowano sprawność membran, przygotowanie wody i warunki obciążenia, a dane meteorologiczne z lat 2007–2023 wykorzystano do długoterminowej oceny zasobów słonecznych.
 

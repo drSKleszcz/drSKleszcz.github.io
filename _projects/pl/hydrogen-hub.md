@@ -18,7 +18,7 @@ Badanie systemów wodorowych wymaga skoordynowania dystrybucji gazu, zabezpiecze
 
 Projekt obejmował opracowanie schematów P&ID i integrację elektrolizera, dwóch turbin oraz silnika gazowego z układami pomiarowymi i bezpieczeństwa.
 
-## Podejście inżynierskie
+## Podejście
 
 Zakres prac obejmował detekcję gazu i wyłączenia awaryjne, wentylację, ogrzewanie kontenerów, chłodzenie z użyciem dry coolerów oraz automatykę PLC. Pomiary wspierały ocenę łańcucha przemian energii od elektrolizy do spalania.
 

@@ -18,7 +18,7 @@ Metody projektowania wentylatorów promieniowych z obudową spiralną wymagają 
 
 Badanie łączyło obliczenia teoretyczne wentylatora, modelowanie trójwymiarowe i analizę CFD w ANSYS.
 
-## Podejście inżynierskie
+## Podejście
 
 Geometrię opracowano na podstawie obliczeń projektowych. Numeryczne charakterystyki pracy i sprawności porównano z wynikami analitycznymi w różnych warunkach eksploatacyjnych.
 

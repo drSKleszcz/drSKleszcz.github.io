@@ -18,7 +18,7 @@ Dobór tłumika wymaga pogodzenia wymagań akustycznych, aerodynamicznych i kosz
 
 Opracowano oprogramowanie do modelowania tłumienia akustycznego, szacowania spadku ciśnienia i optymalizacji konfiguracji tłumików.
 
-## Podejście inżynierskie
+## Podejście
 
 Obliczenia uwzględniają pasma częstotliwości, geometrię, przepływ, membrany kulis i warianty materiałowe. Algorytm doboru ocenia liczbę kulis, materiały, masę i koszt dla zadanych wymiarów.
 

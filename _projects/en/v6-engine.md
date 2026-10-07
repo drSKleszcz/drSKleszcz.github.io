@@ -18,7 +18,7 @@ Explaining engine operation requires a model that shows how individual component
 
 A complete educational V6 engine assembly was developed in SolidWorks, including the block, crankshaft, pistons, camshaft, valve train and manifolds.
 
-## Engineering approach
+## Approach
 
 Lower and upper assemblies were connected through shafts and belt wheels. Motion analysis and animation demonstrated timing and coordination between the valves and pistons.
 

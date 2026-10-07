@@ -18,7 +18,7 @@ Thirasia depends on desalinated water, while fossil-fuel-based electricity makes
 
 The project assessed the existing desalination plant and a 60 kW photovoltaic system connected through net metering, in collaboration with the municipal water utility of Thira and the University of Stavanger.
 
-## Engineering approach
+## Approach
 
 Python supported data cleaning and analysis. IPSEpro modeled membrane performance, pretreatment and load conditions, while meteorological records from 2007–2023 informed long-term solar resource assessment.
 

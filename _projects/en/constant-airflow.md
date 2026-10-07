@@ -18,7 +18,7 @@ Maintaining constant airflow requires a reliable estimate of flow as operating c
 
 A pressure-based measurement and control system was developed, including sensor selection, signal smoothing and calibration of the flow coefficient.
 
-## Engineering approach
+## Approach
 
 The system used total pressure at the fan and static pressure inside the recuperator to estimate flow from the pressure difference and air density. Each unit was tested across operating points to determine its calibration coefficient.
 

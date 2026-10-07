@@ -18,7 +18,7 @@ Utrzymanie stałego przepływu wymaga wiarygodnego wyznaczania strumienia przy z
 
 Opracowano ciśnieniowy system pomiaru i regulacji obejmujący dobór czujnika, wygładzanie sygnału i kalibrację współczynnika przepływu.
 
-## Podejście inżynierskie
+## Podejście
 
 Układ wykorzystywał ciśnienie całkowite przy wentylatorze i ciśnienie statyczne wewnątrz rekuperatora, wyznaczając przepływ z różnicy ciśnień i gęstości powietrza. Każde urządzenie badano w różnych punktach pracy, aby ustalić współczynnik kalibracyjny.
 

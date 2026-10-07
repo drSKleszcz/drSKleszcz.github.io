@@ -18,7 +18,7 @@ Ręczne utrzymywanie obszernego cennika oznacza powtarzalną pracę i ryzyko nie
 
 Cennik w Wordzie liczący 140 stron połączono ze skoroszytem Excel pobierającym ceny z firmowej bazy danych.
 
-## Podejście inżynierskie
+## Podejście
 
 Powiązania między Wordem i Excelem, połączenia SQL oraz automatyzacja VBA aktualizowały ceny i formatowanie. Dokument PDF przygotowywano do publikacji w firmowym intranecie.
 

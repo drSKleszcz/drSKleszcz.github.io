@@ -18,7 +18,7 @@ Pricing glycol heat exchange systems requires coordinated hydraulic calculations
 
 An application was developed to select system components and estimate costs from technical specifications and a company pricing database.
 
-## Engineering approach
+## Approach
 
 Inputs include fluid, flow rate, heat exchanger resistance and volume, piping material and system configuration. Calculations cover pipe sizing, velocity, Reynolds number and pressure losses, followed by pump, valve and expansion-tank selection.
 

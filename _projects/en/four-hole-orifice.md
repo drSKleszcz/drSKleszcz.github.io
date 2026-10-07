@@ -18,7 +18,7 @@ Multi-hole orifices change the pressure and velocity fields used in differential
 
 The study examined a four-hole plate with module m = 0.25 in a pipe with an internal diameter of 50 mm, combining CFD and laboratory measurements.
 
-## Engineering approach
+## Approach
 
 Realizable k–ε and k–ω BSL turbulence models were compared using static-pressure distributions and velocity fields. Experiments covered 0.167–0.686 dm³/s and Reynolds numbers of 4,200–19,000.
 

@@ -18,7 +18,7 @@ Same eksperymenty nie pozwalają opisać wszystkich procesów w okresowym wymien
 
 Opracowano trójwymiarowy model nieustalony do analizy wymiany ciepła i masy, wspierający projekt systemu kontroli mikroklimatu.
 
-## Podejście inżynierskie
+## Podejście
 
 Model łączył równania ciągłości, pędu i energii z modelami Eulerian Wall Film oraz transportu składników. Warunki periodyczne ograniczyły domenę do dwóch reprezentatywnych kanałów, a badania prototypu wspierały walidację.
 

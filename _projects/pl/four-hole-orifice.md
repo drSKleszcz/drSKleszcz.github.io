@@ -18,7 +18,7 @@ Kryzy wielootworowe zmieniają pola ciśnienia i prędkości wykorzystywane w po
 
 Badanie obejmowało kryzę czterootworową o module m = 0,25 w przewodzie o średnicy wewnętrznej 50 mm, łącząc CFD z pomiarami laboratoryjnymi.
 
-## Podejście inżynierskie
+## Podejście
 
 Porównano modele turbulencji realizable k–ε i k–ω BSL na podstawie rozkładów ciśnienia statycznego i pól prędkości. Eksperymenty obejmowały przepływy 0,167–0,686 dm³/s i liczby Reynoldsa 4200–19 000.
 

@@ -18,7 +18,7 @@ W tradycyjnych układach odzysku ciepła wymiennik może zamarzać zimą, a such
 
 Projekt doktorski obejmował opracowanie okresowego wymiennika przeciwprądowego, badania prototypu i analizę numeryczną, a następnie instalację w hotelu w pobliżu Krakowa.
 
-## Podejście inżynierskie
+## Podejście
 
 Cykliczna zmiana kierunku przepływu umożliwia odzysk ciepła i wilgoci bez osobnego, energochłonnego układu ochrony przed zamarzaniem. Pomiary laboratoryjne i symulacje pozwoliły ocenić działanie przy zmiennych warunkach na wlocie.
 

@@ -18,7 +18,7 @@ Testing hydrogen energy systems requires coordinated gas distribution, safety, c
 
 The project included P&ID development and integration of an electrolyzer, two turbines and a gas engine, together with measurement and safety systems.
 
-## Engineering approach
+## Approach
 
 The engineering scope covered gas detection and shutdown, ventilation, container heating, dry-cooler-based cooling and PLC automation. Measurements supported evaluation of the energy conversion chain from electrolysis to combustion.
 

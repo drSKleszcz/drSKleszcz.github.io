@@ -18,7 +18,7 @@ Using CO₂ as cushion gas in underground natural-gas storage requires an assess
 
 The study evaluated Polish storage options through site selection, CAPEX and OPEX modeling, and sensitivity analysis.
 
-## Engineering approach
+## Approach
 
 Costs covered drilling, injection, gas processing and decommissioning. A Monte Carlo analysis with 10,000 iterations varied gas prices, electricity costs and technical parameters, alongside seasonal price differences and potential CO₂ storage benefits.
 

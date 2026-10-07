@@ -7,7 +7,7 @@ description: Analiza ofert i reguły polityki cenowej w jednym procesie.
 permalink: /pl/projects/fedex-pricing/
 translation_key: fedex-pricing
 order: 14
-featured: 0
+featured: 3
 ---
 
 ## Wyzwanie
@@ -18,7 +18,7 @@ Analitycy potrzebowali połączenia plików ePAT z oceną ofert sprzedażowych i
 
 Opracowano program wczytujący wymagane pliki, analizujący oferty sprzedażowe i dostosowujący ceny do obowiązujących stawek handlowych.
 
-## Podejście inżynierskie
+## Podejście
 
 Wczytane pliki pozostają widoczne w interfejsie, co ułatwia wykrywanie problemów z danymi wejściowymi. Aplikacja wyróżnia zmiany wprowadzone w procesie kalkulacji.
 

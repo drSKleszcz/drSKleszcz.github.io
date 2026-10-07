@@ -18,7 +18,7 @@ Wykorzystanie CO₂ jako gazu buforowego w podziemnym magazynie gazu ziemnego wy
 
 W badaniu oceniono możliwości magazynowania w Polsce poprzez wybór lokalizacji, modelowanie CAPEX i OPEX oraz analizę wrażliwości.
 
-## Podejście inżynierskie
+## Podejście
 
 Model kosztów obejmował wiercenia, zatłaczanie, uzdatnianie gazu i likwidację instalacji. Analiza Monte Carlo z 10 000 iteracji uwzględniała zmienne ceny gazu, koszty energii i parametry techniczne, sezonowe różnice cen oraz możliwe korzyści z magazynowania CO₂.
 
