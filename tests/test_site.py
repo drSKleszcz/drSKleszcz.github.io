@@ -2,6 +2,7 @@
 import functools
 import http.server
 import os
+import struct
 from pathlib import Path
 import threading
 import unittest
@@ -15,6 +16,19 @@ ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
 
 class RenderedTests(unittest.TestCase):
+    def test_search_favicon_is_a_published_square_png(self):
+        for path in SITE.rglob('*.html'):
+            soup = BeautifulSoup(path.read_text(encoding='utf-8'), 'html.parser')
+            icon = soup.select_one('link[rel=icon][type="image/png"]')
+            self.assertIsNotNone(icon, f'{path}: provide a raster favicon for search')
+            target = SITE / urlparse(icon['href']).path.lstrip('/')
+            self.assertTrue(target.is_file(), str(target))
+            data = target.read_bytes()
+            self.assertEqual(data[:8], b'\x89PNG\r\n\x1a\n')
+            width, height = struct.unpack('>II', data[16:24])
+            self.assertEqual(width, height, str(target))
+            self.assertGreaterEqual(width, 48, str(target))
+
     def test_translations_metadata_and_internal_assets(self):
         pages = list(SITE.rglob('*.html'))
         self.assertGreaterEqual(len(pages), 42, 'Build the site first')
