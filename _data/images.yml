@@ -273,3 +273,19 @@
     320w, /assets/images/FB_IMG_1790760243979-480.webp 480w, /assets/images/FB_IMG_1790760243979-640.webp
     640w, /assets/images/FB_IMG_1790760243979-768.webp 768w, /assets/images/FB_IMG_1790760243979-950.webp
     950w
+/img/portfolio/orifice_website_home.png:
+  width: 1440
+  height: 960
+  src: /assets/images/orifice_website_home-1440.webp
+  srcset: /assets/images/orifice_website_home-160.webp 160w, /assets/images/orifice_website_home-320.webp
+    319w, /assets/images/orifice_website_home-480.webp 480w, /assets/images/orifice_website_home-640.webp
+    640w, /assets/images/orifice_website_home-768.webp 768w, /assets/images/orifice_website_home-960.webp
+    960w, /assets/images/orifice_website_home-1440.webp 1440w
+/img/portfolio/orifice_website_method.png:
+  width: 1440
+  height: 960
+  src: /assets/images/orifice_website_method-1440.webp
+  srcset: /assets/images/orifice_website_method-160.webp 160w, /assets/images/orifice_website_method-320.webp
+    319w, /assets/images/orifice_website_method-480.webp 480w, /assets/images/orifice_website_method-640.webp
+    640w, /assets/images/orifice_website_method-768.webp 768w, /assets/images/orifice_website_method-960.webp
+    960w, /assets/images/orifice_website_method-1440.webp 1440w

@@ -222,3 +222,16 @@ automated-price-list:
   references: []
   source: _posts/2014-07-18-project-software-1.markdown
   media_type: technical
+orifice-website:
+  category: software
+  client: Own project
+  image: /img/portfolio/orifice_website_home.png
+  gallery:
+  - src: /img/portfolio/orifice_website_method.png
+    alt:
+      en: Orifice website - calculation method page
+      pl: Strona Orifice - objaśnienie metody obliczeń
+    media_type: screen
+  references:
+  - https://orifice-software.com/
+  media_type: screen

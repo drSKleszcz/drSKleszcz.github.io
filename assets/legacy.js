@@ -3,8 +3,8 @@ layout: null
 ---
 (() => {
   const projects = {
-    {% for item in site.data.projects %}"portfolioModal-{{ item[1].legacy_id }}": {{ '/projects/' | append: item[0] | append: '/' | relative_url | jsonify }}{% unless forloop.last %},{% endunless %}
-    {% endfor %}
+    {% assign separator = '' %}{% for item in site.data.projects %}{% if item[1].legacy_id %}{{ separator }}"portfolioModal-{{ item[1].legacy_id }}": {{ '/projects/' | append: item[0] | append: '/' | relative_url | jsonify }}{% assign separator = ',' %}
+    {% endif %}{% endfor %}
   };
   function followLegacyLink() {
     const key = window.location.hash.slice(1);

@@ -25,7 +25,7 @@ class RenderedTests(unittest.TestCase):
             'constant-airflow', 'heat-exchanger-simulation', 'four-hole-orifice',
             'centrifugal-fan', 'v6-engine', 'underground-gas-storage',
             'solar-desalination', 'glycol-system-costing', 'silencer-design',
-            'automated-price-list',
+            'automated-price-list', 'orifice-website',
         ]
         for prefix in ['', 'pl/']:
             soup = BeautifulSoup((SITE / prefix / 'index.html').read_text(encoding='utf-8'), 'html.parser')
@@ -83,10 +83,30 @@ class RenderedTests(unittest.TestCase):
     def test_sitemap_contains_every_project_and_no_archive(self):
         tree = ET.parse(SITE / 'sitemap.xml')
         urls = [e.text for e in tree.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-        self.assertEqual(len(urls), 40)
-        self.assertEqual(len(set(urls)), 40)
-        self.assertEqual(sum('/projects/' in u and u.rstrip('/').split('/')[-1] != 'projects' for u in urls), 36)
+        self.assertEqual(len(urls), 42)
+        self.assertEqual(len(set(urls)), 42)
+        self.assertEqual(sum('/projects/' in u and u.rstrip('/').split('/')[-1] != 'projects' for u in urls), 38)
         self.assertFalse(any('2014' in u or '404' in u for u in urls))
+
+    def test_orifice_website_routes_gallery_and_localized_cross_links(self):
+        for lang, prefix, title in [('en', '', 'Orifice software website'), ('pl', '/pl', 'Strona internetowa Orifice')]:
+            route = prefix + '/projects/orifice-website/'
+            soup = BeautifulSoup((SITE / route.lstrip('/') / 'index.html').read_text(encoding='utf-8'), 'html.parser')
+            self.assertEqual(soup.h1.get_text(strip=True), title)
+            self.assertEqual(soup.html['lang'], lang)
+            self.assertEqual(soup.select_one('link[rel=canonical]')['href'], 'https://www.drskleszcz.pl' + route)
+            self.assertEqual(soup.select_one('[data-language-switch]')['href'], ('/pl' if not prefix else '') + '/projects/orifice-website/')
+            self.assertIsNotNone(soup.select_one(f'.prose a[href="{prefix}/projects/orifice-calculation-software/"]'))
+            self.assertIsNotNone(soup.select_one('.references a[href="https://orifice-software.com/"]'))
+            figures = soup.select('.project-images [data-image-preview]')
+            self.assertEqual([a['href'] for a in figures], ['/img/portfolio/orifice_website_home.png', '/img/portfolio/orifice_website_method.png'])
+            self.assertEqual(len(soup.select('.prose h2')), 4)
+            collection = BeautifulSoup((SITE / prefix.lstrip('/') / 'projects/index.html').read_text(encoding='utf-8'), 'html.parser')
+            self.assertEqual(collection.select_one('[data-results-count]').get_text(), '19')
+            self.assertEqual(len(collection.select('[data-category-section="software"] .atlas-row')), 6)
+        legacy = (SITE / 'assets/legacy.js').read_text(encoding='utf-8')
+        self.assertNotIn('"portfolioModal-"', legacy)
+        self.assertEqual(legacy.count('"portfolioModal-'), 18)
 
     def test_project_dates_are_not_displayed(self):
         for prefix, expected in [('', 'July 2023'), ('pl/', 'lipiec 2023')]:
@@ -305,7 +325,7 @@ class BrowserTests(unittest.TestCase):
                 dots.nth(1).click()
                 self.assertNotEqual(carousel.locator('.project-card:visible a').get_attribute('href'), first_url)
                 expect(pagination.locator('[aria-current=true]')).to_have_attribute('data-slide-index', '1')
-                expect(carousel.locator('[data-position]')).to_contain_text('2 / 18')
+                expect(carousel.locator('[data-position]')).to_contain_text('2 / 19')
                 self.assertFalse(carousel.locator('[data-position]').evaluate('el => !!el.closest("[hidden]")'))
                 self.assertAlmostEqual(grid.bounding_box()['height'], height, delta=1)
                 self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
@@ -355,7 +375,7 @@ class BrowserTests(unittest.TestCase):
                 dots.nth(1).click()
                 self.assertNotEqual(carousel.locator('.project-card:visible a').get_attribute('href'), first_url)
                 expect(pagination.locator('[aria-current=true]')).to_have_attribute('data-slide-index', '1')
-                expect(carousel.locator('[data-position]')).to_contain_text('2 / 17')
+                expect(carousel.locator('[data-position]')).to_contain_text('2 / 18')
                 self.assertFalse(carousel.locator('[data-position]').evaluate('el => !!el.closest("[hidden]")'))
                 self.assertAlmostEqual(grid.bounding_box()['height'], height, delta=1)
                 self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
@@ -524,7 +544,7 @@ class BrowserTests(unittest.TestCase):
         for stem in ['mtt-', 'tea-', 'fedex_app-', 'orficle_2-']:
             self.assertFalse(any('/assets/images/' + stem in url for url in requested), requested)
         self.page.unroute('**/assets/site.js*', delay_script)
-        self.page.wait_for_function('''() => ['microclimate-control', 'energy-techno-economics', 'automated-price-list'].every(slug => {
+        self.page.wait_for_function('''() => ['microclimate-control', 'energy-techno-economics', 'orifice-website'].every(slug => {
             const image = document.querySelector(`[data-home-carousel] a[href="/projects/${slug}/"] img`);
             return image.complete && image.naturalWidth > 0;
         })''', timeout=5000)
@@ -550,7 +570,7 @@ class BrowserTests(unittest.TestCase):
                 page.on('request', lambda request: requested.append(request.url))
                 page.goto(self.base + '/')
                 page.wait_for_timeout(1000)
-                self.assertFalse(any('/assets/images/tea-' in url or '/assets/images/cennik3-' in url for url in requested), requested)
+                self.assertFalse(any('/assets/images/tea-' in url or '/assets/images/orifice_website_home-' in url for url in requested), requested)
                 page.locator('.hero-actions a[href="#projects"]').click()
                 page.locator('[data-carousel-pagination] button').nth(1).click()
                 page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] .project-card:not([hidden]) img');return img.complete&&img.naturalWidth>0}''')
@@ -571,19 +591,19 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/')
         self.page.wait_for_timeout(1000)
         self.assertEqual(len(pending), 1)
-        self.assertFalse(any('/tea-' in url or '/cennik3-' in url for url in requested), requested)
+        self.assertFalse(any('/tea-' in url or '/orifice_website_home-' in url for url in requested), requested)
         self.assertEqual(self.page.locator('[data-home-carousel] .project-card:visible img').get_attribute('fetchpriority'), 'low')
         self.page.evaluate('window.testHidden=true;document.dispatchEvent(new Event("visibilitychange"))')
         pending[0].abort()
         self.page.wait_for_timeout(150)
-        self.assertFalse(any('/tea-' in url or '/cennik3-' in url for url in requested), requested)
+        self.assertFalse(any('/tea-' in url or '/orifice_website_home-' in url for url in requested), requested)
         self.page.evaluate('window.testHidden=false;document.dispatchEvent(new Event("visibilitychange"))')
-        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''')
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/orifice-website/"] img');return img.complete&&img.naturalWidth>0}''')
         self.assertTrue(any('/tea-' in url for url in requested))
-        self.assertTrue(any('/cennik3-' in url for url in requested))
+        self.assertTrue(any('/orifice_website_home-' in url for url in requested))
 
     def test_background_window_matches_desktop_and_tablet_without_loading_all_cards(self):
-        for width, slugs in [(768, ['microclimate-control','energy-techno-economics','fedex-pricing','automated-price-list']), (1440, ['microclimate-control','energy-techno-economics','fedex-pricing','orifice-calculation-software','gas-turbine-digital-twin','automated-price-list'])]:
+        for width, slugs in [(768, ['microclimate-control','energy-techno-economics','fedex-pricing','orifice-website']), (1440, ['microclimate-control','energy-techno-economics','fedex-pricing','orifice-calculation-software','gas-turbine-digital-twin','orifice-website'])]:
             with self.browser.new_context(viewport={'width':width,'height':900}) as context:
                 page = context.new_page()
                 page.goto(self.base + '/pl/')
@@ -618,11 +638,11 @@ class BrowserTests(unittest.TestCase):
         self.page.set_viewport_size({'width':390,'height':844})
         self.page.add_init_script('''window.requestIdleCallback=undefined;Object.defineProperty(navigator,'connection',{value:undefined});''')
         self.page.goto(self.base + '/')
-        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/orifice-website/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
         self.page.locator('.hero-actions a[href="#projects"]').click()
         self.page.locator('[data-prev]').evaluate('button=>button.click()')
         self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
-        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/silencer-design/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
+        self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
         self.page.locator('[data-next]').evaluate('button=>button.click()')
         self.page.locator('[data-next]').evaluate('button=>button.click()')
         self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
@@ -690,13 +710,13 @@ class BrowserTests(unittest.TestCase):
             first = cards.first.locator('a').get_attribute('href')
             self.assertIn('microclimate-control', first)
             seen = set()
-            for _ in range(18):
+            for _ in range(19):
                 seen.add(cards.first.locator('a').get_attribute('href'))
                 carousel.locator('[data-next]').click()
-            self.assertEqual(len(seen), 18)
+            self.assertEqual(len(seen), 19)
             self.assertEqual(cards.first.locator('a').get_attribute('href'), first)
             carousel.locator('[data-prev]').click()
-            self.assertIn('automated-price-list', cards.first.locator('a').get_attribute('href'))
+            self.assertIn('orifice-website', cards.first.locator('a').get_attribute('href'))
             self.page.set_viewport_size({'width': 768, 'height': 1000})
             expect(cards).to_have_count(2)
             self.page.set_viewport_size({'width': 390, 'height': 844})
@@ -713,7 +733,7 @@ class BrowserTests(unittest.TestCase):
             expect(self.page.locator('[data-home-carousel] .project-card:visible')).to_have_count(4 if width > 1000 else 1)
             grid = self.page.locator('.featured-grid')
             heights = []
-            for _ in range(18):
+            for _ in range(19):
                 heights.append(grid.bounding_box()['height'])
                 if width <= 600:
                     self.touch_drag(-80)
@@ -1489,14 +1509,14 @@ class BrowserTests(unittest.TestCase):
                 expect(thumb).to_be_focused()
 
     def test_project_atlas_chapters_and_filter_reset(self):
-        categories = [('engineering', 6), ('simulation', 4), ('analysis', 3), ('software', 5)]
+        categories = [('engineering', 6), ('simulation', 4), ('analysis', 3), ('software', 6)]
         for prefix in ['', '/pl']:
             self.page.set_viewport_size({'width': 1440, 'height': 900})
             self.page.goto(self.base + prefix + '/projects/')
             chapters = self.page.locator('[data-category-section]')
             expect(chapters).to_have_count(4)
             self.assertEqual(chapters.evaluate_all('(nodes) => nodes.map(node => node.dataset.categorySection)'), [key for key, _ in categories])
-            expect(self.page.locator('.atlas-row')).to_have_count(18)
+            expect(self.page.locator('.atlas-row')).to_have_count(19)
             for key, count in categories:
                 chapter = self.page.locator('[data-category-section="' + key + '"]')
                 expect(chapter.locator('.atlas-row')).to_have_count(count)
@@ -1629,14 +1649,14 @@ class BrowserTests(unittest.TestCase):
         first = cards.first.locator('a').get_attribute('href')
         self.assertIn('gas-turbine-digital-twin', first)
         seen = set()
-        for _ in range(17):
+        for _ in range(18):
             seen.add(self.page.locator('[data-carousel] .project-card[style="order: 0;"] a').get_attribute('href'))
             self.page.locator('[data-next]').click()
-        self.assertEqual(len(seen), 17)
+        self.assertEqual(len(seen), 18)
         self.assertFalse(any('microclimate-control' in url for url in seen))
         self.assertEqual(cards.first.locator('a').get_attribute('href'), first)
         self.page.locator('[data-prev]').click()
-        self.assertTrue(any('automated-price-list' in a.get_attribute('href') for a in cards.locator('a').all()))
+        self.assertTrue(any('orifice-website' in a.get_attribute('href') for a in cards.locator('a').all()))
         self.page.set_viewport_size({'width': 390, 'height': 844})
         expect(cards).to_have_count(1)
 
@@ -1657,8 +1677,8 @@ class BrowserTests(unittest.TestCase):
     def test_collection_filters_and_language_pairs(self):
         for prefix in ['', '/pl']:
             self.page.goto(self.base + prefix + '/projects/')
-            expect(self.page.locator('[data-project]:visible')).to_have_count(18)
-            for category, count in [('engineering', 6), ('simulation', 4), ('analysis', 3), ('software', 5), ('all', 18)]:
+            expect(self.page.locator('[data-project]:visible')).to_have_count(19)
+            for category, count in [('engineering', 6), ('simulation', 4), ('analysis', 3), ('software', 6), ('all', 19)]:
                 button = self.page.locator(f'[data-filter="{category}"]')
                 button.click()
                 expect(button).to_have_attribute('aria-pressed', 'true')
@@ -1767,7 +1787,7 @@ class BrowserTests(unittest.TestCase):
         with self.browser.new_context(java_script_enabled=False, viewport={'width':390, 'height':844}) as context:
             page = context.new_page()
             page.goto(self.base + '/pl/projects/')
-            expect(page.locator('[data-project]')).to_have_count(18)
+            expect(page.locator('[data-project]')).to_have_count(19)
             expect(page.locator('[data-category-section]:visible')).to_have_count(4)
             expect(page.locator('#site-nav')).to_be_visible()
             expect(page.locator('#site-nav [data-nav-home]')).to_have_text('Strona główna')

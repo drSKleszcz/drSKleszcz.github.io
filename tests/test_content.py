@@ -12,8 +12,8 @@ class ContentTests(unittest.TestCase):
     def test_all_original_projects_have_two_complete_translations(self):
         originals = {str(frontmatter(p)['modal-id']) for p in (ROOT / '_posts').glob('*.markdown')}
         shared = yaml.safe_load((ROOT / '_data/projects.yml').read_text(encoding='utf-8'))
-        self.assertEqual({str(p['legacy_id']) for p in shared.values()}, originals)
-        self.assertEqual(len(shared), 18)
+        self.assertEqual({str(p['legacy_id']) for p in shared.values() if 'legacy_id' in p}, originals)
+        self.assertEqual(len(shared), 19)
         routes = set()
         for project_id, metadata in shared.items():
             for lang, prefix in [('en', ''), ('pl', '/pl')]:
@@ -30,6 +30,26 @@ class ContentTests(unittest.TestCase):
             self.assertTrue((ROOT / metadata['image'].lstrip('/')).is_file())
             for figure in metadata.get('gallery', []):
                 self.assertTrue((ROOT / figure['src'].lstrip('/')).is_file())
+
+    def test_orifice_website_is_separate_bilingual_software_case_study(self):
+        shared = yaml.safe_load((ROOT / '_data/projects.yml').read_text(encoding='utf-8'))
+        self.assertIn('orifice-website', shared)
+        meta = shared['orifice-website']
+        self.assertEqual(meta['category'], 'software')
+        self.assertNotIn('legacy_id', meta)
+        self.assertEqual(sum(p['category'] == 'software' for p in shared.values()), 6)
+        self.assertIn('https://orifice-software.com/', meta['references'])
+        images = yaml.safe_load((ROOT / '_data/images.yml').read_text(encoding='utf-8'))
+        for src in [meta['image']] + [f['src'] for f in meta['gallery']]:
+            self.assertIn(src, images)
+            self.assertGreater(images[src]['width'], 1000)
+            self.assertTrue((ROOT / images[src]['src'].lstrip('/')).is_file())
+        for lang, prefix in [('en', ''), ('pl', '/pl')]:
+            path = ROOT / '_projects' / lang / 'orifice-website.md'
+            data = frontmatter(path)
+            self.assertEqual(data['order'], 18)
+            self.assertEqual(data['featured'], 0)
+            self.assertIn(f'{prefix}/projects/orifice-calculation-software/', path.read_text(encoding='utf-8'))
 
     def test_translated_interface_keys_match(self):
         translations = yaml.safe_load((ROOT / '_data/i18n.yml').read_text(encoding='utf-8'))

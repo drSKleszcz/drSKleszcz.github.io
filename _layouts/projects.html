@@ -5,7 +5,7 @@ layout: default
 {% assign projects = site.projects | where: 'lang', page.lang | sort: 'order' %}
 <div class="container collection section">
   <header class="collection-heading"><p class="eyebrow">{{ t.collection_label }}</p><h1>{{ t.collection_title }}</h1><p>{{ t.collection_description }}</p></header>
-  <div class="filter-bar" data-filter-controls hidden><div class="filters" role="group" aria-label="{{ t.filters_label }}"><button type="button" data-filter="all" aria-pressed="true">{{ t.all }}</button>{% for category in t.categories %}<button type="button" data-filter="{{ category[0] }}" aria-pressed="false">{{ category[1] }}</button>{% endfor %}</div><p class="filter-count visually-hidden" aria-live="polite" aria-atomic="true"><span data-results-count>18</span> {{ t.results_count }}</p></div>
+  <div class="filter-bar" data-filter-controls hidden><div class="filters" role="group" aria-label="{{ t.filters_label }}"><button type="button" data-filter="all" aria-pressed="true">{{ t.all }}</button>{% for category in t.categories %}<button type="button" data-filter="{{ category[0] }}" aria-pressed="false">{{ category[1] }}</button>{% endfor %}</div><p class="filter-count visually-hidden" aria-live="polite" aria-atomic="true"><span data-results-count>{{ projects.size }}</span> {{ t.results_count }}</p></div>
   <div class="project-atlas">
     {% for category in t.categories %}{% assign category_key = category[0] %}
     <section class="atlas-chapter" id="{{ category_key }}" data-category-section="{{ category_key }}" aria-labelledby="chapter-{{ category_key }}">
