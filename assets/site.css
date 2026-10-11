@@ -9,7 +9,6 @@
   --accent: #7ef0d4;
   --warm: #ffb36b;
   --line: #3a4b4f;
-  --contact-end: #0f2b27;
   --contact-glow: #ffb36b1f;
   --page-glow: #7ef0d414;
   --page-glow-warm: #ffb36b0d;
@@ -306,7 +305,7 @@ input:focus, textarea:focus { border-color: var(--accent); }
   --text: #202d30; --muted: #526466; --reading: #344548;
   --accent: #096c61; --accent-hover: #075c53; --line: #c8d2cf; --header: #f7f6f2d9; --button-text: #ffffff;
   --warm: #a84f0a;
-  --contact-end: #dcece6; --contact-glow: #a84f0a14; --page-glow: #096c610f; --page-glow-warm: #a84f0a0a;
+  --contact-glow: #a84f0a14; --page-glow: #096c610f; --page-glow-warm: #a84f0a0a;
   --card-hover-shadow: 0 16px 26px #1822252e, 0 4px 8px #18222514;
 }
 .theme-toggle { margin-left: auto; border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 9px 12px; min-height: 44px; font-size: .8rem; }
@@ -810,7 +809,7 @@ html[data-theme-changing] body *, html[data-theme-changing] body *::before, html
 /* Colour refresh with two fixed roles: mint marks everything you can click
    (buttons, links, active navigation), warm orange marks labels and
    highlights (eyebrows, numbers, categories, markers). The header blends into
-   the page and the contact block runs into the footer. */
+   the page. */
 body { background-image: radial-gradient(900px 620px at 88% 12%, var(--page-glow), transparent 70%), radial-gradient(700px 500px at 0% 70%, var(--page-glow-warm), transparent 70%); background-repeat: no-repeat; }
 .site-header { border-bottom-color: transparent; }
 /* Lower header on desktop only; the mobile header keeps its measured height. */
@@ -827,8 +826,57 @@ body { background-image: radial-gradient(900px 620px at 88% 12%, var(--page-glow
   .expertise-grid article:hover .expertise-number { color: var(--warm); }
 }
 
-/* The contact block starts in the colour of the section above it and ends in
-   the footer colour, so the two read as one closing band. */
-.contact-section { border-top: 0; background: radial-gradient(55% 70% at 92% 35%, var(--contact-glow), transparent 70%), linear-gradient(180deg, var(--panel) 0%, var(--contact-end) 78%); }
-.home-page .site-footer { background: var(--contact-end); border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent); }
-.contact-section input, .contact-section textarea { background: color-mix(in srgb, var(--bg) 70%, transparent); }
+/* Contact follows the same rhythm as the other sections: page surface below
+   the about panel, footer on the panel surface. */
+.contact-section { background: var(--bg); border-top: 1px solid var(--line); }
+.home-page .site-footer { background: var(--panel); border-top: 1px solid var(--line); }
+.contact-section input, .contact-section textarea { background: var(--panel); }
+
+/* Livelier sections: every home section and the project index header carry a
+   soft mint and warm glow like the hero, expertise and experience become
+   cards. Glows are full-bleed pseudo
+   elements, so main clips horizontal overflow. */
+main { overflow-x: clip; }
+.home-page main > section.section { position: relative; isolation: isolate; }
+.home-page main > section.section::before, .collection-heading::before { content: ""; position: absolute; z-index: -1; inset: 0; pointer-events: none; }
+#expertise::before, #contact::before { background: radial-gradient(620px 460px at 92% 10%, var(--page-glow-warm), transparent 70%), radial-gradient(700px 520px at 0% 100%, var(--page-glow), transparent 70%); }
+#projects::before { inset: 0 calc(50% - 50vw); background: radial-gradient(700px 520px at 6% 4%, var(--page-glow), transparent 70%), radial-gradient(560px 420px at 100% 100%, var(--page-glow-warm), transparent 70%); }
+#about::before { background: radial-gradient(640px 480px at 95% 20%, var(--page-glow), transparent 70%), radial-gradient(520px 400px at 10% 95%, var(--page-glow-warm), transparent 70%); }
+.home-page main > section.section h2 { font-size: clamp(2.6rem, 4.2vw, 3.8rem); letter-spacing: -.035em; }
+.expertise-grid { gap: 20px; }
+.expertise-grid article, .expertise-grid article:first-child, .expertise-grid article:last-child { position: relative; overflow: hidden; padding: 30px 28px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, color-mix(in srgb, var(--panel-light) 85%, transparent), color-mix(in srgb, var(--panel) 60%, transparent)); transition: transform var(--motion-hover) var(--ease-ui), border-color var(--motion-hover) var(--ease-ui); }
+.expertise-grid article::before, .expertise-grid article:not(:first-child)::before { left: 0; background: var(--warm); }
+.expertise-grid .expertise-number { font-family: inherit; font-size: 2.4rem; font-weight: 600; line-height: 1; letter-spacing: -.04em; margin-bottom: 22px; }
+.expertise-grid .tools { margin-top: auto; padding-top: 16px; border-top: 1px dashed var(--line); }
+.portrait-panel { border-radius: 22px; overflow: hidden; }
+.about-experience { border-top: 0; }
+.experience-grid { gap: 18px; }
+.experience-grid article { padding: 20px 22px; border: 1px solid var(--line); border-left: 3px solid var(--warm); border-radius: 16px; background: color-mix(in srgb, var(--bg) 45%, transparent); }
+@media (hover: hover) and (pointer: fine) {
+  .expertise-grid article:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--warm) 45%, var(--line)); }
+  .atlas-row:hover { transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 18px 40px -24px var(--accent); }
+}
+@media (max-width: 900px) {
+  .expertise-grid article, .expertise-grid article:first-child, .expertise-grid article:last-child { padding: 24px 22px; border-top: 1px solid var(--line); }
+}
+
+/* Project index: glowing header, numbered chapters and project rows as cards. */
+.collection { padding-top: 0; counter-reset: chapter; }
+.collection-heading { position: relative; max-width: none; margin-bottom: 0; padding: 72px 0 40px; }
+.collection-heading::before { inset: -120px calc(50% - 50vw) -90px; background: radial-gradient(640px 400px at 85% 30%, var(--page-glow), transparent 70%), radial-gradient(520px 340px at 0% 100%, var(--page-glow-warm), transparent 70%); }
+.collection-heading > * { max-width: 850px; }
+.collection-heading h1 { letter-spacing: -.035em; }
+.atlas-chapter { counter-increment: chapter; }
+.atlas-chapter-heading::before { content: counter(chapter, decimal-leading-zero) " /"; width: auto; height: auto; margin-bottom: 16px; background: none; color: var(--warm); font-size: 2.4rem; font-weight: 600; line-height: 1; letter-spacing: -.04em; }
+.atlas-chapter-heading h2 { font-size: clamp(1.4rem, 2vw, 1.75rem); }
+.atlas-list { display: grid; gap: 14px; }
+.atlas-row { overflow: hidden; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, color-mix(in srgb, var(--panel-light) 70%, transparent), color-mix(in srgb, var(--panel) 60%, transparent)); transition: transform var(--motion-hover) var(--ease-ui), border-color var(--motion-hover) var(--ease-ui), box-shadow var(--motion-hover) var(--ease-ui); }
+.atlas-row-link { grid-template-columns: minmax(0, 1fr) 200px; min-height: 0; padding: 22px 22px 22px 26px; }
+.atlas-row-meta { color: var(--warm); }
+.atlas-row-image { width: 200px; height: 130px; }
+@media (max-width: 900px) {
+  .atlas-row-link { grid-template-columns: minmax(0, 1fr) 110px; padding: 18px; }
+  .atlas-row-image { width: 110px; height: 84px; }
+  .atlas-chapter-heading::before { font-size: 1.8rem; }
+}
+@media (max-width: 600px) { .atlas-row-image { width: 96px; height: 72px; } }
