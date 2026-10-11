@@ -43,12 +43,13 @@ description: |
     </ul>
 
     <div style="text-align: center; margin-top: 20px;">
-        <img src="img/portfolio/oricalc_screen_2.png" alt="OriCalc results, flow range and measurement error" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+        <a href="img/portfolio/oricalc_screen_2.png" target="_blank" rel="noopener" title="Open full size"><img src="img/portfolio/oricalc_screen_2.png" alt="OriCalc results, flow range and measurement error" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 5px;"></a>
     </div>
+    <p style="text-align: center; font-size: 0.9em; color: #777; margin-top: 15px;">Click an image to open it in full size.</p>
     <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 15px;">
-        <img src="img/portfolio/oricalc_report_1.png" alt="Report page 1: sizing and fluid parameters" style="width: 31%; min-width: 160px; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;">
-        <img src="img/portfolio/oricalc_report_2.png" alt="Report page 2: flow range and measurement error" style="width: 31%; min-width: 160px; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;">
-        <img src="img/portfolio/oricalc_report_3.png" alt="Report page 3: technical drawing and pressure tappings" style="width: 31%; min-width: 160px; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;">
+        <a href="img/portfolio/oricalc_report_1.png" target="_blank" rel="noopener" title="Open full size" style="width: 31%; min-width: 160px;"><img src="img/portfolio/oricalc_report_1.png" alt="Report page 1: sizing and fluid parameters" style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;"></a>
+        <a href="img/portfolio/oricalc_report_2.png" target="_blank" rel="noopener" title="Open full size" style="width: 31%; min-width: 160px;"><img src="img/portfolio/oricalc_report_2.png" alt="Report page 2: flow range and measurement error" style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;"></a>
+        <a href="img/portfolio/oricalc_report_3.png" target="_blank" rel="noopener" title="Open full size" style="width: 31%; min-width: 160px;"><img src="img/portfolio/oricalc_report_3.png" alt="Report page 3: technical drawing and pressure tappings" style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 5px; padding: 3px;"></a>
     </div>
     <p style="text-align: center; margin-top: 15px;"><a href="https://orifice-software.com/" target="_blank" rel="noopener">Visit orifice-software.com →</a></p>
   </div>

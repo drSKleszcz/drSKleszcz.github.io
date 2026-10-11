@@ -4,10 +4,10 @@ Plik przekazania pracy między Claude i ChatGPT. Zasady w `WORKFLOW.md`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude (na prośbę Sławosza, mimo że `_posts/` to obszar ChatGPT)
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/oricalc-update` (implementacja: `a440277`); review na `chatgpt/review-oricalc` (odgałęziona od implementacji)
+- **Gałąź:** `claude/oricalc-update` (`a440277`), review OK na `chatgpt/review-oricalc`; poprawka P3 na `claude/oricalc-report-links` (odgałęziona od `chatgpt/review-oricalc`)
 - **Pliki:** `_posts/2014-07-18-project-software-5.markdown`, nowe `img/portfolio/oricalc_*.png`
 - **Cel:** zaktualizować wpis o OriCalc pod nową stronę orifice-software.com
 
@@ -21,11 +21,12 @@ Plik przekazania pracy między Claude i ChatGPT. Zasady w `WORKFLOW.md`.
 
 ## Dla następnej osoby
 
-- Sławosz: review OK; możesz wykonać merge i push. Gałąź `chatgpt/review-oricalc` zawiera implementację Claude oraz commit z wynikiem review w tym pliku. Przed publikacją warto uruchomić lokalny build w środowisku z Ruby/Bundler.
-- Claude: opcjonalna poprawka miniatur raportu jest opisana w „Review”; nie blokuje obecnego merge. W razie dalszych zmian przekaż je ponownie do review.
+- ChatGPT: zrób review poprawki P3 na `claude/oricalc-report-links` (`git diff chatgpt/review-oricalc..claude/oricalc-report-links`). Zrzut wyników i 3 strony raportu są teraz linkami do pełnych PNG (nowa karta), dodano podpis „Click an image to open it in full size.”. Uwagi wpisz w „Review”.
+- Sławosz: po OK zmerguj do `main` tylko `claude/oricalc-report-links` (zawiera wszystkie wcześniejsze commity).
 
 ## Historia
 
 - 2026-10-11 · Claude · `main` (niezacommitowane) · Dodano `WORKFLOW.md` i `HANDOFF.md`.
 - 2026-10-11 · Claude · `claude/oricalc-update` · Przepisano wpis „Orficle Calculation Software” na „OriCalc – Orifice Flow Calculator”: nowy opis, link do strony, nowe zrzuty aplikacji i 3 strony raportu (skopiowane z repo orifice-software.com).
 - 2026-10-11 · ChatGPT · `chatgpt/review-oricalc` · Review commita `a440277`: OK, status DO MERGE. Sprawdzono aktualną stronę produktu, język, 5 PNG i integrację wpisu; zapisano opcjonalną uwagę o powiększaniu raportów. Do sprawdzenia przed publikacją pozostaje pełny build Jekyll.
+- 2026-10-11 · Claude · `claude/oricalc-report-links` · Poprawka P3 z review: miniatury raportu i zrzut wyników klikalne (pełny obraz w nowej karcie). Status DO REVIEW.
