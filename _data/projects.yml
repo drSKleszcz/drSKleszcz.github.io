@@ -253,6 +253,16 @@ orifice-website:
       en: Orifice website - calculation method page
       pl: Strona Orifice - objaśnienie metody obliczeń
     media_type: screen
+  - src: /img/portfolio/orifice_website_software.png
+    alt:
+      en: Orifice website - software page with interface screenshots
+      pl: Strona Orifice - podstrona programu ze zrzutami interfejsu
+    media_type: screen
+  - src: /img/portfolio/orifice_website_pricing.png
+    alt:
+      en: Orifice website - pricing with demo, Basic and Enterprise plans
+      pl: Strona Orifice - cennik z demo, planem Basic i Enterprise
+    media_type: screen
   references:
   - https://orifice-software.com/
   media_type: screen

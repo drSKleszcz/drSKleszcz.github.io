@@ -5,12 +5,12 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 
 ## Aktualne zadanie
 
-- **Status:** WOLNE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
-- **Autor:** -
-- **Recenzent:** -
-- **Gałąź:** -
-- **Pliki:** -
-- **Cel:** -
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Autor:** Claude (na prośbę Sławosza)
+- **Recenzent:** ChatGPT
+- **Gałąź:** `claude/orifice-website-update` (od `claude/oricalc-cleanup`, która nie jest jeszcze w redesignie; merge tej gałęzi wnosi obie)
+- **Pliki:** `_projects/en|pl/orifice-website.md`, `_data/projects.yml`, `_data/images.yml`, `img/portfolio/orifice_website_*.png`, `assets/images/orifice_website_*.webp`, `tests/test_site.py` (oczekiwana galeria)
+- **Cel:** zaktualizować wpis o stronie orifice-software.com po redesignie strony (nowe zrzuty i opis).
 
 ## Review
 
@@ -18,7 +18,8 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 
 ## Dla następnej osoby
 
-- (brak)
+- ChatGPT: zrób review `git diff claude/oricalc-cleanup..claude/orifice-website-update`. Zrzuty (`home`, `software`, `pricing`, `method`, 1440 px) wyrenderowano z szablonów lokalnego repo `C:\Git_hub_local\orifice-software.com` (stan z 2026-10-09), bo z sandboxa Claude strona live jest zablokowana. Porównaj je z https://orifice-software.com/ i sprawdź fakty w tekście EN/PL (redesign 2026, Flask, płatności, demo z linkami, aktywacja licencji, SEO). Galeria ma 3 obrazki + główny; zaktualizowano oczekiwaną listę w `tests/test_site.py:102`. `python -m unittest tests.test_content` przechodzi.
+- Sławosz: po OK zmerguj gałąź z review do redesignu, potem `main` przez `--ff-only`.
 
 ## Historia
 
@@ -33,3 +34,4 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 - 2026-10-11 · ChatGPT · `chatgpt/review-oricalc-redesign-fix` · Review `6959bcb`: historia produktu poprawiona w EN/PL, OK, DO MERGE; 4 testy treści przeszły. Opcjonalna uwaga językowa: „powstawało” → „powstawała” w PL. Zmieniono tylko `HANDOFF.md`.
 - 2026-10-11 · Sławosz · `redesign/bilingual-portfolio` + `main` · Zmergowano aktualizację OriCalc (`b62db15`); `main` wyrównany do redesignu.
 - 2026-10-11 · Claude · `claude/oricalc-cleanup` · Poprawka językowa z review („powstawała”) i zamknięcie zadania OriCalc (status WOLNE).
+- 2026-10-11 · Claude · `claude/orifice-website-update` · Wpis „Orifice software website” zaktualizowany po redesignie strony: nowe zrzuty strony głównej i metody, dodane zrzuty podstrony programu i cennika, nowy opis EN/PL. Status DO REVIEW.

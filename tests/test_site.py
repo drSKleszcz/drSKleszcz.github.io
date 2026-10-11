@@ -99,7 +99,7 @@ class RenderedTests(unittest.TestCase):
             self.assertIsNotNone(soup.select_one(f'.prose a[href="{prefix}/projects/orifice-calculation-software/"]'))
             self.assertIsNotNone(soup.select_one('.references a[href="https://orifice-software.com/"]'))
             figures = soup.select('.project-images [data-image-preview]')
-            self.assertEqual([a['href'] for a in figures], ['/img/portfolio/orifice_website_home.png', '/img/portfolio/orifice_website_method.png'])
+            self.assertEqual([a['href'] for a in figures], ['/img/portfolio/orifice_website_home.png', '/img/portfolio/orifice_website_method.png', '/img/portfolio/orifice_website_software.png', '/img/portfolio/orifice_website_pricing.png'])
             self.assertEqual(len(soup.select('.prose h2')), 4)
             collection = BeautifulSoup((SITE / prefix.lstrip('/') / 'projects/index.html').read_text(encoding='utf-8'), 'html.parser')
             self.assertEqual(collection.select_one('[data-results-count]').get_text(), '19')
