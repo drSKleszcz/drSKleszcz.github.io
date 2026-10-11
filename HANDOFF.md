@@ -5,20 +5,24 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/color-coherence`
+- **Gałąź:** autor `claude/color-coherence` (`f9b9031`), review `chatgpt/review-color-coherence`
 - **Pliki:** `assets/site.css`
 - **Cel:** Po publikacji Sławosz uznał, że kolory są niespójne. Przyczyna: dwa akcenty (mięta i pomarańcz) bez reguły, plus 4 kolory kategorii, z których dwa dublowały akcenty (pomarańcz znaczył raz „symulacje”, raz „wyróżnienie”). Teraz stała zasada: **mięta = wszystko klikalne** (przyciski, linki, aktywna nawigacja, przycisk kontaktu), **pomarańcz = etykiety i wyróżnienia** (eyebrow, druga linia hero, numery kompetencji, kategoria na kartach, znaczniki nagłówków w opisie projektu, kreska rozdziału w atlasie). Usunięto kolory kategorii (`--cat-*`, kolorowe górne krawędzie kart, kropki w filtrach) i kolorowe kolumny kompetencji. Paleta, wtopiony pasek i blok kontakt + stopka zostają.
 
 ## Review
 
-- (czeka na review)
+- **Werdykt: OK, status DO MERGE.** Review `main` (`940360b`) → `claude/color-coherence` (`f9b9031`); brak potwierdzonych uwag wymagających zmian.
+- Sprawdzono powrót aktywnej nawigacji i przycisku kontaktu do miętowego akcentu, pomarańczowe etykiety/numery/znaczniki, neutralne narzędzia kompetencji oraz usunięcie tokenów kategorii, kolorowych krawędzi kart i kropek filtrów. Pozostałe style nie odwołują się do usuniętych tokenów. Gradient kontaktu i poprawka wysokości paska mobilnego pozostają bez zmian.
+- Izolowany test Chrome z aktualnym CSS: oba motywy przy szerokościach 390/900/901/1280 px. Końcowe kolory aktywnej nawigacji, języka i przycisku kontaktu są zgodne z miętowym akcentem; etykieta, kategoria na karcie i numer kompetencji mają wspólny pomarańczowy kolor. Kontrast wybranych tekstów (etykieta na tle strony, kategoria na panelu, narzędzia kompetencji, tekst przycisku) wyniósł minimum 8,24:1 w ciemnym motywie i 5,13:1 w jasnym. Computed min-height wewnętrznej części paska: 80 px do 900 px, 78 px od 901 px; reguła mobilna nie została zmieniona. To kontrola wybranych styli na izolowanej stronie, nie pełny audyt wszystkich stron.
+- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły; detektor Impeccable dla CSS nie zgłosił uwag. Pełny build, testy przeglądarkowe i 188 skanów axe bez błędów to raport autora, nie niezależny wynik recenzenta.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review `main..claude/color-coherence` (blok „Colour refresh” na końcu `site.css` przepisany, usunięte tokeny `--cat-*` i `--warm-button-text`). Lokalnie: build Jekyll, pełne `tests` (2 znane błędy środowiska jak na `main`), audyt WCAG `--full`: 188 skanów, 0 błędów. Reguła wysokości paska tylko od 901 px pozostaje bez zmian.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-color-coherence` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
+- Recenzent zmienił wyłącznie `HANDOFF.md`.
 
 ## Historia
 
@@ -51,3 +55,4 @@ Gałąź główna: `main`.
 - 2026-10-11 · Claude · `claude/mobile-header-fix` · Naprawa: niższy pasek tylko na desktopie, mobilny pasek wraca do 81 px. Status DO REVIEW.
 - 2026-10-11 · Sławosz · `main` · Scalono poprawkę paska (`940360b`), strona opublikowana.
 - 2026-10-11 · Claude · `claude/color-coherence` · Spójność kolorów: mięta = klikalne, pomarańcz = etykiety; usunięte kolory kategorii i kolumn. Status DO REVIEW.
+- 2026-10-11 · ChatGPT · `chatgpt/review-color-coherence` · Review `f9b9031`: OK, DO MERGE. Sprawdzono role kolorów, usunięte tokeny, oba motywy i granicę 900/901 px. Izolowany test Chrome, kontrast wybranych tekstów, 4 testy treści, kontrola diff i detektor przeszły. Zmieniono tylko `HANDOFF.md`.
