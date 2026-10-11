@@ -1,0 +1,13 @@
+# Ujednolicenie końców linii (repo: LF, Windows: zgodnie z core.autocrlf)
+* text=auto
+
+# Pliki binarne
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
