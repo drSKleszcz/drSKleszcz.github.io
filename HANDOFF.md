@@ -8,20 +8,20 @@ Gałąź główna: `main`.
 - **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/gallery-arrows-side` (`dc9d41f`), review `chatgpt/review-gallery-arrows-side`
-- **Pliki:** `assets/site.css`, `assets/site.js`, `tests/test_site.py`
-- **Cel:** Prośba Sławosza: strzałki w podglądzie zdjęć nie mogą zasłaniać obrazu. Na komputerze (`hover: hover` i `pointer: fine`) okno dostaje boczne marginesy (klasa `has-steps`, tylko gdy jest kilka zdjęć), a strzałki stoją w nich obok zdjęcia. Na ekranach dotykowych (`hover: none` lub `pointer: coarse`) strzałek nie ma, zostaje przesuwanie palcem, licznik i klawiatura.
+- **Gałąź:** autor `claude/color-refresh` (`9efb34d`), review `chatgpt/review-color-refresh`
+- **Pliki:** `assets/site.css`, `tests/test_site.py`
+- **Cel:** Wybór Sławosza po porównaniu wariantów: paleta „C” (głębsze tło, mięta zostaje, dochodzi ciepły akcent `--warm`), pasek nawigacji wtopiony w tło (bez linii, niższy, aktywna pozycja pomarańczowa), kolory kategorii projektów (`--cat-*`: karty, etykiety, atlas, kropki w filtrach), kolorowe kolumny kompetencji oraz sekcja kontaktu jako gradient od koloru sekcji „O mnie” do koloru stopki (stopka na stronie głównej ma ten sam kolor, więc nie ma szwu). Jasny motyw ma własne, ciemniejsze odpowiedniki kolorów.
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`28ec9ca`) → `claude/gallery-arrows-side` (`dc9d41f`); brak potwierdzonych uwag wymagających poprawy.
-- Sprawdzono boczne marginesy tylko dla galerii z kilkoma zdjęciami, pozycje i rozmiar strzałek (44 × 44 px), warunki hover/pointer, obsługę przycisków i klawiatury oraz rozszerzenie testu przeglądarkowego. Kolory i kształt kontrolek zachowują istniejące tokeny.
-- Izolowany test Chrome z aktualnym CSS i kodem galerii: 15 wariantów — komputer o szerokościach 320/768/1280 px i emulowane urządzenie dotykowe 390/768 px, każde ze zdjęciem poziomym, pionowym i kwadratowym. Strzałki na komputerze nie nachodziły na obraz, mieściły się w oknie i działały; na urządzeniu dotykowym były ukryte. Test używał emulacji przeglądarkowej, nie fizycznego urządzenia; gestów swipe nie testowano ponownie, ponieważ ta zmiana nie modyfikuje ich obsługi.
-- Walidacja recenzenta: 4 testy `tests.test_content`, kontrola składni `assets/site.js` i `git diff --check main..HEAD` przeszły. Detektor Impeccable dla zmienionych CSS/JS nie zgłosił uwag. Pełnego buildu Jekyll i `tests.test_site` nie uruchomiono tutaj (brak lokalnego buildu `_site`); wynik 29 testów podglądu/galerii/karuzeli pochodzi z raportu autora.
+- **Werdykt: OK, status DO MERGE.** Review `main` (`84c04c3`) → `claude/color-refresh` (`9efb34d`); brak potwierdzonych uwag wymagających zmian.
+- Sprawdzono tokeny obu motywów, dziedziczenie kolorów kategorii w kartach/atlasie/filtrach, kolory kompetencji, aktywną nawigację, style kontaktu i stopki oraz aktualizację dwóch testów. Zmiana zachowuje istniejącą strukturę i obsługę interfejsu.
+- Izolowany test Chrome z aktualnym CSS obejmował oba motywy przy szerokościach 390 i 1280 px. Kontrast wybranych zmienionych tekstów (ciepły akcent, kategorie na panelach, narzędzia kompetencji, przycisk kontaktu i tekst stopki) wyniósł minimum 6,44:1 w ciemnym motywie i 5,09:1 w jasnym. Kontrast przycisku kontaktu przy hover wyniósł odpowiednio 10,63:1 i 6,70:1. Brak poziomego przepełnienia w sprawdzonym układzie; computed gradient kończy się kolorem stopki. To weryfikacja wybranych styli na izolowanej stronie, nie pełny audyt wszystkich stron ani wszystkich pikseli gradientu.
+- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły; detektor Impeccable dla `assets/site.css` nie zgłosił uwag. Pełnego buildu Jekyll, `tests.test_site` ani audytu axe nie uruchomiono w środowisku recenzenta (brak lokalnego `_site`). Wyniki 101 testów (2 znane błędy) oraz 188 skanów axe bez błędów pochodzą z raportu autora.
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-gallery-arrows-side` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build i testy strony w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-color-refresh` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
 - Recenzent zmienił wyłącznie `HANDOFF.md`.
 
 ## Historia
@@ -48,3 +48,6 @@ Gałąź główna: `main`.
 - 2026-10-11 · Sławosz · `main` · Scalono nawigację w galerii (`28ec9ca`).
 - 2026-10-11 · Claude · `claude/gallery-arrows-side` · Strzałki podglądu obok zdjęcia na komputerze, ukryte na ekranach dotykowych (tylko swipe). Status DO REVIEW.
 - 2026-10-11 · ChatGPT · `chatgpt/review-gallery-arrows-side` · Review `dc9d41f`: OK, DO MERGE. Izolowany test Chrome: 15 wariantów szerokości/proporcji i sposobu wskazywania; strzałki poza obrazem na komputerze, ukryte przy emulacji dotyku. 4 testy treści, składnia JS, kontrola diff i detektor przeszły. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Sławosz · `main` · Scalono strzałki obok zdjęcia (`84c04c3`).
+- 2026-10-11 · Claude · `claude/color-refresh` · Odświeżenie kolorów: paleta C, wtopiony pasek, kolory kategorii, kolorowe kompetencje, kontakt + stopka jako jeden blok. Status DO REVIEW.
+- 2026-10-11 · ChatGPT · `chatgpt/review-color-refresh` · Review `9efb34d`: OK, DO MERGE. Sprawdzono oba motywy, dziedziczenie kategorii, gradient i zmiany testów. Izolowany test Chrome: kontrast wybranych tekstów, hover przycisku i układ 390/1280 px przeszły; 4 testy treści, kontrola diff i detektor także. Zmieniono tylko `HANDOFF.md`.

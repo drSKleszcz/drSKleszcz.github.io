@@ -927,7 +927,7 @@ class BrowserTests(unittest.TestCase):
         self.assertEqual(self.page.locator('.featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(32, 45, 48)')
         self.page.locator('[data-theme-toggle]').click()
         colours = self.page.locator('.hero .button').evaluate('el => ({text:getComputedStyle(el).color, background:getComputedStyle(el).backgroundColor})')
-        self.assertEqual(colours, {'text':'rgb(16, 32, 30)', 'background':'rgb(139, 232, 213)'})
+        self.assertEqual(colours, {'text':'rgb(16, 32, 30)', 'background':'rgb(126, 240, 212)'})
         self.assertEqual(self.page.locator('.featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(242, 244, 239)')
 
     def test_hero_content_and_centered_workflow(self):
@@ -1458,15 +1458,19 @@ class BrowserTests(unittest.TestCase):
                 const work = document.querySelector('#projects').getBoundingClientRect();
                 return {
                     base: color('body'), panel: color('.project-card-link'), about: color('#about'),
-                    contact: color('#contact'), field: color('#contact-name'),
+                    contact: getComputedStyle(document.querySelector('#contact')).backgroundImage,
+                    footer: color('.site-footer'), field: color('#contact-name'),
                     aboutWidth: about.getBoundingClientRect().width, contentLeft: content.left,
                     workLeft: work.left, viewportWidth: innerWidth,
                     overflow: document.documentElement.scrollWidth > innerWidth
                 };
             }''')
             self.assertEqual(surfaces['about'], surfaces['panel'], surfaces)
-            self.assertEqual(surfaces['contact'], surfaces['base'], surfaces)
-            self.assertEqual(surfaces['field'], surfaces['panel'], surfaces)
+            # Contact fades from the about surface into the footer colour, so the
+            # closing band has no hard seam above or below it.
+            self.assertIn('linear-gradient(' + surfaces['panel'], surfaces['contact'], surfaces)
+            self.assertIn(surfaces['footer'] + ' 78%', surfaces['contact'], surfaces)
+            self.assertNotEqual(surfaces['field'], 'rgba(0, 0, 0, 0)', surfaces)
             self.assertEqual(surfaces['aboutWidth'], surfaces['viewportWidth'], surfaces)
             self.assertAlmostEqual(surfaces['contentLeft'], surfaces['workLeft'], delta=1, msg=str(surfaces))
             self.assertFalse(surfaces['overflow'], surfaces)
