@@ -5,28 +5,20 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/gallery-navigation` (`8ea3919`), review `chatgpt/review-gallery-navigation-fix`
-- **Pliki:** `_layouts/project.html`, `assets/site.js`, `assets/site.css`, `_data/i18n.yml`, `tests/test_site.py`
-- **Cel:** W powiększonym zdjęciu projektu można przechodzić do kolejnych bez zamykania: strzałki ← → w oknie, klawisze strzałek, licznik „2 / 4”, a na telefonie przesunięcie palcem (obraz podąża za palcem; pionowe gesty i pinch-zoom zostają przeglądarce). Po zamknięciu fokus wraca na miniaturę ostatnio oglądanego zdjęcia. Nowe klucze i18n: `previous_image`, `next_image` (EN/PL). Nowy test przeglądarkowy `test_image_viewer_steps_through_gallery_with_buttons_keys_and_swipe`.
+- **Gałąź:** `claude/gallery-arrows-side`
+- **Pliki:** `assets/site.css`, `assets/site.js`, `tests/test_site.py`
+- **Cel:** Prośba Sławosza: strzałki w podglądzie zdjęć nie mogą zasłaniać obrazu. Na komputerze (`hover: hover` i `pointer: fine`) okno dostaje boczne marginesy (klasa `has-steps`, tylko gdy jest kilka zdjęć), a strzałki stoją w nich obok zdjęcia. Na ekranach dotykowych (`hover: none` lub `pointer: coarse`) strzałek nie ma, zostaje przesuwanie palcem, licznik i klawiatura.
 
 ## Review
 
-| Before | After | Why |
-|---|---|---|
-| P2: trwająca animacja przesłaniała ruch obrazu przy szybkim kolejnym geście. | `assets/site.js:518–524` odczytuje bieżącą pozycję, anuluje animacje i kontynuuje gest od tej pozycji. | Izolowany test Chrome potwierdził brak skoku przy przejęciu i zgodność dalszego ruchu obrazu z ruchem palca, również podczas animacji powrotu. |
-
-- **Werdykt: OK / Approve, status DO MERGE.** Ponowne review poprawki `8ea3919` względem `8cb3aba`, z uwzględnieniem wcześniejszego review pełnej zmiany `main..claude/gallery-navigation`. P2 rozwiązane; brak nowych potwierdzonych uwag wymagających zmian.
-- Test przeglądarkowy recenzenta używał aktualnego kodu galerii, mechanizmu motion i CSS w izolowanej stronie. Przy przejęciu animacji pozycja pozostała 4,58552 px, potem ruch palca o −25 px przesunął obraz do −20,4145 px; aktywnych animacji było 0. Przejęcie animacji powrotu także zachowało pozycję i śledziło dalszy ruch. Krótki gest zakończył się powrotem do `transform: none`. Nawigacja klawiaturą i przy ograniczeniu ruchu nie uruchamiała animacji.
-- Nowy test regresji sprawdza computed transform, brak aktywnej animacji podczas gestu i powrót po krótkim przesunięciu. Raport autora potwierdza, że test pada na poprzednim kodzie i przechodzi na poprawionym.
-- Walidacja recenzenta: 4 testy `tests.test_content`, kontrola składni `assets/site.js` i `git diff --check main..HEAD` przeszły. Pełnego buildu Jekyll i `tests.test_site` nie uruchomiono tutaj (brak Ruby/Bundler i `_site`). Wynik 29 testów galerii/podglądu/karuzeli pochodzi z raportu autora.
+- (czeka na review)
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-gallery-navigation-fix` zawiera kod autora i wynik obu review; można ją scalić do `main`. Przed publikacją sprawdź pełny build i testy strony w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
-- Recenzent zmienił wyłącznie `HANDOFF.md`.
+- **ChatGPT:** review `main..claude/gallery-arrows-side`. Test galerii sprawdza teraz, że strzałki nie nachodzą na obraz i mieszczą się w oknie, a na telefonie są ukryte. Lokalny build Jekyll: 29 testów podglądu/galerii/karuzeli przechodzi.
 
 ## Historia
 
@@ -49,3 +41,5 @@ Gałąź główna: `main`.
 - 2026-10-11 · ChatGPT · `chatgpt/review-gallery-navigation` · Review `a926155`: POPRAWKI, potwierdzone P2 — trwająca animacja blokuje podążanie obrazu za palcem podczas szybkiego kolejnego gestu. Izolowany test Chrome odtworzył problem; 4 testy treści, składnia JS i kontrola diff przeszły. Pełny build i testy strony nieuruchomione u recenzenta. Zmieniono tylko `HANDOFF.md`.
 - 2026-10-11 · Claude · `claude/gallery-navigation` · Poprawka P2: swipe przejmuje trwającą animację od bieżącej pozycji; test szybkiego drugiego gestu (pada na starym kodzie, przechodzi na nowym). Status DO REVIEW.
 - 2026-10-11 · ChatGPT · `chatgpt/review-gallery-navigation-fix` · Re-review `8ea3919`: P2 rozwiązane, OK, DO MERGE. Izolowany test Chrome potwierdził płynne przejęcie animacji zmiany i powrotu, podążanie za palcem, klawiaturę i ograniczenie ruchu; 4 testy treści, składnia JS i kontrola diff przeszły. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Sławosz · `main` · Scalono nawigację w galerii (`28ec9ca`).
+- 2026-10-11 · Claude · `claude/gallery-arrows-side` · Strzałki podglądu obok zdjęcia na komputerze, ukryte na ekranach dotykowych (tylko swipe). Status DO REVIEW.

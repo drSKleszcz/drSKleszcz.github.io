@@ -1487,10 +1487,16 @@ class BrowserTests(unittest.TestCase):
             expect(counter).to_have_text('1 / 3')
             self.page.wait_for_function('document.querySelector(".image-viewer").getAnimations().every(a => a.playState === "finished")')
             self.assertEqual((previous.get_attribute('aria-label'), following.get_attribute('aria-label')), labels)
+            picture = image.bounding_box()
+            frame = viewer.bounding_box()
             for control in [previous, following]:
                 self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '50%')
                 box = control.bounding_box()
                 self.assertEqual((box['width'], box['height']), (44, 44))
+                # Arrows sit beside the image, inside the dialog, never over the picture.
+                self.assertTrue(box['x'] + box['width'] <= picture['x'] or box['x'] >= picture['x'] + picture['width'], (box, picture))
+                self.assertGreaterEqual(box['x'], frame['x'])
+                self.assertLessEqual(box['x'] + box['width'], frame['x'] + frame['width'])
             following.click()
             expect(image).to_have_attribute('src', hrefs[1])
             expect(counter).to_have_text('2 / 3')
@@ -1511,6 +1517,10 @@ class BrowserTests(unittest.TestCase):
             page.locator('[data-image-preview]').first.tap()
             image = page.locator('dialog img')
             expect(image).to_have_attribute('src', hrefs[0])
+            # Phones navigate by swipe only.
+            expect(page.locator('dialog [data-prev-image]')).to_be_hidden()
+            expect(page.locator('dialog [data-next-image]')).to_be_hidden()
+            expect(page.locator('dialog [data-image-counter]')).to_have_text('1 / 3')
             box = image.bounding_box()
             x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
             session = context.new_cdp_session(page)

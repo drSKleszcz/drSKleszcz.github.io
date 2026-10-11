@@ -439,6 +439,7 @@
     const next = viewer.querySelector('[data-next-image]');
     const several = links.length > 1;
     if (several) previous.hidden = next.hidden = counter.hidden = false;
+    viewer.classList.toggle('has-steps', several);
     let current = 0;
     const show = index => {
       current = (index + links.length) % links.length;

@@ -539,10 +539,18 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .image-counter { position: absolute; top: 20px; left: 24px; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
 .image-stage { position: relative; touch-action: pan-y pinch-zoom; }
 .image-viewer.is-zoomed .image-stage { touch-action: auto; }
-.image-viewer .image-step { position: absolute; top: 50%; transform: translateY(-50%); border: 1px solid var(--line); background: var(--panel); font-size: 1.2rem; opacity: .92; }
+.image-viewer .image-step { position: absolute; top: 50%; transform: translateY(-50%); border: 1px solid var(--line); background: var(--panel); font-size: 1.2rem; }
 .image-viewer .image-step[hidden], .image-counter[hidden] { display: none; }
-.image-step-prev { left: 8px; }
-.image-step-next { right: 8px; }
+/* Arrows sit in side gutters beside the image; touch screens use swipe only. */
+.image-step-prev { left: -58px; }
+.image-step-next { right: -58px; }
+@media (hover: hover) and (pointer: fine) {
+  .image-viewer.has-steps { padding-inline: 72px; }
+  .image-viewer.has-steps img { max-width: calc(94vw - 146px); width: min(var(--image-width, 88vw), calc(94vw - 146px), calc(76svh * var(--image-ratio, 1))); }
+}
+@media (hover: none), (pointer: coarse) {
+  .image-viewer .image-step { display: none; }
+}
 .image-viewer .image-step:hover { border-color: var(--accent); }
 .image-viewer p { margin-top: 12px; font-size: .85rem; max-width: 70ch; }
 @media (max-width: 900px) {
