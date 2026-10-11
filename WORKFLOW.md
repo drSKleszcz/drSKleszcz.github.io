@@ -4,9 +4,9 @@ To repozytorium (dwujęzyczna strona Jekyll publikowana przez GitHub Pages pod `
 jest edytowane przez dwóch asystentów AI, Claude i ChatGPT, którzy mają dostęp do tego
 samego lokalnego folderu. Ten plik opisuje zasady, dzięki którym nie nadpisują sobie zmian.
 
-**Gałąź główna to `redesign/bilingual-portfolio`.** To z niej publikowana jest oficjalna
-strona. Każda nowa praca odgałęzia się od niej i do niej wraca. `main` jest tylko
-okresowo wyrównywany do redesignu (patrz sekcja 4).
+**Gałąź główna to `main`.** To z niej publikowana jest oficjalna (dwujęzyczna) strona.
+Każda nowa praca odgałęzia się od niej i do niej wraca. Dawna gałąź
+`redesign/bilingual-portfolio` została scalona z `main` i usunięta 2026-10-11.
 
 **Zasada nadrzędna: w danym momencie w folderze pracuje tylko jeden asystent,
 na własnej gałęzi, a stan pracy zapisuje w `HANDOFF.md`. Jeden implementuje,
@@ -23,11 +23,11 @@ drugi robi review.**
 | Treść projektów | **ChatGPT** | `_projects/en/`, `_projects/pl/`, `_data/projects.yml` |
 | Teksty interfejsu i tłumaczenia | **ChatGPT** | `_data/i18n.yml` |
 | Obrazki | ten, kto dodaje projekt | `img/portfolio/` + wygenerowane `assets/images/`, `_data/images.yml` |
-| Decyzje, merge, push, deploy | **Sławosz** | gałąź `redesign/bilingual-portfolio`, `main`, GitHub |
+| Decyzje, merge, push, deploy | **Sławosz** | gałąź `main`, GitHub |
 
 - Asystent może zmienić plik spoza swojego obszaru tylko wtedy, gdy wpisze to w `HANDOFF.md`
   w sekcji „Aktualne zadanie” (pole „Pliki”), zanim zacznie.
-- Żaden asystent nie robi `git push`, merge do gałęzi głównej ani do `main`,
+- Żaden asystent nie robi `git push`, merge do `main`,
   nie uruchamia publikacji i nie zmienia `CNAME`.
   To zawsze robi Sławosz.
 
@@ -37,7 +37,7 @@ Każde zadanie ma dwie role. Role przypisuje się do zadania, nie na stałe do a
 
 - **Autor** to asystent, do którego należy obszar zadania (patrz tabela wyżej).
   Pracuje na swojej gałęzi i jako jedyny edytuje pliki.
-- **Recenzent** to drugi asystent. Czyta zmiany poleceniem `git diff redesign/bilingual-portfolio..<gałąź>`
+- **Recenzent** to drugi asystent. Czyta zmiany poleceniem `git diff main..<gałąź>`
   i zapisuje uwagi w `HANDOFF.md` w sekcji „Review”. **Nie edytuje plików**;
   poprawki wprowadza autor.
 
@@ -47,7 +47,7 @@ Przebieg:
 2. Autor implementuje i commituje na swojej gałęzi, status `DO REVIEW`.
 3. Recenzent robi review: `OK` albo lista konkretnych uwag (plik, co i dlaczego).
 4. Autor poprawia, a kroki 3–4 powtarza się do `OK`.
-5. Sławosz robi merge do `redesign/bilingual-portfolio`, wyrównuje `main` i robi push.
+5. Sławosz robi merge do `main` i push.
 
 Asystenci nie poprawiają nawzajem swojego kodu na zmianę: każdy przepisywałby rzeczy
 po swojemu, a historia zmian przestałaby być czytelna.
@@ -72,16 +72,14 @@ po swojemu, a historia zmian przestałaby być czytelna.
 ## 4. Git: gałęzie i commity
 
 Gałęzie:
-- `redesign/bilingual-portfolio` to **gałąź główna** (oficjalna strona). Nikt poza
-  Sławoszem nie commituje tu bezpośrednio.
-- `main` to stara gałąź; Sławosz wyrównuje ją do redesignu po każdym merge'u.
-  **Nigdy nie odgałęziaj pracy od `main`.**
+- `main` to **gałąź główna** (oficjalna strona). Nikt poza Sławoszem nie commituje
+  tu bezpośrednio.
 - `claude/<temat>` dla pracy Claude, np. `claude/nowy-layout-kart`.
 - `chatgpt/<temat>` dla pracy ChatGPT, np. `chatgpt/opis-projektu-mrr`.
 
 Rozpoczęcie zadania:
 ```bash
-git switch redesign/bilingual-portfolio
+git switch main
 git pull                      # robi Sławosz albo asystent, jeśli ma dostęp do sieci
 git switch -c claude/<temat>  # lub chatgpt/<temat>
 ```
@@ -95,16 +93,13 @@ Commity:
 
 Zakończenie zadania (Sławosz):
 ```bash
-git switch redesign/bilingual-portfolio
+git switch main
 git merge --no-ff claude/<temat>   # albo gałąź recenzenta, jeśli zawiera commit z review
 git push                           # GitHub Actions „Build and verify portfolio” uruchamia testy
-git switch main
-git merge --ff-only redesign/bilingual-portfolio   # wyrównanie main do redesignu
-git push
 git branch -d claude/<temat>
 ```
 Publikacja nie dzieje się automatycznie: po zielonym buildzie Sławosz uruchamia ręcznie
-workflow **„Publish approved portfolio”** (GitHub → Actions) na gałęzi redesignu.
+workflow **„Publish approved portfolio”** (GitHub → Actions) na gałęzi `main`.
 
 ## 5. Podgląd lokalny
 
