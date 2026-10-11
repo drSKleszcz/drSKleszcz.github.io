@@ -8,9 +8,9 @@ Gałąź główna: `main`.
 - **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/mobile-header-fix`
+- **Gałąź:** `claude/color-coherence`
 - **Pliki:** `assets/site.css`
-- **Cel:** Naprawa czerwonego buildu na `main` po scaleniu kolorów. W Actions padł `test_mobile_dropdown_overlays_without_changing_header_or_scroll` (`scrollY` 1731 zamiast 1733 po otwarciu menu). Przyczyna: reguła `.header-inner { min-height: 78px }` z bloku „Colour refresh” stała na końcu pliku i nadpisywała mobilne `min-height: 80px` (≤900 px), więc pasek na telefonie zmalał o 2 px. Teraz niższy pasek obowiązuje tylko od 901 px.
+- **Cel:** Po publikacji Sławosz uznał, że kolory są niespójne. Przyczyna: dwa akcenty (mięta i pomarańcz) bez reguły, plus 4 kolory kategorii, z których dwa dublowały akcenty (pomarańcz znaczył raz „symulacje”, raz „wyróżnienie”). Teraz stała zasada: **mięta = wszystko klikalne** (przyciski, linki, aktywna nawigacja, przycisk kontaktu), **pomarańcz = etykiety i wyróżnienia** (eyebrow, druga linia hero, numery kompetencji, kategoria na kartach, znaczniki nagłówków w opisie projektu, kreska rozdziału w atlasie). Usunięto kolory kategorii (`--cat-*`, kolorowe górne krawędzie kart, kropki w filtrach) i kolorowe kolumny kompetencji. Paleta, wtopiony pasek i blok kontakt + stopka zostają.
 
 ## Review
 
@@ -18,7 +18,7 @@ Gałąź główna: `main`.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review `main..claude/mobile-header-fix` (jedna reguła CSS). Wysokość paska przed zmianą kolorów i po poprawce jest identyczna na 320/390/900 px (81 px); na 1440 px zostaje 79 px. Ten konkretny test nie przechodzi w środowisku Claude także na starym `main` (inna wersja Chromium), więc rozstrzygnie go dopiero Actions. Pozostałe testy jak wcześniej.
+- **ChatGPT:** review `main..claude/color-coherence` (blok „Colour refresh” na końcu `site.css` przepisany, usunięte tokeny `--cat-*` i `--warm-button-text`). Lokalnie: build Jekyll, pełne `tests` (2 znane błędy środowiska jak na `main`), audyt WCAG `--full`: 188 skanów, 0 błędów. Reguła wysokości paska tylko od 901 px pozostaje bez zmian.
 
 ## Historia
 
@@ -49,3 +49,5 @@ Gałąź główna: `main`.
 - 2026-10-11 · ChatGPT · `chatgpt/review-color-refresh` · Review `9efb34d`: OK, DO MERGE. Sprawdzono oba motywy, dziedziczenie kategorii, gradient i zmiany testów. Izolowany test Chrome: kontrast wybranych tekstów, hover przycisku i układ 390/1280 px przeszły; 4 testy treści, kontrola diff i detektor także. Zmieniono tylko `HANDOFF.md`.
 - 2026-10-11 · Sławosz · `main` · Scalono odświeżenie kolorów (`6b791e4`); build w Actions czerwony (test menu mobilnego).
 - 2026-10-11 · Claude · `claude/mobile-header-fix` · Naprawa: niższy pasek tylko na desktopie, mobilny pasek wraca do 81 px. Status DO REVIEW.
+- 2026-10-11 · Sławosz · `main` · Scalono poprawkę paska (`940360b`), strona opublikowana.
+- 2026-10-11 · Claude · `claude/color-coherence` · Spójność kolorów: mięta = klikalne, pomarańcz = etykiety; usunięte kolory kategorii i kolumn. Status DO REVIEW.

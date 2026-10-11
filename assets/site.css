@@ -9,11 +9,6 @@
   --accent: #7ef0d4;
   --warm: #ffb36b;
   --line: #3a4b4f;
-  /* One colour per project category, reused by the expertise columns. */
-  --cat-engineering: #7ef0d4;
-  --cat-simulation: #ffb36b;
-  --cat-analysis: #a9a2ff;
-  --cat-software: #6cc4ff;
   --contact-end: #0f2b27;
   --contact-glow: #ffb36b1f;
   --page-glow: #7ef0d414;
@@ -23,7 +18,6 @@
   --reading: #dce3df;
   --header: #141d20e6;
   --button-text: #10201e;
-  --warm-button-text: #2a1604;
   --accent-hover: #a8f5e2;
   --card-hover-shadow: 0 16px 26px #00000080, 0 4px 8px #00000038;
   --motion-card-reduced: 200ms;
@@ -311,8 +305,7 @@ input:focus, textarea:focus { border-color: var(--accent); }
   --bg: #f7f6f2; --panel: #ffffff; --panel-light: #eeeee8;
   --text: #202d30; --muted: #526466; --reading: #344548;
   --accent: #096c61; --accent-hover: #075c53; --line: #c8d2cf; --header: #f7f6f2d9; --button-text: #ffffff;
-  --warm: #a84f0a; --warm-button-text: #ffffff;
-  --cat-engineering: #096c61; --cat-simulation: #a84f0a; --cat-analysis: #5a4bd1; --cat-software: #0a64a0;
+  --warm: #a84f0a;
   --contact-end: #dcece6; --contact-glow: #a84f0a14; --page-glow: #096c610f; --page-glow-warm: #a84f0a0a;
   --card-hover-shadow: 0 16px 26px #1822252e, 0 4px 8px #18222514;
 }
@@ -814,37 +807,24 @@ html[data-theme-changing] body *, html[data-theme-changing] body *::before, html
   .expertise-grid .expertise-number, .expertise-grid h3 { transition: color 100ms !important; }
 }
 
-/* Colour refresh: a warm second accent, per-category colours, a header that
-   blends into the page and a contact block that runs into the footer. */
+/* Colour refresh with two fixed roles: mint marks everything you can click
+   (buttons, links, active navigation), warm orange marks labels and
+   highlights (eyebrows, numbers, categories, markers). The header blends into
+   the page and the contact block runs into the footer. */
 body { background-image: radial-gradient(900px 620px at 88% 12%, var(--page-glow), transparent 70%), radial-gradient(700px 500px at 0% 70%, var(--page-glow-warm), transparent 70%); background-repeat: no-repeat; }
 .site-header { border-bottom-color: transparent; }
 /* Lower header on desktop only; the mobile header keeps its measured height. */
 @media (min-width: 901px) { .header-inner { min-height: 78px; } }
-#site-nav a[aria-current], .language-links [aria-current] { color: var(--warm); }
-#site-nav > a::after { background: var(--warm); }
-.hero h1 > .hero-solution, .eyebrow, .experience-organization { color: var(--warm); }
+.hero h1 > .hero-solution, .eyebrow, .experience-organization, .card-meta span:first-child { color: var(--warm); }
 .status-dot { background: var(--warm); box-shadow: 0 0 14px var(--contact-glow); }
 .workflow-emphasis { stroke: var(--warm); }
-
-[data-category="engineering"], [data-category-section="engineering"], [data-filter="engineering"] { --cat: var(--cat-engineering); }
-[data-category="simulation"], [data-category-section="simulation"], [data-filter="simulation"] { --cat: var(--cat-simulation); }
-[data-category="analysis"], [data-category-section="analysis"], [data-filter="analysis"] { --cat: var(--cat-analysis); }
-[data-category="software"], [data-category-section="software"], [data-filter="software"] { --cat: var(--cat-software); }
-.project-card-link { border-top: 3px solid var(--cat, var(--line)); }
-.card-meta span:first-child { color: var(--cat, var(--accent)); }
-.atlas-chapter-heading::before, .atlas-row::before { background: var(--cat, var(--accent)); }
-.atlas-row-meta { color: var(--cat, var(--muted)); }
-.atlas-row:hover h3, .atlas-row:focus-within h3 { color: var(--cat, var(--accent)); }
-.filters button[data-filter]:not([data-filter="all"])::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 50%; background: var(--cat); vertical-align: 1px; }
-
-.expertise-grid article:nth-child(1) { --col: var(--cat-engineering); }
-.expertise-grid article:nth-child(2) { --col: var(--cat-simulation); }
-.expertise-grid article:nth-child(3) { --col: var(--cat-software); }
-.expertise-grid .expertise-number, .expertise-grid .tools { color: var(--col, var(--accent)); }
-.expertise-grid article::before { background: var(--col, var(--accent)); }
-@keyframes expertise-number { from { color: var(--muted); } to { color: var(--col, var(--accent)); } }
+.atlas-chapter-heading::before { background: var(--warm); }
+.case-body .prose h2::before { border-color: var(--warm); }
+.expertise-grid .expertise-number { color: var(--warm); }
+.expertise-grid .tools { color: var(--muted); }
+@keyframes expertise-number { from { color: var(--muted); } to { color: var(--warm); } }
 @media (hover: hover) and (pointer: fine) {
-  .expertise-grid article:hover h3, .expertise-grid article:hover .expertise-number { color: var(--col, var(--accent)); }
+  .expertise-grid article:hover .expertise-number { color: var(--warm); }
 }
 
 /* The contact block starts in the colour of the section above it and ends in
@@ -852,7 +832,3 @@ body { background-image: radial-gradient(900px 620px at 88% 12%, var(--page-glow
 .contact-section { border-top: 0; background: radial-gradient(55% 70% at 92% 35%, var(--contact-glow), transparent 70%), linear-gradient(180deg, var(--panel) 0%, var(--contact-end) 78%); }
 .home-page .site-footer { background: var(--contact-end); border-top: 1px solid color-mix(in srgb, var(--text) 8%, transparent); }
 .contact-section input, .contact-section textarea { background: color-mix(in srgb, var(--bg) 70%, transparent); }
-.contact-section .button { background: var(--warm); border-color: var(--warm); color: var(--warm-button-text); }
-@media (hover: hover) and (pointer: fine) {
-  .contact-section .button:hover { background: color-mix(in srgb, var(--warm) 82%, var(--text)); }
-}
