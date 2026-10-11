@@ -5,21 +5,26 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude (na prośbę Sławosza)
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/orifice-website-update` (od `claude/oricalc-cleanup`, która nie jest jeszcze w redesignie; merge tej gałęzi wnosi obie)
+- **Gałąź:** `claude/orifice-website-update` (`a5b0857`, od `claude/oricalc-cleanup`); wynik review na `chatgpt/review-orifice-website` (zawiera również cleanup OriCalc)
 - **Pliki:** `_projects/en|pl/orifice-website.md`, `_data/projects.yml`, `_data/images.yml`, `img/portfolio/orifice_website_*.png`, `assets/images/orifice_website_*.webp`, `tests/test_site.py` (oczekiwana galeria)
 - **Cel:** zaktualizować wpis o stronie orifice-software.com po redesignie strony (nowe zrzuty i opis).
 
 ## Review
 
-- (brak uwag; wyniki poprzednich review są w historii Gita i w sekcji „Historia”)
+- **Wynik: OK — brak uwag, status DO MERGE.** ChatGPT, 2026-10-11; porównanie `claude/oricalc-cleanup` (`a95936f`) z `claude/orifice-website-update` (`a5b0857`). Recenzent nie zmieniał opisów, danych, obrazków ani testów; zapisano wyłącznie wynik w `HANDOFF.md`.
+- **Zrzuty i strona live:** otwarto https://orifice-software.com/, https://orifice-software.com/software, https://orifice-software.com/pricing i https://orifice-software.com/learn-more w przeglądarce i porównano z czterema PNG. Treść, nawigacja, ciemny wygląd, sfera cząsteczek, przycisk pauzy, cennik oraz renderowane równania odpowiadają aktualnej stronie. Różnice w rozłożeniu treści wynikają z szerokości widoku, a sfera jest animowana; nie stwierdzono rozbieżności wymagających wymiany zrzutów.
+- **Fakty EN/PL:** opisy są spójne i bez istotnych zastrzeżeń językowych. W lokalnym repo produktu potwierdzono Flask (`main.py:73`), obsługę płatności (`stripe_handlers.py:47,83,203`), demo z podpisanymi i wygasającymi linkami (`main.py:424–437`, `download.py:19–59`), aktywację przypisaną do urządzenia (`main.py:515–552`), metadane i sitemap (`website_support.py:39–59`, `templates/base.html:6–17`), cache i kompresję odpowiednich tekstowych zasobów statycznych (`website_support.py:70–89`). Historia szablonów i animacji z 7–8 października 2026 potwierdza rok redesignu. Ścieżki dotyczą `C:\Git_hub_local\orifice-software.com\orifice-software.com\public_python\`; repo produktu wykorzystano tylko jako źródło, bez zmian i bez wykonywania kodu.
+- **Galeria:** główny obrazek i trzy elementy galerii istnieją, PNG mają 1440 × 900 px, wszystkie nowe elementy mają alt EN/PL i typ `screen`. Wszystkie 28 używanych wariantów WebP poprawnie się dekoduje, wymiary źródeł i szerokości `srcset` zgadzają się z `_data/images.yml`. Kolejność `home`, `method`, `software`, `pricing` odpowiada zmienionej liście w `tests/test_site.py:102`; sprawdzono ją statycznie z danych YAML i kodu testu.
+- **Weryfikacja:** `python -m unittest tests.test_content -v` — 4 testy, wszystkie OK. `git diff --check claude/oricalc-cleanup..claude/orifice-website-update` — bez błędów. Sprawdzono również wniesioną poprawkę językową OriCalc w `claude/oricalc-cleanup`: „powstawała” rozwiązuje poprzednią uwagę P3.
+- **Ograniczenia:** nie wykonano pełnego buildu Jekyll ani całego `tests/test_site.py` (brak lokalnego Ruby/Bundler i `_site`); pozostają do wykonania w Actions przed publikacją. Przegląd strony produktu i jej źródeł nie obejmował wykonywania prawdziwych płatności, wysyłki e-maili ani aktywacji licencji; nie potwierdza ich konfiguracji produkcyjnej.
 
 ## Dla następnej osoby
 
-- ChatGPT: zrób review `git diff claude/oricalc-cleanup..claude/orifice-website-update`. Zrzuty (`home`, `software`, `pricing`, `method`, 1440 px) wyrenderowano z szablonów lokalnego repo `C:\Git_hub_local\orifice-software.com` (stan z 2026-10-09), bo z sandboxa Claude strona live jest zablokowana. Porównaj je z https://orifice-software.com/ i sprawdź fakty w tekście EN/PL (redesign 2026, Flask, płatności, demo z linkami, aktywacja licencji, SEO). Galeria ma 3 obrazki + główny; zaktualizowano oczekiwaną listę w `tests/test_site.py:102`. `python -m unittest tests.test_content` przechodzi.
-- Sławosz: po OK zmerguj gałąź z review do redesignu, potem `main` przez `--ff-only`.
+- Sławosz: review OK. Gałąź `chatgpt/review-orifice-website` zawiera aktualizację strony, wcześniejszy cleanup OriCalc i zapis review. Możesz scalić ją do redesignu, następnie wyrównać `main` przez `--ff-only` zgodnie z `WORKFLOW.md`. Publikację uruchom po zielonym pełnym buildzie i testach w Actions. Merge, push i publikację wykonujesz Ty.
+- Claude: zakres zaakceptowany, brak dalszych uwag.
 
 ## Historia
 
@@ -35,3 +40,4 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 - 2026-10-11 · Sławosz · `redesign/bilingual-portfolio` + `main` · Zmergowano aktualizację OriCalc (`b62db15`); `main` wyrównany do redesignu.
 - 2026-10-11 · Claude · `claude/oricalc-cleanup` · Poprawka językowa z review („powstawała”) i zamknięcie zadania OriCalc (status WOLNE).
 - 2026-10-11 · Claude · `claude/orifice-website-update` · Wpis „Orifice software website” zaktualizowany po redesignie strony: nowe zrzuty strony głównej i metody, dodane zrzuty podstrony programu i cennika, nowy opis EN/PL. Status DO REVIEW.
+- 2026-10-11 · ChatGPT · `chatgpt/review-orifice-website` · Review `a5b0857`: OK, DO MERGE, bez uwag. Porównano cztery zrzuty ze stroną live, sprawdzono fakty w źródłach produktu i EN/PL, galerię i 28 WebP; 4 testy treści przeszły. Pełny build i testy strony pozostają do wykonania w Actions. Zmieniono tylko `HANDOFF.md`.
