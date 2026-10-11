@@ -5,24 +5,20 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/color-refresh` (`9efb34d`), review `chatgpt/review-color-refresh`
-- **Pliki:** `assets/site.css`, `tests/test_site.py`
-- **Cel:** Wybór Sławosza po porównaniu wariantów: paleta „C” (głębsze tło, mięta zostaje, dochodzi ciepły akcent `--warm`), pasek nawigacji wtopiony w tło (bez linii, niższy, aktywna pozycja pomarańczowa), kolory kategorii projektów (`--cat-*`: karty, etykiety, atlas, kropki w filtrach), kolorowe kolumny kompetencji oraz sekcja kontaktu jako gradient od koloru sekcji „O mnie” do koloru stopki (stopka na stronie głównej ma ten sam kolor, więc nie ma szwu). Jasny motyw ma własne, ciemniejsze odpowiedniki kolorów.
+- **Gałąź:** `claude/mobile-header-fix`
+- **Pliki:** `assets/site.css`
+- **Cel:** Naprawa czerwonego buildu na `main` po scaleniu kolorów. W Actions padł `test_mobile_dropdown_overlays_without_changing_header_or_scroll` (`scrollY` 1731 zamiast 1733 po otwarciu menu). Przyczyna: reguła `.header-inner { min-height: 78px }` z bloku „Colour refresh” stała na końcu pliku i nadpisywała mobilne `min-height: 80px` (≤900 px), więc pasek na telefonie zmalał o 2 px. Teraz niższy pasek obowiązuje tylko od 901 px.
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`84c04c3`) → `claude/color-refresh` (`9efb34d`); brak potwierdzonych uwag wymagających zmian.
-- Sprawdzono tokeny obu motywów, dziedziczenie kolorów kategorii w kartach/atlasie/filtrach, kolory kompetencji, aktywną nawigację, style kontaktu i stopki oraz aktualizację dwóch testów. Zmiana zachowuje istniejącą strukturę i obsługę interfejsu.
-- Izolowany test Chrome z aktualnym CSS obejmował oba motywy przy szerokościach 390 i 1280 px. Kontrast wybranych zmienionych tekstów (ciepły akcent, kategorie na panelach, narzędzia kompetencji, przycisk kontaktu i tekst stopki) wyniósł minimum 6,44:1 w ciemnym motywie i 5,09:1 w jasnym. Kontrast przycisku kontaktu przy hover wyniósł odpowiednio 10,63:1 i 6,70:1. Brak poziomego przepełnienia w sprawdzonym układzie; computed gradient kończy się kolorem stopki. To weryfikacja wybranych styli na izolowanej stronie, nie pełny audyt wszystkich stron ani wszystkich pikseli gradientu.
-- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły; detektor Impeccable dla `assets/site.css` nie zgłosił uwag. Pełnego buildu Jekyll, `tests.test_site` ani audytu axe nie uruchomiono w środowisku recenzenta (brak lokalnego `_site`). Wyniki 101 testów (2 znane błędy) oraz 188 skanów axe bez błędów pochodzą z raportu autora.
+- (czeka na review)
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-color-refresh` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
-- Recenzent zmienił wyłącznie `HANDOFF.md`.
+- **ChatGPT:** review `main..claude/mobile-header-fix` (jedna reguła CSS). Wysokość paska przed zmianą kolorów i po poprawce jest identyczna na 320/390/900 px (81 px); na 1440 px zostaje 79 px. Ten konkretny test nie przechodzi w środowisku Claude także na starym `main` (inna wersja Chromium), więc rozstrzygnie go dopiero Actions. Pozostałe testy jak wcześniej.
 
 ## Historia
 
@@ -51,3 +47,5 @@ Gałąź główna: `main`.
 - 2026-10-11 · Sławosz · `main` · Scalono strzałki obok zdjęcia (`84c04c3`).
 - 2026-10-11 · Claude · `claude/color-refresh` · Odświeżenie kolorów: paleta C, wtopiony pasek, kolory kategorii, kolorowe kompetencje, kontakt + stopka jako jeden blok. Status DO REVIEW.
 - 2026-10-11 · ChatGPT · `chatgpt/review-color-refresh` · Review `9efb34d`: OK, DO MERGE. Sprawdzono oba motywy, dziedziczenie kategorii, gradient i zmiany testów. Izolowany test Chrome: kontrast wybranych tekstów, hover przycisku i układ 390/1280 px przeszły; 4 testy treści, kontrola diff i detektor także. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Sławosz · `main` · Scalono odświeżenie kolorów (`6b791e4`); build w Actions czerwony (test menu mobilnego).
+- 2026-10-11 · Claude · `claude/mobile-header-fix` · Naprawa: niższy pasek tylko na desktopie, mobilny pasek wraca do 81 px. Status DO REVIEW.
