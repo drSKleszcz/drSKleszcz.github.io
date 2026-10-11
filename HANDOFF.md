@@ -5,24 +5,20 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/gallery-arrows-side` (`dc9d41f`), review `chatgpt/review-gallery-arrows-side`
-- **Pliki:** `assets/site.css`, `assets/site.js`, `tests/test_site.py`
-- **Cel:** Prośba Sławosza: strzałki w podglądzie zdjęć nie mogą zasłaniać obrazu. Na komputerze (`hover: hover` i `pointer: fine`) okno dostaje boczne marginesy (klasa `has-steps`, tylko gdy jest kilka zdjęć), a strzałki stoją w nich obok zdjęcia. Na ekranach dotykowych (`hover: none` lub `pointer: coarse`) strzałek nie ma, zostaje przesuwanie palcem, licznik i klawiatura.
+- **Gałąź:** `claude/color-refresh`
+- **Pliki:** `assets/site.css`, `tests/test_site.py`
+- **Cel:** Wybór Sławosza po porównaniu wariantów: paleta „C” (głębsze tło, mięta zostaje, dochodzi ciepły akcent `--warm`), pasek nawigacji wtopiony w tło (bez linii, niższy, aktywna pozycja pomarańczowa), kolory kategorii projektów (`--cat-*`: karty, etykiety, atlas, kropki w filtrach), kolorowe kolumny kompetencji oraz sekcja kontaktu jako gradient od koloru sekcji „O mnie” do koloru stopki (stopka na stronie głównej ma ten sam kolor, więc nie ma szwu). Jasny motyw ma własne, ciemniejsze odpowiedniki kolorów.
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`28ec9ca`) → `claude/gallery-arrows-side` (`dc9d41f`); brak potwierdzonych uwag wymagających poprawy.
-- Sprawdzono boczne marginesy tylko dla galerii z kilkoma zdjęciami, pozycje i rozmiar strzałek (44 × 44 px), warunki hover/pointer, obsługę przycisków i klawiatury oraz rozszerzenie testu przeglądarkowego. Kolory i kształt kontrolek zachowują istniejące tokeny.
-- Izolowany test Chrome z aktualnym CSS i kodem galerii: 15 wariantów — komputer o szerokościach 320/768/1280 px i emulowane urządzenie dotykowe 390/768 px, każde ze zdjęciem poziomym, pionowym i kwadratowym. Strzałki na komputerze nie nachodziły na obraz, mieściły się w oknie i działały; na urządzeniu dotykowym były ukryte. Test używał emulacji przeglądarkowej, nie fizycznego urządzenia; gestów swipe nie testowano ponownie, ponieważ ta zmiana nie modyfikuje ich obsługi.
-- Walidacja recenzenta: 4 testy `tests.test_content`, kontrola składni `assets/site.js` i `git diff --check main..HEAD` przeszły. Detektor Impeccable dla zmienionych CSS/JS nie zgłosił uwag. Pełnego buildu Jekyll i `tests.test_site` nie uruchomiono tutaj (brak lokalnego buildu `_site`); wynik 29 testów podglądu/galerii/karuzeli pochodzi z raportu autora.
+- (czeka na review)
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-gallery-arrows-side` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build i testy strony w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
-- Recenzent zmienił wyłącznie `HANDOFF.md`.
+- **ChatGPT:** review `main..claude/color-refresh`. Zmiany są w nowych tokenach w `:root` i jasnym motywie oraz w bloku „Colour refresh” na końcu `site.css`. Zmieniono 2 testy: kolor przycisku w ciemnym motywie (nowy akcent) i test powierzchni „O mnie/Kontakt” (kontakt ma teraz gradient kończący się kolorem stopki). Lokalnie: build Jekyll, pełne `tests` (101; 2 znane błędy środowiska jak na `main`) i audyt WCAG `scripts/audit_accessibility.py --full` z tym samym axe-core co w CI: 188 skanów, 0 błędów.
 
 ## Historia
 
@@ -48,3 +44,5 @@ Gałąź główna: `main`.
 - 2026-10-11 · Sławosz · `main` · Scalono nawigację w galerii (`28ec9ca`).
 - 2026-10-11 · Claude · `claude/gallery-arrows-side` · Strzałki podglądu obok zdjęcia na komputerze, ukryte na ekranach dotykowych (tylko swipe). Status DO REVIEW.
 - 2026-10-11 · ChatGPT · `chatgpt/review-gallery-arrows-side` · Review `dc9d41f`: OK, DO MERGE. Izolowany test Chrome: 15 wariantów szerokości/proporcji i sposobu wskazywania; strzałki poza obrazem na komputerze, ukryte przy emulacji dotyku. 4 testy treści, składnia JS, kontrola diff i detektor przeszły. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Sławosz · `main` · Scalono strzałki obok zdjęcia (`84c04c3`).
+- 2026-10-11 · Claude · `claude/color-refresh` · Odświeżenie kolorów: paleta C, wtopiony pasek, kolory kategorii, kolorowe kompetencje, kontakt + stopka jako jeden blok. Status DO REVIEW.
