@@ -5,10 +5,10 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude (na prośbę Sławosza)
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/oricalc-redesign` (`956d23f`, od redesignu z wmergowanym `origin/main`); wynik review na `chatgpt/review-oricalc-redesign` (odgałęziona od gałęzi autora)
+- **Gałąź:** poprawka P3 na `claude/oricalc-redesign-fix` (od `chatgpt/review-oricalc-redesign`)
 - **Pliki:** `_projects/en|pl/orifice-calculation-software.md`, `_data/projects.yml`, `_data/images.yml`, `assets/images/oricalc_*.webp`, `WORKFLOW.md`, `HANDOFF.md`
 - **Cel:** przenieść aktualizację OriCalc (zrobioną omyłkowo na `main`) do redesignu, w jego formacie, w obu językach; ustawić redesign jako gałąź główną w zasadach pracy.
 
@@ -24,8 +24,8 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 
 ## Dla następnej osoby
 
-- Sławosz: review OK. Gałąź `chatgpt/review-oricalc-redesign` zawiera całą implementację autora oraz zapis tego review; możesz scalić ją do redesignu zgodnie z sekcją 4 `WORKFLOW.md`, wykonać push i wyrównać `main` przez `--ff-only`. Publikację uruchom dopiero po zielonym pełnym buildzie i testach w Actions. Merge, push i publikacja pozostają po Twojej stronie.
-- Claude/Sławosz: potwierdźcie historię „wewnętrznego kalkulatora” z uwagi P3; pozostały zakres zaakceptowany. Jeżeli treść zostanie zmieniona, przekażcie poprawkę do review.
+- ChatGPT: zrób review poprawki P3: `git diff chatgpt/review-oricalc-redesign..claude/oricalc-redesign-fix`. Sławosz potwierdził, że OriCalc był pisany od zera jako produkt (nie z wewnętrznego kalkulatora); zdanie w EN i PL zmieniono na „od początku jako produkt komercyjny”.
+- Sławosz: po OK zmerguj gałąź z review do `redesign/bilingual-portfolio`, potem `main` przez `--ff-only` (WORKFLOW.md, sekcja 4).
 
 ## Historia
 
@@ -36,3 +36,4 @@ Gałąź główna: `redesign/bilingual-portfolio`.
 - 2026-10-11 · ChatGPT · `chatgpt/review-oricalc-report-links` · Review poprawki `a65a592`: P3 rozwiązane, OK, status DO MERGE. Sprawdzono 4 linki do PNG, podpis, strukturę HTML i integrację. Zmieniono wyłącznie `HANDOFF.md`.
 - 2026-10-11 · Claude · `claude/oricalc-redesign` · Okazało się, że oficjalną gałęzią jest `redesign/bilingual-portfolio`, a poprzednia aktualizacja trafiła na `main`. Wmergowano `origin/main` do nowej gałęzi od redesignu (bez konfliktów), przepisano wpis OriCalc w `_projects/en|pl`, dodano galerię (ekran wejściowy + 3 strony raportu) i link do orifice-software.com, wygenerowano webp. `WORKFLOW.md` zaktualizowany: redesign jako gałąź główna, ręczna publikacja przez Actions, nowy format wpisów.
 - 2026-10-11 · ChatGPT · `chatgpt/review-oricalc-redesign` · Review `956d23f`: OK, DO MERGE. Sprawdzono opisy EN/PL, bieżącą stronę produktu, galerię, WebP i workflow; 4 testy treści przeszły. Nieblokująca uwaga P3: potwierdzić historię wewnętrznego kalkulatora. Pełny build i testy przeglądarkowe pozostają do wykonania w Actions. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Claude · `claude/oricalc-redesign-fix` · P3: na podstawie informacji od Sławosza usunięto nieprawdziwe „wyrósł z wewnętrznego kalkulatora”; teraz „od początku tworzony jako produkt komercyjny” (EN/PL). Status DO REVIEW.

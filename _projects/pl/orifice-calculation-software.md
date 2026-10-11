@@ -17,7 +17,7 @@ Pomiar przepływu za pomocą kryzy wymaga powiązanych obliczeń właściwości 
 
 ## Wkład w projekt
 
-Opracowano OriCalc, aplikację desktopową Windows do projektowania kryz pomiarowych według ISO 5167:2003, we współpracy z dr. Alim Karimim. Narzędzie wyrosło z wewnętrznego kalkulatora na licencjonowany produkt z bezpłatnym demo, licencją bezterminową i ofertą dostosowania dla firm.
+Opracowano OriCalc, aplikację desktopową Windows do projektowania kryz pomiarowych według ISO 5167:2003, we współpracy z dr. Alim Karimim. Od początku powstawało jako produkt komercyjny, oferowany z bezpłatnym demo, licencją bezterminową i ofertą dostosowania dla firm.
 
 ## Podejście
 

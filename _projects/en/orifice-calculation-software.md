@@ -17,7 +17,7 @@ Orifice flow measurement involves interdependent fluid-property, geometry and un
 
 ## Contribution
 
-Developed OriCalc, a Windows desktop application for orifice flow meters based on ISO 5167:2003, together with Ali Karimi, PhD. The tool grew from an in-house calculator into a licensed product with a free demo, a lifetime licence and enterprise customisation.
+Developed OriCalc, a Windows desktop application for orifice flow meters based on ISO 5167:2003, together with Ali Karimi, PhD. It was built from the start as a commercial product, offered with a free demo, a lifetime licence and enterprise customisation.
 
 ## Approach
 
