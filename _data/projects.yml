@@ -45,8 +45,29 @@ orifice-calculation-software:
   client: Own project
   date: Feb 2025
   image: /img/portfolio/orficle_2.png
-  gallery: []
-  references: []
+  gallery:
+  - src: /img/portfolio/oricalc_screen_1.png
+    alt:
+      en: OriCalc - inputs and orifice configuration
+      pl: OriCalc - dane wejściowe i konfiguracja kryzy
+    media_type: screen
+  - src: /img/portfolio/oricalc_report_1.png
+    alt:
+      en: OriCalc report page 1 - sizing and fluid parameters
+      pl: Raport OriCalc, strona 1 - dobór i parametry płynu
+    media_type: technical
+  - src: /img/portfolio/oricalc_report_2.png
+    alt:
+      en: OriCalc report page 2 - flow range and measurement error
+      pl: Raport OriCalc, strona 2 - zakres przepływu i błąd pomiaru
+    media_type: technical
+  - src: /img/portfolio/oricalc_report_3.png
+    alt:
+      en: OriCalc report page 3 - technical drawing and pressure tappings
+      pl: Raport OriCalc, strona 3 - rysunek techniczny i odbiory ciśnienia
+    media_type: technical
+  references:
+  - https://orifice-software.com/
   source: _posts/2014-07-18-project-software-5.markdown
   media_type: screen
 hydrogen-hub:

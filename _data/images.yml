@@ -289,3 +289,32 @@
     319w, /assets/images/orifice_website_method-480.webp 480w, /assets/images/orifice_website_method-640.webp
     640w, /assets/images/orifice_website_method-768.webp 768w, /assets/images/orifice_website_method-960.webp
     960w, /assets/images/orifice_website_method-1440.webp 1440w
+/img/portfolio/oricalc_screen_1.png:
+  width: 1098
+  height: 623
+  src: /assets/images/oricalc_screen_1-1098.webp
+  srcset: /assets/images/oricalc_screen_1-160.webp 160w, /assets/images/oricalc_screen_1-320.webp
+    320w, /assets/images/oricalc_screen_1-480.webp 479w, /assets/images/oricalc_screen_1-640.webp
+    640w, /assets/images/oricalc_screen_1-768.webp 768w, /assets/images/oricalc_screen_1-960.webp
+    960w, /assets/images/oricalc_screen_1-1098.webp 1098w
+/img/portfolio/oricalc_report_1.png:
+  width: 647
+  height: 879
+  src: /assets/images/oricalc_report_1-647.webp
+  srcset: /assets/images/oricalc_report_1-160.webp 160w, /assets/images/oricalc_report_1-320.webp
+    320w, /assets/images/oricalc_report_1-480.webp 480w, /assets/images/oricalc_report_1-640.webp
+    640w, /assets/images/oricalc_report_1-647.webp 647w
+/img/portfolio/oricalc_report_2.png:
+  width: 647
+  height: 881
+  src: /assets/images/oricalc_report_2-647.webp
+  srcset: /assets/images/oricalc_report_2-160.webp 160w, /assets/images/oricalc_report_2-320.webp
+    320w, /assets/images/oricalc_report_2-480.webp 480w, /assets/images/oricalc_report_2-640.webp
+    640w, /assets/images/oricalc_report_2-647.webp 647w
+/img/portfolio/oricalc_report_3.png:
+  width: 642
+  height: 883
+  src: /assets/images/oricalc_report_3-642.webp
+  srcset: /assets/images/oricalc_report_3-160.webp 160w, /assets/images/oricalc_report_3-320.webp
+    320w, /assets/images/oricalc_report_3-480.webp 480w, /assets/images/oricalc_report_3-640.webp
+    640w, /assets/images/oricalc_report_3-642.webp 642w
