@@ -818,7 +818,8 @@ html[data-theme-changing] body *, html[data-theme-changing] body *::before, html
    blends into the page and a contact block that runs into the footer. */
 body { background-image: radial-gradient(900px 620px at 88% 12%, var(--page-glow), transparent 70%), radial-gradient(700px 500px at 0% 70%, var(--page-glow-warm), transparent 70%); background-repeat: no-repeat; }
 .site-header { border-bottom-color: transparent; }
-.header-inner { min-height: 78px; }
+/* Lower header on desktop only; the mobile header keeps its measured height. */
+@media (min-width: 901px) { .header-inner { min-height: 78px; } }
 #site-nav a[aria-current], .language-links [aria-current] { color: var(--warm); }
 #site-nav > a::after { background: var(--warm); }
 .hero h1 > .hero-solution, .eyebrow, .experience-organization { color: var(--warm); }
