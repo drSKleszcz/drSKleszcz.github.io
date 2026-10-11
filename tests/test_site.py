@@ -1471,6 +1471,81 @@ class BrowserTests(unittest.TestCase):
             self.assertAlmostEqual(surfaces['contentLeft'], surfaces['workLeft'], delta=1, msg=str(surfaces))
             self.assertFalse(surfaces['overflow'], surfaces)
 
+    def test_image_viewer_steps_through_gallery_with_buttons_keys_and_swipe(self):
+        for prefix, labels in [('', ('Previous image', 'Next image')), ('/pl', ('Poprzedni obraz', 'Następny obraz'))]:
+            self.page.set_viewport_size({'width': 1440, 'height': 900})
+            self.page.goto(self.base + prefix + '/projects/hydrogen-hub/')
+            thumbs = self.page.locator('[data-image-preview]')
+            hrefs = thumbs.evaluate_all('links => links.map(a => a.href)')
+            self.assertEqual(len(hrefs), 3)
+            viewer = self.page.locator('dialog')
+            image = viewer.locator('img')
+            counter = viewer.locator('[data-image-counter]')
+            previous, following = viewer.locator('[data-prev-image]'), viewer.locator('[data-next-image]')
+            thumbs.first.click()
+            expect(image).to_have_attribute('src', hrefs[0])
+            expect(counter).to_have_text('1 / 3')
+            self.page.wait_for_function('document.querySelector(".image-viewer").getAnimations().every(a => a.playState === "finished")')
+            self.assertEqual((previous.get_attribute('aria-label'), following.get_attribute('aria-label')), labels)
+            for control in [previous, following]:
+                self.assertEqual(control.evaluate('el => getComputedStyle(el).borderRadius'), '50%')
+                box = control.bounding_box()
+                self.assertEqual((box['width'], box['height']), (44, 44))
+            following.click()
+            expect(image).to_have_attribute('src', hrefs[1])
+            expect(counter).to_have_text('2 / 3')
+            self.page.keyboard.press('ArrowRight')
+            expect(image).to_have_attribute('src', hrefs[2])
+            self.page.keyboard.press('ArrowRight')
+            expect(image).to_have_attribute('src', hrefs[0])
+            self.page.keyboard.press('ArrowLeft')
+            expect(image).to_have_attribute('src', hrefs[2])
+            self.assertEqual(viewer.locator('p').inner_text(), thumbs.nth(2).locator('img').get_attribute('alt'))
+            self.page.keyboard.press('Escape')
+            expect(viewer).not_to_be_visible()
+            expect(thumbs.nth(2)).to_be_focused()
+        with self.browser.new_context(has_touch=True, is_mobile=True, viewport={'width': 390, 'height': 844}) as context:
+            page = context.new_page()
+            page.goto(self.base + '/projects/hydrogen-hub/')
+            hrefs = page.locator('[data-image-preview]').evaluate_all('links => links.map(a => a.href)')
+            page.locator('[data-image-preview]').first.tap()
+            image = page.locator('dialog img')
+            expect(image).to_have_attribute('src', hrefs[0])
+            box = image.bounding_box()
+            x, y = box['x'] + box['width'] / 2, box['y'] + box['height'] / 2
+            session = context.new_cdp_session(page)
+            def swipe(dx, dy=0, end=True):
+                session.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': x, 'y': y}]})
+                for step in range(1, 5):
+                    session.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': [{'x': x + dx * step / 4, 'y': y + dy * step / 4}]})
+                    page.wait_for_timeout(25)
+                if end:
+                    session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+            swipe(-120)
+            expect(image).to_have_attribute('src', hrefs[1])
+            # A new swipe during the step animation takes over from the drawn position.
+            image.evaluate('el => { const animation = el.getAnimations()[0]; animation.pause(); animation.currentTime = 60; }')
+            swipe(-40, end=False)
+            follow = image.evaluate('''el => ({
+                drawn: new DOMMatrixReadOnly(getComputedStyle(el).transform).m41,
+                inline: new DOMMatrixReadOnly(el.style.transform).m41,
+                animations: el.getAnimations().length})''')
+            self.assertEqual(follow['animations'], 0, follow)
+            self.assertAlmostEqual(follow['drawn'], follow['inline'], delta=1, msg=str(follow))
+            self.assertLess(follow['drawn'], -20, follow)
+            session.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+            expect(image).to_have_attribute('src', hrefs[1])
+            page.wait_for_function('!document.querySelector("dialog img").getAnimations().length')
+            self.assertEqual(image.evaluate('el => getComputedStyle(el).transform'), 'none')
+            swipe(120)
+            expect(image).to_have_attribute('src', hrefs[0])
+            swipe(120)
+            expect(image).to_have_attribute('src', hrefs[2])
+            swipe(-20)
+            expect(image).to_have_attribute('src', hrefs[2])
+            expect(page.locator('dialog[open]')).to_have_count(1)
+            session.detach()
+
     def test_project_gallery_below_text(self):
         self.page.goto(self.base + '/projects/hydrogen-hub/')
         thumbs = self.page.locator('[data-image-preview]')

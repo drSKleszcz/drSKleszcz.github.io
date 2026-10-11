@@ -534,7 +534,16 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 .image-viewer { max-width: 94vw; max-height: 94svh; width: fit-content; padding: 54px 16px 16px; border: 1px solid var(--line); border-radius: 24px; background: var(--bg); color: var(--text); }
 .image-viewer::backdrop { background: #000b; }
 .image-viewer img { max-width: 88vw; max-height: 76svh; width: min(var(--image-width, 88vw), 88vw, calc(76svh * var(--image-ratio, 1))); height: auto; aspect-ratio: var(--image-ratio, auto); object-fit: contain; border-radius: 16px; }
-.image-viewer button { position: absolute; top: 8px; right: 12px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--text); font-size: 1.4rem; }
+.image-viewer button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: var(--text); font-size: 1.4rem; }
+.image-viewer [data-close-image] { position: absolute; top: 8px; right: 12px; }
+.image-counter { position: absolute; top: 20px; left: 24px; color: var(--muted); font-size: .85rem; font-variant-numeric: tabular-nums; }
+.image-stage { position: relative; touch-action: pan-y pinch-zoom; }
+.image-viewer.is-zoomed .image-stage { touch-action: auto; }
+.image-viewer .image-step { position: absolute; top: 50%; transform: translateY(-50%); border: 1px solid var(--line); background: var(--panel); font-size: 1.2rem; opacity: .92; }
+.image-viewer .image-step[hidden], .image-counter[hidden] { display: none; }
+.image-step-prev { left: 8px; }
+.image-step-next { right: 8px; }
+.image-viewer .image-step:hover { border-color: var(--accent); }
 .image-viewer p { margin-top: 12px; font-size: .85rem; max-width: 70ch; }
 @media (max-width: 900px) {
   .atlas-chapter { display: block; padding-block: 36px 15px; }

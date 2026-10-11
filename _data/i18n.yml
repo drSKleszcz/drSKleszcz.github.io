@@ -1,6 +1,8 @@
 en:
   close_image: Close image
   view_image: View image
+  previous_image: Previous image
+  next_image: Next image
   related_headings:
     all: Continue exploring all projects
     engineering: Continue exploring engineering projects
@@ -132,6 +134,8 @@ en:
 pl:
   close_image: Zamknij obraz
   view_image: Powiększ obraz
+  previous_image: Poprzedni obraz
+  next_image: Następny obraz
   related_headings:
     all: Poznaj kolejne projekty
     engineering: Poznaj kolejne projekty inżynierskie

@@ -430,29 +430,110 @@
   }
   const viewer = document.querySelector('.image-viewer');
   if (viewer && typeof viewer.showModal === 'function') {
-    let opener;
-    document.querySelectorAll('[data-image-preview]').forEach(link => {
+    const links = [...document.querySelectorAll('[data-image-preview]')];
+    const image = viewer.querySelector('img');
+    const stage = viewer.querySelector('.image-stage');
+    const caption = viewer.querySelector('p');
+    const counter = viewer.querySelector('[data-image-counter]');
+    const previous = viewer.querySelector('[data-prev-image]');
+    const next = viewer.querySelector('[data-next-image]');
+    const several = links.length > 1;
+    if (several) previous.hidden = next.hidden = counter.hidden = false;
+    let current = 0;
+    const show = index => {
+      current = (index + links.length) % links.length;
+      const link = links[current];
+      const thumbnail = link.querySelector('img');
+      // Reserve the original's proportions before its full-resolution file loads.
+      const width = Number(thumbnail.getAttribute('width'));
+      const height = Number(thumbnail.getAttribute('height'));
+      image.style.transform = '';
+      image.width = width;
+      image.height = height;
+      image.style.setProperty('--image-width', width + 'px');
+      image.style.setProperty('--image-ratio', width / height);
+      image.src = link.href;
+      image.alt = thumbnail.alt;
+      caption.textContent = image.alt;
+      if (several) counter.textContent = (current + 1) + ' / ' + links.length;
+    };
+    // Warm the neighbours once the visible original is ready, so stepping feels immediate.
+    image.addEventListener('load', () => {
+      if (!several || !viewer.open) return;
+      [current - 1, current + 1].forEach(index => { new Image().src = links[(index + links.length) % links.length].href; });
+    });
+    const step = (direction, event) => {
+      if (!several || !viewer.open) return;
+      show(current + direction);
+      if (motion && motion.canPlay(event)) motion.play(image, [{opacity: .4, transform: 'translateX(' + direction * 24 + 'px)'}, {opacity: 1, transform: 'none'}], 'change');
+    };
+    links.forEach((link, index) => {
       link.addEventListener('click', event => {
         // Keep the native link available for opening originals in another tab.
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
         event.preventDefault();
-        opener = link;
-        const image = viewer.querySelector('img');
-        const thumbnail = link.querySelector('img');
-        // Reserve the original's proportions before its full-resolution file loads.
-        const width = Number(thumbnail.getAttribute('width'));
-        const height = Number(thumbnail.getAttribute('height'));
-        image.width = width;
-        image.height = height;
-        image.style.setProperty('--image-width', width + 'px');
-        image.style.setProperty('--image-ratio', width / height);
-        image.src = link.href;
-        image.alt = thumbnail.alt;
-        viewer.querySelector('p').textContent = image.alt;
+        show(index);
         viewer.showModal();
         if (motion && motion.canPlay(event)) motion.play(viewer, [{opacity: .7, transform: 'scale(.985)'}, {opacity: 1, transform: 'none'}], 'overlay');
       });
     });
+    previous.addEventListener('click', event => step(-1, event));
+    next.addEventListener('click', event => step(1, event));
+    viewer.addEventListener('keydown', event => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === 'ArrowLeft') { event.preventDefault(); step(-1); }
+      else if (event.key === 'ArrowRight') { event.preventDefault(); step(1); }
+    });
+    // Touch swipe: the image follows the finger and a decisive horizontal flick
+    // changes it. Vertical pans and pinch zoom stay with the browser.
+    let swipe = null;
+    let swiped = false;
+    let offset = 0;
+    const endSwipe = () => {
+      if (!swipe) return;
+      if (swipe.captured && stage.hasPointerCapture(swipe.id)) stage.releasePointerCapture(swipe.id);
+      swipe = null;
+      if (image.style.transform) {
+        image.style.transform = '';
+        if (motion) motion.play(image, [{transform: 'translateX(' + offset + 'px)'}, {transform: 'none'}], 'change');
+      }
+    };
+    const zoomed = () => window.visualViewport && window.visualViewport.scale > 1.01;
+    if (window.visualViewport) window.visualViewport.addEventListener('resize', () => viewer.classList.toggle('is-zoomed', zoomed()));
+    viewer.addEventListener('pointerdown', () => { swiped = false; });
+    stage.addEventListener('pointerdown', event => {
+      if (!several || event.pointerType === 'mouse' || !event.isPrimary || event.target.closest('button') || zoomed()) return;
+      swipe = {id: event.pointerId, x: event.clientX, y: event.clientY, captured: false, base: 0};
+      offset = 0;
+    });
+    stage.addEventListener('pointermove', event => {
+      if (!swipe || event.pointerId !== swipe.id) return;
+      const dx = event.clientX - swipe.x;
+      const dy = event.clientY - swipe.y;
+      if (!swipe.captured) {
+        if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+        swipe.captured = true;
+        stage.setPointerCapture(swipe.id);
+        // Take over from a running step or settle animation at its current
+        // position, so the image follows the finger from where it is drawn.
+        const matrix = new DOMMatrixReadOnly(getComputedStyle(image).transform);
+        image.getAnimations().forEach(animation => animation.cancel());
+        swipe.base = matrix.m41 - dx;
+      }
+      offset = swipe.base + dx;
+      image.style.transform = 'translateX(' + offset + 'px)';
+    });
+    stage.addEventListener('pointerup', event => {
+      if (!swipe || event.pointerId !== swipe.id) return;
+      const dx = event.clientX - swipe.x;
+      const dy = event.clientY - swipe.y;
+      if (swipe.captured && Math.abs(dx) > Math.min(60, stage.clientWidth / 5) && Math.abs(dx) > Math.abs(dy)) {
+        swiped = true;
+        swipe = null;
+        step(dx < 0 ? 1 : -1);
+      } else endSwipe();
+    });
+    stage.addEventListener('pointercancel', endSwipe);
     let closeSequence = 0;
     const closeViewer = event => {
       const sequence = ++closeSequence;
@@ -466,8 +547,10 @@
       else finish();
     };
     viewer.querySelector('[data-close-image]').addEventListener('click', closeViewer);
-    viewer.addEventListener('close', () => { closeSequence++; if (motion) motion.stop(viewer); if (opener) opener.focus({preventScroll: true}); });
+    viewer.addEventListener('close', () => { closeSequence++; endSwipe(); if (motion) motion.stop(viewer); links[current].focus({preventScroll: true}); });
     viewer.addEventListener('click', event => {
+      // A swipe that ends past the dialog edge must not read as a backdrop click.
+      if (swiped) { swiped = false; return; }
       const box = viewer.getBoundingClientRect();
       if (event.target === viewer && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) closeViewer(event);
     });
