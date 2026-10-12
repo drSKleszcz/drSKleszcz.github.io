@@ -5,10 +5,10 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/sections-refresh` (z `main` `aea42a7`)
+- **Gałąź:** autor `claude/sections-refresh` (`0e7bf6d`, z `main` `aea42a7`), review `chatgpt/review-sections-refresh`
 - **Pliki:** `assets/site.css`, `tests/test_site.py`
 - **Cel:** Sławosz uznał, że hero na home jest dobre, a sekcje niżej i lista All projects są mdłe. Zmiany wyłącznie w CSS, zasada kolorów bez zmian (mięta = klikalne, pomarańcz = etykiety):
   - każda sekcja home (Expertise, Projects, About, Contact) ma delikatną poświatę jak hero, nagłówki sekcji są większe;
@@ -21,12 +21,16 @@ Gałąź główna: `main`.
 
 ## Review
 
-- (do uzupełnienia przez ChatGPT)
+- **Werdykt: OK, status DO MERGE.** Review `main` (`aea42a7`) → `claude/sections-refresh` (`0e7bf6d`); brak potwierdzonych uwag wymagających poprawy.
+- Sprawdzono nowe poświaty i izolację warstw sekcji, karty kompetencji/doświadczenia, skalowanie nagłówków, powrót kontaktu do tła strony, powierzchnię stopki, numerowanie rozdziałów, rozmiary miniatur i aktualizację oczekiwań testów. Nie znaleziono pozostałych odwołań do usuniętego tokenu `--contact-end`. Efekty hover są ograniczone do urządzeń z hover i precyzyjnym wskaźnikiem; istniejące reguły ograniczenia ruchu obejmują nowe karty.
+- Izolowany test Edge z aktualnym CSS i strukturą listy projektów: oba motywy przy 320/390/768/1280 px. Brak poziomego przepełnienia; obrazy mieszczą się w kartach i mają odpowiednio 96×72, 96×72, 110×84, 200×130 px. Przy `prefers-reduced-motion: reduce` przejścia kart mają czas 0 s. Porównanie zrzutów przed/po wyłączeniu pseudo-elementu potwierdziło widoczność poświaty nagłówka listy. Chrome nie uruchomił się w limicie czasu, dlatego użyto Edge. Test jest izolowaną kontrolą CSS, nie pełną weryfikacją wygenerowanej strony.
+- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły. Detektor Impeccable zgłosił wyłącznie stylistyczne ostrzeżenie `side-tab` dla pomarańczowej lewej krawędzi kart doświadczenia (`assets/site.css:854`); to element jawnie zapisany w celu zadania, bez wykazanej usterki użytkowej, więc nie blokuje review.
+- Pełny build Jekyll, 101 testów (2 znane błędy środowiska) oraz 188 skanów axe bez błędów pozostają raportem autora. Recenzent nie uruchomił pełnego zestawu ani buildu (brak `_site`).
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review `main..claude/sections-refresh` na gałęzi `chatgpt/review-sections-refresh`.
-- Raport autora (lokalnie, Chromium starszy niż w CI): build OK, 101 testów, z czego 2 znane błędy środowiska (`test_atlas_fragment_focus_and_responsive_themes`, `test_mobile_dropdown_overlays_without_changing_header_or_scroll`), które padają identycznie na czystym `main`; ich pozostałe asercje sprawdzone osobno i przechodzą. Audyt axe `--full`: 188 skanów, 0 błędów.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-sections-refresh` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
+- Recenzent zmienił wyłącznie `HANDOFF.md`.
 
 ## Historia
 
@@ -62,3 +66,4 @@ Gałąź główna: `main`.
 - 2026-10-11 · ChatGPT · `chatgpt/review-color-coherence` · Review `f9b9031`: OK, DO MERGE. Sprawdzono role kolorów, usunięte tokeny, oba motywy i granicę 900/901 px. Izolowany test Chrome, kontrast wybranych tekstów, 4 testy treści, kontrola diff i detektor przeszły. Zmieniono tylko `HANDOFF.md`.
 - 2026-10-11 · Sławosz · `main` · Scalono spójność kolorów (`aea42a7`).
 - 2026-10-11 · Claude · `claude/sections-refresh` · Ożywione sekcje home i lista All projects (poświaty, karty, ujednolicony Contact). Status DO REVIEW.
+- 2026-10-12 · ChatGPT · `chatgpt/review-sections-refresh` · Review `0e7bf6d`: OK, DO MERGE. Sprawdzono CSS i zmiany oczekiwań testów; izolowany test Edge potwierdził układ listy w obu motywach, miniatury, widoczność poświaty i ograniczenie ruchu. 4 testy treści i kontrola diff przeszły. Zmieniono tylko `HANDOFF.md`.
