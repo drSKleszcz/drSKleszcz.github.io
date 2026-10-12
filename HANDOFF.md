@@ -8,20 +8,28 @@ Gałąź główna: `main`.
 - **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/color-coherence` (`f9b9031`), review `chatgpt/review-color-coherence`
-- **Pliki:** `assets/site.css`
-- **Cel:** Po publikacji Sławosz uznał, że kolory są niespójne. Przyczyna: dwa akcenty (mięta i pomarańcz) bez reguły, plus 4 kolory kategorii, z których dwa dublowały akcenty (pomarańcz znaczył raz „symulacje”, raz „wyróżnienie”). Teraz stała zasada: **mięta = wszystko klikalne** (przyciski, linki, aktywna nawigacja, przycisk kontaktu), **pomarańcz = etykiety i wyróżnienia** (eyebrow, druga linia hero, numery kompetencji, kategoria na kartach, znaczniki nagłówków w opisie projektu, kreska rozdziału w atlasie). Usunięto kolory kategorii (`--cat-*`, kolorowe górne krawędzie kart, kropki w filtrach) i kolorowe kolumny kompetencji. Paleta, wtopiony pasek i blok kontakt + stopka zostają.
+- **Gałąź:** autor `claude/sections-refresh` (`0e7bf6d`, z `main` `aea42a7`), review `chatgpt/review-sections-refresh`
+- **Pliki:** `assets/site.css`, `tests/test_site.py`
+- **Cel:** Sławosz uznał, że hero na home jest dobre, a sekcje niżej i lista All projects są mdłe. Zmiany wyłącznie w CSS, zasada kolorów bez zmian (mięta = klikalne, pomarańcz = etykiety):
+  - każda sekcja home (Expertise, Projects, About, Contact) ma delikatną poświatę jak hero, nagłówki sekcji są większe;
+  - Expertise: kolumny jako karty z dużymi pomarańczowymi numerami; istniejąca animowana linia zostaje i jest pomarańczowa; karta unosi się po najechaniu;
+  - About: zdjęcie z zaokrągloną ramką (bez poświaty), doświadczenie jako karty z pomarańczowym paskiem z lewej;
+  - Contact ujednolicony z resztą: tło strony zamiast zielonego gradientu, stopka na panelu; usunięty token `--contact-end`;
+  - lista All projects: nagłówek z poświatą, rozdziały z numerami „01 /”, projekty jako karty (unoszą się, miętowa krawędź), organizacja na pomarańczowo, miniatury 200×130 (na telefonie bez zmian);
+  - karty projektów na home i strona pojedynczego projektu bez zmian.
+- **Testy:** zmienione tylko oczekiwania, które opisywały stary wygląd: kolor sekcji kontaktu i stopki (`test_about_and_contact_complete_the_alternating_section_surfaces`) oraz maks. rozmiar miniatury na liście (161→201, 113→131).
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`940360b`) → `claude/color-coherence` (`f9b9031`); brak potwierdzonych uwag wymagających zmian.
-- Sprawdzono powrót aktywnej nawigacji i przycisku kontaktu do miętowego akcentu, pomarańczowe etykiety/numery/znaczniki, neutralne narzędzia kompetencji oraz usunięcie tokenów kategorii, kolorowych krawędzi kart i kropek filtrów. Pozostałe style nie odwołują się do usuniętych tokenów. Gradient kontaktu i poprawka wysokości paska mobilnego pozostają bez zmian.
-- Izolowany test Chrome z aktualnym CSS: oba motywy przy szerokościach 390/900/901/1280 px. Końcowe kolory aktywnej nawigacji, języka i przycisku kontaktu są zgodne z miętowym akcentem; etykieta, kategoria na karcie i numer kompetencji mają wspólny pomarańczowy kolor. Kontrast wybranych tekstów (etykieta na tle strony, kategoria na panelu, narzędzia kompetencji, tekst przycisku) wyniósł minimum 8,24:1 w ciemnym motywie i 5,13:1 w jasnym. Computed min-height wewnętrznej części paska: 80 px do 900 px, 78 px od 901 px; reguła mobilna nie została zmieniona. To kontrola wybranych styli na izolowanej stronie, nie pełny audyt wszystkich stron.
-- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły; detektor Impeccable dla CSS nie zgłosił uwag. Pełny build, testy przeglądarkowe i 188 skanów axe bez błędów to raport autora, nie niezależny wynik recenzenta.
+- **Werdykt: OK, status DO MERGE.** Review `main` (`aea42a7`) → `claude/sections-refresh` (`0e7bf6d`); brak potwierdzonych uwag wymagających poprawy.
+- Sprawdzono nowe poświaty i izolację warstw sekcji, karty kompetencji/doświadczenia, skalowanie nagłówków, powrót kontaktu do tła strony, powierzchnię stopki, numerowanie rozdziałów, rozmiary miniatur i aktualizację oczekiwań testów. Nie znaleziono pozostałych odwołań do usuniętego tokenu `--contact-end`. Efekty hover są ograniczone do urządzeń z hover i precyzyjnym wskaźnikiem; istniejące reguły ograniczenia ruchu obejmują nowe karty.
+- Izolowany test Edge z aktualnym CSS i strukturą listy projektów: oba motywy przy 320/390/768/1280 px. Brak poziomego przepełnienia; obrazy mieszczą się w kartach i mają odpowiednio 96×72, 96×72, 110×84, 200×130 px. Przy `prefers-reduced-motion: reduce` przejścia kart mają czas 0 s. Porównanie zrzutów przed/po wyłączeniu pseudo-elementu potwierdziło widoczność poświaty nagłówka listy. Chrome nie uruchomił się w limicie czasu, dlatego użyto Edge. Test jest izolowaną kontrolą CSS, nie pełną weryfikacją wygenerowanej strony.
+- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły. Detektor Impeccable zgłosił wyłącznie stylistyczne ostrzeżenie `side-tab` dla pomarańczowej lewej krawędzi kart doświadczenia (`assets/site.css:854`); to element jawnie zapisany w celu zadania, bez wykazanej usterki użytkowej, więc nie blokuje review.
+- Pełny build Jekyll, 101 testów (2 znane błędy środowiska) oraz 188 skanów axe bez błędów pozostają raportem autora. Recenzent nie uruchomił pełnego zestawu ani buildu (brak `_site`).
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-color-coherence` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-sections-refresh` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
 - Recenzent zmienił wyłącznie `HANDOFF.md`.
 
 ## Historia
@@ -56,3 +64,6 @@ Gałąź główna: `main`.
 - 2026-10-11 · Sławosz · `main` · Scalono poprawkę paska (`940360b`), strona opublikowana.
 - 2026-10-11 · Claude · `claude/color-coherence` · Spójność kolorów: mięta = klikalne, pomarańcz = etykiety; usunięte kolory kategorii i kolumn. Status DO REVIEW.
 - 2026-10-11 · ChatGPT · `chatgpt/review-color-coherence` · Review `f9b9031`: OK, DO MERGE. Sprawdzono role kolorów, usunięte tokeny, oba motywy i granicę 900/901 px. Izolowany test Chrome, kontrast wybranych tekstów, 4 testy treści, kontrola diff i detektor przeszły. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-11 · Sławosz · `main` · Scalono spójność kolorów (`aea42a7`).
+- 2026-10-11 · Claude · `claude/sections-refresh` · Ożywione sekcje home i lista All projects (poświaty, karty, ujednolicony Contact). Status DO REVIEW.
+- 2026-10-12 · ChatGPT · `chatgpt/review-sections-refresh` · Review `0e7bf6d`: OK, DO MERGE. Sprawdzono CSS i zmiany oczekiwań testów; izolowany test Edge potwierdził układ listy w obu motywach, miniatury, widoczność poświaty i ograniczenie ruchu. 4 testy treści i kontrola diff przeszły. Zmieniono tylko `HANDOFF.md`.

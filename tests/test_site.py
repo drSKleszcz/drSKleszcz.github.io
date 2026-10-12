@@ -1458,7 +1458,7 @@ class BrowserTests(unittest.TestCase):
                 const work = document.querySelector('#projects').getBoundingClientRect();
                 return {
                     base: color('body'), panel: color('.project-card-link'), about: color('#about'),
-                    contact: getComputedStyle(document.querySelector('#contact')).backgroundImage,
+                    contact: color('#contact'),
                     footer: color('.site-footer'), field: color('#contact-name'),
                     aboutWidth: about.getBoundingClientRect().width, contentLeft: content.left,
                     workLeft: work.left, viewportWidth: innerWidth,
@@ -1466,10 +1466,10 @@ class BrowserTests(unittest.TestCase):
                 };
             }''')
             self.assertEqual(surfaces['about'], surfaces['panel'], surfaces)
-            # Contact fades from the about surface into the footer colour, so the
-            # closing band has no hard seam above or below it.
-            self.assertIn('linear-gradient(' + surfaces['panel'], surfaces['contact'], surfaces)
-            self.assertIn(surfaces['footer'] + ' 78%', surfaces['contact'], surfaces)
+            # Contact returns to the page surface after the about panel and the
+            # footer closes on the panel surface, keeping the alternation.
+            self.assertEqual(surfaces['contact'], surfaces['base'], surfaces)
+            self.assertEqual(surfaces['footer'], surfaces['panel'], surfaces)
             self.assertNotEqual(surfaces['field'], 'rgba(0, 0, 0, 0)', surfaces)
             self.assertEqual(surfaces['aboutWidth'], surfaces['viewportWidth'], surfaces)
             self.assertAlmostEqual(surfaces['contentLeft'], surfaces['workLeft'], delta=1, msg=str(surfaces))
@@ -1614,8 +1614,8 @@ class BrowserTests(unittest.TestCase):
             self.assertEqual(row.locator('a').count(), 1)
             self.assertEqual(row.evaluate('el => getComputedStyle(el).backgroundColor'), 'rgba(0, 0, 0, 0)')
             plate = row.locator('.atlas-row-image').bounding_box()
-            self.assertLessEqual(plate['width'], 161)
-            self.assertLessEqual(plate['height'], 113)
+            self.assertLessEqual(plate['width'], 201)
+            self.assertLessEqual(plate['height'], 131)
             self.page.locator('[data-filter="engineering"]').click()
             expect(self.page.locator('[data-category-section]:visible')).to_have_count(1)
             expect(self.page.locator('.atlas-row:visible')).to_have_count(6)
@@ -1679,7 +1679,7 @@ class BrowserTests(unittest.TestCase):
                     self.page.set_viewport_size({'width': width, 'height': 900})
                     self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
                     plate = first.locator('.atlas-row-image').bounding_box()
-                    self.assertLessEqual(plate['width'], 97 if width <= 600 else 161)
+                    self.assertLessEqual(plate['width'], 97 if width <= 600 else 201)
                 self.page.locator('[data-language-switch]').click()
                 self.assertIn('#analysis', self.page.url)
 
