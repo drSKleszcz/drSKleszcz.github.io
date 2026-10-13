@@ -8,31 +8,28 @@ Gałąź główna: `main`.
 - **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/home-publications-polish` (z `main` `3ee3aad`, sprawdzony commit `7534464`); review `chatgpt/review-home-publications-polish`
-- **Pliki:** `_data/i18n.yml`, `_layouts/home.html`, `_includes/site-nav.html`, `_includes/publication-card.html`, `assets/site.css`, `tests/test_site.py`
-- **Cel:** uwagi Sławosza po publikacji sekcji Publikacje na home:
-  - numeracja sekcji home ciągła: nowy klucz `home_publications_label` („03 / Publications” / „03 / Publikacje”), O mnie → 04, Kontakt → 05 (`about_label`, `contact_label`); strona `/publications/` zachowuje etykietę „Research / Badania”;
-  - link Publikacje w menu działa jak Projects: na home przewija do `#publications` (podświetlenie aktywnej sekcji działa jak dla innych), na pozostałych stronach otwiera `/publications/`;
-  - okładka karty bez dużego roku (był powtórzony): krótka pomarańczowa kreska i nazwa czasopisma/konferencji (dla rozprawy typ pracy); rok wrócił do opisu karty („2024 · vol. 22, 100560”).
-- **Do sprawdzenia przez recenzenta (treść):** nowy klucz `home_publications_label` i nowe numery w `about_label` / `contact_label` (EN/PL).
-- **Testy:** `test_home_publications_carousel_follows_projects` sprawdza nazwy na okładkach i rok w opisie, numerację 01–05 sekcji home i link `#publications` w menu na home; kontrola pełnych nazw przy 1001/1040 px zostaje. U autora: 104 testy (2 znane błędy środowiska jak na `main`), axe `--full` 196 skanów bez błędów.
+- **Gałąź:** autor `claude/compact-publication-cards` (z `main` `9d416b6`, sprawdzony commit `8bfa21c`); review `chatgpt/review-compact-publication-cards`
+- **Pliki:** `assets/site.css`, `tests/test_site.py`
+- **Cel:** uwagi Sławosza do kart publikacji na home:
+  - karty niższe i bardziej zwarte: okładka nie jest już stałym prostokątem z proporcją obrazu projektu, tylko ma wysokość treści (kreska + nazwa czasopisma); mniejszy tytuł (1.08rem), autorzy .85rem, mniejsze odstępy;
+  - sekcja Publikacje mieści się w ekranie 1440×900 (było 857 px przy 821 dostępnych, teraz 821);
+  - nazwy czasopism/konferencji pomarańczowe (`--warm`, jak etykiety), .95rem 600, wyrównane do góry okładki; zarezerwowane 3 linie (2 na telefonie), więc tytuły i metadane zaczynają się na tej samej wysokości we wszystkich kartach.
+- **Do sprawdzenia przez recenzenta:** czy pomarańczowe nazwy czasopism nie konkurują z etykietą typu w metadanych; czytelność przy 1001–1040 px (nadal pełne nazwy, bez ucięcia).
+- **Testy:** `test_home_publications_carousel_follows_projects` dodatkowo sprawdza, że przy 1440 px nazwy czasopism w 4 widocznych kartach mają tę samą pozycję i kolor etykiety sekcji; kontrola pełnych nazw przy 1001/1040 px zostaje. U autora: pełny zestaw testów (2 znane błędy środowiska jak na `main`), axe `--full` 196 skanów bez błędów.
 
 ## Review
 
-**ChatGPT · 2026-10-13 · `7534464`: OK, DO MERGE. Bez nowych uwag wymagających poprawki.**
+**ChatGPT · 2026-10-13 · `8bfa21c`: OK, DO MERGE. Bez nowych uwag wymagających poprawki.**
 
-Spójność sprawdzona w zakresie tej aktualizacji:
-- Numeracja home: 01 Kompetencje, 02 Projekty, 03 Publikacje, 04 O mnie, 05 Kontakt; klucze EN/PL zgodne, oddzielna strona publikacji zachowuje Research / Badania.
-- Menu: na home Publikacje prowadzą do `#publications` i korzystają z tego samego mechanizmu aktywnej sekcji co pozostałe linki; poza home szablon zachowuje ścieżkę strony publikacji oraz jej `aria-current`. Link do pełnej listy pozostaje dostępny w nagłówku sekcji.
-- Karty: wspólna ramka, tło, hover i układ projektu; pomarańczowa kreska korzysta z `--warm`, nazwa czasopisma z `--text`, autorzy z `--muted`. Rok znajduje się raz w metadanych, również dla rozprawy; tytuły, autorzy i cele linków pozostają zgodne z listą publikacji. Hierarchia okładki odróżnia publikacje bez zmiany systemu kolorów.
+Sprawdzono CSS i uzupełnienie testu względem `main`. Okładki mają wysokość treści zamiast proporcji obrazka; rezerwa wierszy utrzymuje wspólną pozycję metadanych. Nowe reguły są ograniczone do kart publikacji, więc nie zmniejszają kart projektów ani pozycji na osobnej stronie publikacji. Nazwa czasopisma i etykieta typu korzystają z ustalonego koloru `--warm`, ale mają różne wielkości i krój: nazwa jest większa i pisana zwykłym tekstem, typ mniejszym tekstem monospace. Na obejrzanych podglądach nie konkurują o tę samą rolę; tytuł pracy pozostaje czytelny w jasnym kolorze.
 
-**Weryfikacja:** 5 testów treści przeszło; `git diff --check main..HEAD` bez błędów. Izolowany Edge z aktualnym CSS, JS i danymi sprawdził 28 wariantów (EN/PL, oba motywy, 390/768/901/1001/1040/1280/1440 px): 448 pomiarów nazw bez ucięcia ani wychodzenia poza okładkę; kliknięcie linku Publikacje aktywuje właściwą sekcję również z rozwijanego menu. Osobna kontrola 10 wariantów menu desktopowego nie wykazała nakładania widocznych elementów; wcześniejszy alarm pomocniczego pomiaru wynikał z uwzględnienia ukrytego przycisku menu. Obejrzano zrzut PL przy 1001 px. Detektor Impeccable zgłasza tylko wcześniejszą ramkę doświadczenia (`assets/site.css:854`), poza zmianą i zgodną z ustalonym wyglądem — bez nowej uwagi.
+**Weryfikacja:** 5 testów treści przeszło, `git diff --check main..HEAD` bez błędów. Izolowany Edge z aktualnym CSS/JS i rzeczywistymi danymi: 28 wariantów (EN/PL, oba motywy, 320/390/600/768/1001/1040/1440 px), wszystkie 16 kart w każdym wariancie — 448 pomiarów bez ucięcia nazw oraz bez różnic w wysokości początku metadanych w widocznym rzędzie. Obejrzano zrzuty desktopowe i mobilny; mniejsze odstępy i autorzy pozostają czytelne. W izolowanym podglądzie sekcja przy 1440×900 miała 805 px z domyślnym offsetem nagłówka 95 px; wynik wspiera zmniejszenie wysokości, ale nie zastępuje pomiaru kompletnej strony z rzeczywistym nagłówkiem. Detektor Impeccable wskazuje jedynie wcześniej uzgodnioną ramkę doświadczenia przy `assets/site.css:854`, poza zmianą.
 
-**Ograniczenia:** podgląd izolowany odtwarza strukturę szablonów i używa systemowych fontów zastępczych; nie jest pełnym buildem Jekyll. Nie uruchomiono niezależnie pełnych testów `_site` i axe ani nie sprawdzono fizycznego telefonu. Wyniki autora powyżej pozostają jego raportem. W repo zmieniono wyłącznie `HANDOFF.md`.
+**Ograniczenia:** nie ma lokalnego buildu Jekyll ani `_site`, więc pełnego zestawu testów strony i axe nie uruchomiono niezależnie. Podgląd odtwarza sekcję i karty, bez pełnego nagłówka oraz animacji `motion.js`; nie weryfikuje ponownie gestów na fizycznym telefonie. Wyniki autora powyżej pozostają jego raportem. W repo zmieniono wyłącznie `HANDOFF.md`.
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-home-publications-polish` zawiera aktualizację autora oraz wynik review; można scalić do `main`, potwierdzić pełny build/testy w Actions i opublikować zgodnie z `WORKFLOW.md`.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-compact-publication-cards` zawiera kod autora i wynik review; można scalić do `main`, potwierdzić pełny build/testy w Actions i opublikować zgodnie z `WORKFLOW.md`.
 
 ## Historia
 
@@ -83,3 +80,7 @@ Spójność sprawdzona w zakresie tej aktualizacji:
 - 2026-10-13 · Claude · `claude/home-publications-polish` · Numeracja 03 dla Publikacji, link w menu do sekcji na home, okładka kart bez dużego roku. Status DO REVIEW.
 
 - 2026-10-13 · ChatGPT · `chatgpt/review-home-publications-polish` · Review `7534464`: OK, DO MERGE. Spójna numeracja EN/PL, menu i metadane kart; 5 testów treści i kontrola diff przeszły. Izolowany Edge: 28 wariantów kart/nawigacji i 10 kontroli menu desktopowego. Zmieniono tylko `HANDOFF.md` w repo.
+- 2026-10-13 · Sławosz · `main` · Scalono poprawki publikacji na home: numeracja, menu, okładka (`9d416b6`).
+- 2026-10-13 · Claude · `claude/compact-publication-cards` · Zwarte karty publikacji: okładka o wysokości treści, pomarańczowe nazwy czasopism wyrównane do góry, sekcja mieści się w 1440×900. Status DO REVIEW.
+
+- 2026-10-13 · ChatGPT · `chatgpt/review-compact-publication-cards` · Review `8bfa21c`: OK, DO MERGE. 5 testów treści i kontrola diff przeszły; izolowany Edge potwierdził czytelność i wyrównanie kart w 28 wariantach EN/PL i obu motywów. Zmieniono tylko `HANDOFF.md` w repo.

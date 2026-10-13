@@ -1934,6 +1934,12 @@ class BrowserTests(unittest.TestCase):
                 self.page.set_viewport_size({'width': width, 'height': 900})
                 expect(carousel.locator('.publication-card:visible')).to_have_count(visible)
                 self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            # Venue names are warm labels, aligned at the same height in every card.
+            self.page.set_viewport_size({'width': 1440, 'height': 900})
+            expect(carousel.locator('.publication-card:visible')).to_have_count(4)
+            venues = carousel.locator('.publication-card:visible .publication-venue')
+            self.assertEqual(len(set(venues.evaluate_all('els => els.map(el => Math.round(el.getBoundingClientRect().top))'))), 1)
+            self.assertEqual(venues.first.evaluate('el => getComputedStyle(el).color'), self.page.locator('#publications .eyebrow').evaluate('el => getComputedStyle(el).color'))
             # Narrow four-card desktops show every venue name in full.
             for width in [1001, 1040]:
                 self.page.set_viewport_size({'width': width, 'height': 900})
