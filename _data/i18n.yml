@@ -109,6 +109,11 @@ en:
   publications_title: Publications
   publications_description: Journal articles, conference papers and conference contributions on heat recovery, air distribution, flow measurement and energy systems.
   publications_profiles: Research profiles
+  all_publications: View all publications
+  previous_publication: Previous publication
+  next_publication: Next publication
+  select_publication: Choose a publication
+  swipe_publications_hint: Swipe to explore publications
   publications_stats:
     total: Publications
     article: Journal articles
@@ -260,6 +265,11 @@ pl:
   publications_title: Publikacje naukowe
   publications_description: Artykuły, referaty i wystąpienia konferencyjne dotyczące odzysku ciepła, rozdziału powietrza, pomiarów przepływu i systemów energetycznych.
   publications_profiles: Profile naukowe
+  all_publications: Zobacz wszystkie publikacje
+  previous_publication: Poprzednia publikacja
+  next_publication: Następna publikacja
+  select_publication: Wybierz publikację
+  swipe_publications_hint: Przesuń, aby zobaczyć publikacje
   publications_stats:
     total: Publikacje
     article: Artykuły w czasopismach

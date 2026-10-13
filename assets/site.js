@@ -31,7 +31,9 @@
   if (document.documentElement.classList.contains('home-page')) {
     const sections = [...document.querySelectorAll('main > section')];
     const footer = document.querySelector('.site-footer:not([data-contact-footer])');
-    const projectsIndex = sections.findIndex(section => section.id === 'projects');
+    // Carousel sections can be taller than a short desktop viewport; a wheel
+    // step from their top still moves on to the next section.
+    const carouselSections = sections.filter(section => ['projects', 'publications'].includes(section.id));
     const stepMode = window.matchMedia('(min-width: 1001px) and (min-height: 650px)');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let lockedUntil = 0;
@@ -70,8 +72,8 @@
       sections.forEach((section, i) => { if (section.getBoundingClientRect().top + window.scrollY <= position + 2) current = i; });
       if (footer && footer.getBoundingClientRect().top < innerHeight - 2) current = sections.length;
       const rect = sections[current]?.getBoundingClientRect();
-      const leaveProjects = current === projectsIndex && direction > 0 && Math.abs(rect.top - offset) <= 2;
-      if (rect && !leaveProjects && ((direction > 0 && rect.bottom > innerHeight + 2) || (direction < 0 && rect.top < offset - 2))) return;
+      const leaveCarousel = carouselSections.includes(sections[current]) && direction > 0 && Math.abs(rect.top - offset) <= 2;
+      if (rect && !leaveCarousel && ((direction > 0 && rect.bottom > innerHeight + 2) || (direction < 0 && rect.top < offset - 2))) return;
       if (moveTo(current + direction, direction, now)) event.preventDefault();
     }, {passive: false});
 
@@ -143,13 +145,15 @@
     url.hash = browsingCategory;
     link.href = url.pathname + url.hash;
   });
-  const carousel = document.querySelector('[data-carousel]');
-  if (carousel) {
+  // Project carousels follow the browsing category; the publication
+  // carousel on home shares the behaviour but always lists every item.
+  document.querySelectorAll('[data-carousel], [data-publication-carousel]').forEach(carousel => {
+    const projects = carousel.hasAttribute('data-carousel');
     const allCards = [...carousel.querySelectorAll('.project-card')];
-    const category = carousel.hasAttribute('data-home-carousel') ? 'all' : browsingCategory;
+    const category = projects && !carousel.hasAttribute('data-home-carousel') ? browsingCategory : 'all';
     const cards = allCards.filter(card => category === 'all' || card.dataset.category === category);
     allCards.forEach(card => { card.hidden = true; });
-    cards.forEach(card => setCategoryLink(card.querySelector('a'), category));
+    if (projects) cards.forEach(card => setCategoryLink(card.querySelector('a'), category));
     const heading = carousel.querySelector('h2');
     if (heading) heading.textContent = carousel.getAttribute('data-title-' + category);
     const mobile = window.matchMedia('(max-width: 600px)');
@@ -427,7 +431,7 @@
     render();
     if (window.ResizeObserver) new ResizeObserver(measureHeight).observe(grid);
     document.fonts.ready.then(() => { measuredSize = ''; measureHeight(); });
-  }
+  });
   const viewer = document.querySelector('.image-viewer');
   if (viewer && typeof viewer.showModal === 'function') {
     const links = [...document.querySelectorAll('[data-image-preview]')];
