@@ -5,10 +5,10 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/home-publications` (z `main` `3e07af1`; `9e258cf` + poprawka P2), review `chatgpt/review-home-publications`
+- **Gałąź:** autor `claude/home-publications` (z `main` `3e07af1`; `9e258cf` + poprawka P2 `fa89e2d`), review `chatgpt/review-home-publications-fix`
 - **Pliki:** `_includes/publication-card.html` (nowy), `_layouts/home.html`, `_layouts/publications.html`, `_data/i18n.yml`, `assets/site.js`, `assets/site.css`, `tests/test_site.py`
 - **Cel:** Sławosz poprosił o sekcję Publikacje na stronie głównej zaraz po Projects, z karuzelą kart w tym samym stylu co projekty:
   - nowa sekcja `#publications` między `#projects` a `#about`: nagłówek jak w projektach (etykieta, tytuł, opis, link „Zobacz wszystkie publikacje”), poświata jak w innych sekcjach;
@@ -20,6 +20,14 @@ Gałąź główna: `main`.
 - **Testy:** nowy `test_home_publications_carousel_follows_projects`; oczekiwana kolejność sekcji home z `publications`; test kroku kółkiem przechodzi Projects → Publikacje → About; lokatory starych testów karuzeli zawężone do `[data-carousel]` (na home są teraz dwie karuzele). U autora: 104 testy (2 znane błędy środowiska jak na `main`, ich pozostałe asercje przechodzą), axe `--full` 196 skanów bez błędów.
 
 ## Review
+
+**Ponowne review · ChatGPT · 2026-10-13 · `fa89e2d`: OK, DO MERGE.**
+
+P2 rozwiązane: minimalna wysokość okładki, mniejsze odstępy i wyłączone kurczenie roku/nazwy zapewniają miejsce na pełne wiersze. Limit trzech wierszy mieści także najdłuższą nazwę. Bez nowych uwag do poprawki CSS i testu regresji. Test obejmuje wszystkie 16 kart przy 1001 i 1040 px w EN oraz PL.
+
+Niezależna weryfikacja: 5 testów treści przeszło, `git diff --check main..HEAD` bez błędów. Izolowany Edge z aktualnym CSS, JS i rzeczywistymi danymi sprawdził wszystkie 16 nazw przy 390, 768, 1001, 1040, 1280 i 1440 px w obu motywach (192 pomiary): brak ucięcia treści i wychodzenia nazwy poza wewnętrzną przestrzeń okładki. Nazwy czasopism są wspólne dla EN/PL. Pełnego buildu Jekyll, testów `_site` i axe nie uruchomiono niezależnie; raport autora pozostaje powyżej. W repo zmieniono wyłącznie `HANDOFF.md`.
+
+Poniżej wcześniejsze review i odpowiedź autora, zachowane dla historii.
 
 **ChatGPT · 2026-10-13 · commit autora `9e258cf` · wynik: POPRAWKI.**
 
@@ -33,7 +41,7 @@ Gałąź główna: `main`.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** ponowne review poprawki P2 na `chatgpt/review-home-publications`, wynik w sekcji Review.
+- **Sławosz:** review OK; gałąź `chatgpt/review-home-publications-fix` zawiera kod autora, poprawkę `fa89e2d` i wynik review. Można scalić do `main`, sprawdzić pełny build/testy w Actions i opublikować zgodnie z `WORKFLOW.md`.
 
 ## Historia
 
@@ -78,3 +86,5 @@ Gałąź główna: `main`.
 
 - 2026-10-13 · ChatGPT · `chatgpt/review-home-publications` · Review `9e258cf`: POPRAWKI, P2 — nazwy czasopism ucięte w połowie wiersza przy 1001–1040 px. 5 testów treści, składnia JS i kontrola diff przeszły; izolowany Edge potwierdził układ, niezależne sterowanie, kropki i gest dotykowy. Zmieniono tylko `HANDOFF.md` w repo.
 - 2026-10-13 · Claude · `claude/home-publications` · Poprawka P2: pełne nazwy czasopism na okładkach kart przy 1001–1040 px, test w EN/PL. Status DO REVIEW.
+
+- 2026-10-13 · ChatGPT · `chatgpt/review-home-publications-fix` · Ponowne review `fa89e2d`: P2 rozwiązane, OK, DO MERGE. 5 testów treści i kontrola diff przeszły; izolowany Edge: 192 pomiary nazw bez ucięcia przy 6 szerokościach w obu motywach. Zmieniono tylko `HANDOFF.md` w repo.
