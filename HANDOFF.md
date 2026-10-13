@@ -5,10 +5,10 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** `claude/compact-publication-cards` (z `main` `9d416b6`)
+- **Gałąź:** autor `claude/compact-publication-cards` (z `main` `9d416b6`, sprawdzony commit `8bfa21c`); review `chatgpt/review-compact-publication-cards`
 - **Pliki:** `assets/site.css`, `tests/test_site.py`
 - **Cel:** uwagi Sławosza do kart publikacji na home:
   - karty niższe i bardziej zwarte: okładka nie jest już stałym prostokątem z proporcją obrazu projektu, tylko ma wysokość treści (kreska + nazwa czasopisma); mniejszy tytuł (1.08rem), autorzy .85rem, mniejsze odstępy;
@@ -19,11 +19,17 @@ Gałąź główna: `main`.
 
 ## Review
 
-_(czeka na review)_
+**ChatGPT · 2026-10-13 · `8bfa21c`: OK, DO MERGE. Bez nowych uwag wymagających poprawki.**
+
+Sprawdzono CSS i uzupełnienie testu względem `main`. Okładki mają wysokość treści zamiast proporcji obrazka; rezerwa wierszy utrzymuje wspólną pozycję metadanych. Nowe reguły są ograniczone do kart publikacji, więc nie zmniejszają kart projektów ani pozycji na osobnej stronie publikacji. Nazwa czasopisma i etykieta typu korzystają z ustalonego koloru `--warm`, ale mają różne wielkości i krój: nazwa jest większa i pisana zwykłym tekstem, typ mniejszym tekstem monospace. Na obejrzanych podglądach nie konkurują o tę samą rolę; tytuł pracy pozostaje czytelny w jasnym kolorze.
+
+**Weryfikacja:** 5 testów treści przeszło, `git diff --check main..HEAD` bez błędów. Izolowany Edge z aktualnym CSS/JS i rzeczywistymi danymi: 28 wariantów (EN/PL, oba motywy, 320/390/600/768/1001/1040/1440 px), wszystkie 16 kart w każdym wariancie — 448 pomiarów bez ucięcia nazw oraz bez różnic w wysokości początku metadanych w widocznym rzędzie. Obejrzano zrzuty desktopowe i mobilny; mniejsze odstępy i autorzy pozostają czytelne. W izolowanym podglądzie sekcja przy 1440×900 miała 805 px z domyślnym offsetem nagłówka 95 px; wynik wspiera zmniejszenie wysokości, ale nie zastępuje pomiaru kompletnej strony z rzeczywistym nagłówkiem. Detektor Impeccable wskazuje jedynie wcześniej uzgodnioną ramkę doświadczenia przy `assets/site.css:854`, poza zmianą.
+
+**Ograniczenia:** nie ma lokalnego buildu Jekyll ani `_site`, więc pełnego zestawu testów strony i axe nie uruchomiono niezależnie. Podgląd odtwarza sekcję i karty, bez pełnego nagłówka oraz animacji `motion.js`; nie weryfikuje ponownie gestów na fizycznym telefonie. Wyniki autora powyżej pozostają jego raportem. W repo zmieniono wyłącznie `HANDOFF.md`.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review gałęzi `claude/compact-publication-cards`.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-compact-publication-cards` zawiera kod autora i wynik review; można scalić do `main`, potwierdzić pełny build/testy w Actions i opublikować zgodnie z `WORKFLOW.md`.
 
 ## Historia
 
@@ -76,3 +82,5 @@ _(czeka na review)_
 - 2026-10-13 · ChatGPT · `chatgpt/review-home-publications-polish` · Review `7534464`: OK, DO MERGE. Spójna numeracja EN/PL, menu i metadane kart; 5 testów treści i kontrola diff przeszły. Izolowany Edge: 28 wariantów kart/nawigacji i 10 kontroli menu desktopowego. Zmieniono tylko `HANDOFF.md` w repo.
 - 2026-10-13 · Sławosz · `main` · Scalono poprawki publikacji na home: numeracja, menu, okładka (`9d416b6`).
 - 2026-10-13 · Claude · `claude/compact-publication-cards` · Zwarte karty publikacji: okładka o wysokości treści, pomarańczowe nazwy czasopism wyrównane do góry, sekcja mieści się w 1440×900. Status DO REVIEW.
+
+- 2026-10-13 · ChatGPT · `chatgpt/review-compact-publication-cards` · Review `8bfa21c`: OK, DO MERGE. 5 testów treści i kontrola diff przeszły; izolowany Edge potwierdził czytelność i wyrównanie kart w 28 wariantach EN/PL i obu motywów. Zmieniono tylko `HANDOFF.md` w repo.
