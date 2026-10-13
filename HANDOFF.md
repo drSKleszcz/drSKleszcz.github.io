@@ -5,10 +5,10 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/publications` (z `main` `0f005e3`)
+- **Gałąź:** autor `claude/publications` (`448f720`, z `main` `0f005e3`), review `chatgpt/review-publications`
 - **Pliki:** `_data/publications.yml` (nowy), `_layouts/publications.html` (nowy), `publications/index.html` i `pl/publications/index.html` (nowe), `_data/i18n.yml`, `_includes/site-nav.html`, `assets/site.css`, `tests/test_site.py`, `tests/test_content.py`
 - **Cel:** Sławosz poprosił o zakładkę z dorobkiem naukowym. Nowa strona `/publications/` i `/pl/publications/` w menu (między Projects a About):
   - linki do profili Google Scholar, BaDAP AGH i ORCID, liczniki (wszystkie prace, artykuły, referaty, wystąpienia);
@@ -23,11 +23,17 @@ Gałąź główna: `main`.
 
 ## Review
 
-_(czeka na review)_
+- **Werdykt: OK, status DO MERGE.** Review `main` (`0f005e3`) → `claude/publications` (`448f720`); brak potwierdzonych uwag wymagających zmian.
+- Sprawdzono szablon Liquid, klucze i opisy EN/PL, lata i typy prac, liczniki, wyróżnienie autora, tytuł rozprawy zależny od języka, układ DOI, aktywną pozycję menu, mapowanie wersji językowych przez istniejący layout oraz zmiany testów/sitemap. Dane zawierają 16 prac (6 artykułów, 8 referatów, rozdział i rozprawę) oraz 9 wystąpień; nie znaleziono duplikatów tytuł+typ ani DOI.
+- Wybrane dane porównano ze źródłami pierwotnymi: [BaDAP — Energy Reports 2023](https://badap.agh.edu.pl/publikacja/146044), [Measurement 2022](https://www.sciencedirect.com/science/article/pii/S0263224122001919), [Energy Conversion and Management: X 2024](https://www.sciencedirect.com/science/article/pii/S2590174524000382), [BaDAP — Thermal Science 2019](https://badap.agh.edu.pl/publikacja/124783), [repozytorium UiS — praca o bezpieczeństwie wodoru](https://uis.brage.unit.no/uis-xmlui/bitstream/handle/11250/3123582/Kleszcz_2023_IOP_Conf._Ser.__Mater._Sci._Eng._1294_012057.pdf?isAllowed=y&sequence=1). Nie znaleziono rozbieżności w sprawdzonych tytułach, latach, miejscach publikacji i autorstwie.
+- Ograniczenia treści: eksport Scholar CSV i raport BaDAP PDF nie są zapisane w repo, więc recenzent nie potwierdza kompletności wszystkich pozycji ani wszystkich wystąpień. Nie zweryfikowano niezależnie autorstwa usuniętej pozycji HYBRID ani pochodzenia angielskiego tytułu rozprawy — są opisane jako ustalenia autora z użytkownikiem. Część bezpośrednich odczytów doi.org nie powiodła się w narzędziu web; nie oznacza to niedziałających linków. Rozwiązywanie wszystkich DOI pozostaje raportem autora.
+- Izolowany test Edge z bieżącym CSS i treścią z YAML, w strukturze odpowiadającej szablonowi: EN/PL × dark/light × 320/390/901/1040/1180/1440 px (24 warianty). Brak poziomego przepełnienia i obcięcia kart/liczników; menu desktopowe jest widoczne od 901 px. To kontrola układu na fixture, nie wykonanie buildu Liquid/Jekyll ani pełnych interakcji menu.
+- Walidacja recenzenta: 5 testów `tests.test_content` i `git diff --check main..claude/publications` przeszły. Pełnego buildu, testów strony i audytu axe nie uruchomiono tutaj (brak `_site`); 103 testy z dwoma znanymi błędami i 196 skanów axe bez błędów pozostają raportem autora.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review gałęzi `claude/publications` na własnej gałęzi `chatgpt/review-publications`, wynik w sekcji Review.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-publications` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
+- Recenzent zmienił wyłącznie `HANDOFF.md` w repozytorium.
 
 ## Historia
 
@@ -66,3 +72,4 @@ _(czeka na review)_
 - 2026-10-12 · ChatGPT · `chatgpt/review-sections-refresh` · Review `0e7bf6d`: OK, DO MERGE. Sprawdzono CSS i zmiany oczekiwań testów; izolowany test Edge potwierdził układ listy w obu motywach, miniatury, widoczność poświaty i ograniczenie ruchu. 4 testy treści i kontrola diff przeszły. Zmieniono tylko `HANDOFF.md`.
 - 2026-10-12 · Sławosz · `main` · Scalono ożywione sekcje i listę projektów (`0f005e3`), opublikowane.
 - 2026-10-13 · Claude · `claude/publications` · Nowa zakładka Publikacje / Publications (dorobek naukowy EN/PL z Scholar i BaDAP). Status DO REVIEW.
+- 2026-10-13 · ChatGPT · `chatgpt/review-publications` · Review `448f720`: OK, DO MERGE. Sprawdzono szablon, EN/PL, wybrane dane w źródłach pierwotnych, testy i 24 warianty izolowanego układu Edge. 5 testów treści i kontrola diff przeszły; kompletność eksportów i pełny build niezweryfikowane niezależnie. Zmieniono tylko `HANDOFF.md` w repo.
