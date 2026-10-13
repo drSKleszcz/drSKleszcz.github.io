@@ -5,10 +5,10 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/home-publications-polish` (z `main` `3ee3aad`)
+- **Gałąź:** autor `claude/home-publications-polish` (z `main` `3ee3aad`, sprawdzony commit `7534464`); review `chatgpt/review-home-publications-polish`
 - **Pliki:** `_data/i18n.yml`, `_layouts/home.html`, `_includes/site-nav.html`, `_includes/publication-card.html`, `assets/site.css`, `tests/test_site.py`
 - **Cel:** uwagi Sławosza po publikacji sekcji Publikacje na home:
   - numeracja sekcji home ciągła: nowy klucz `home_publications_label` („03 / Publications” / „03 / Publikacje”), O mnie → 04, Kontakt → 05 (`about_label`, `contact_label`); strona `/publications/` zachowuje etykietę „Research / Badania”;
@@ -19,11 +19,20 @@ Gałąź główna: `main`.
 
 ## Review
 
-_(czeka na review)_
+**ChatGPT · 2026-10-13 · `7534464`: OK, DO MERGE. Bez nowych uwag wymagających poprawki.**
+
+Spójność sprawdzona w zakresie tej aktualizacji:
+- Numeracja home: 01 Kompetencje, 02 Projekty, 03 Publikacje, 04 O mnie, 05 Kontakt; klucze EN/PL zgodne, oddzielna strona publikacji zachowuje Research / Badania.
+- Menu: na home Publikacje prowadzą do `#publications` i korzystają z tego samego mechanizmu aktywnej sekcji co pozostałe linki; poza home szablon zachowuje ścieżkę strony publikacji oraz jej `aria-current`. Link do pełnej listy pozostaje dostępny w nagłówku sekcji.
+- Karty: wspólna ramka, tło, hover i układ projektu; pomarańczowa kreska korzysta z `--warm`, nazwa czasopisma z `--text`, autorzy z `--muted`. Rok znajduje się raz w metadanych, również dla rozprawy; tytuły, autorzy i cele linków pozostają zgodne z listą publikacji. Hierarchia okładki odróżnia publikacje bez zmiany systemu kolorów.
+
+**Weryfikacja:** 5 testów treści przeszło; `git diff --check main..HEAD` bez błędów. Izolowany Edge z aktualnym CSS, JS i danymi sprawdził 28 wariantów (EN/PL, oba motywy, 390/768/901/1001/1040/1280/1440 px): 448 pomiarów nazw bez ucięcia ani wychodzenia poza okładkę; kliknięcie linku Publikacje aktywuje właściwą sekcję również z rozwijanego menu. Osobna kontrola 10 wariantów menu desktopowego nie wykazała nakładania widocznych elementów; wcześniejszy alarm pomocniczego pomiaru wynikał z uwzględnienia ukrytego przycisku menu. Obejrzano zrzut PL przy 1001 px. Detektor Impeccable zgłasza tylko wcześniejszą ramkę doświadczenia (`assets/site.css:854`), poza zmianą i zgodną z ustalonym wyglądem — bez nowej uwagi.
+
+**Ograniczenia:** podgląd izolowany odtwarza strukturę szablonów i używa systemowych fontów zastępczych; nie jest pełnym buildem Jekyll. Nie uruchomiono niezależnie pełnych testów `_site` i axe ani nie sprawdzono fizycznego telefonu. Wyniki autora powyżej pozostają jego raportem. W repo zmieniono wyłącznie `HANDOFF.md`.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review gałęzi `claude/home-publications-polish` na własnej gałęzi `chatgpt/review-home-publications-polish`, wynik w sekcji Review.
+- **Sławosz:** review OK. Gałąź `chatgpt/review-home-publications-polish` zawiera aktualizację autora oraz wynik review; można scalić do `main`, potwierdzić pełny build/testy w Actions i opublikować zgodnie z `WORKFLOW.md`.
 
 ## Historia
 
@@ -72,3 +81,5 @@ _(czeka na review)_
 - 2026-10-13 · ChatGPT · `chatgpt/review-home-publications-fix` · Ponowne review `fa89e2d`: P2 rozwiązane, OK, DO MERGE. 5 testów treści i kontrola diff przeszły; izolowany Edge: 192 pomiary nazw bez ucięcia przy 6 szerokościach w obu motywach. Zmieniono tylko `HANDOFF.md` w repo.
 - 2026-10-13 · Sławosz · `main` · Scalono sekcję Publikacje na home (`3ee3aad`).
 - 2026-10-13 · Claude · `claude/home-publications-polish` · Numeracja 03 dla Publikacji, link w menu do sekcji na home, okładka kart bez dużego roku. Status DO REVIEW.
+
+- 2026-10-13 · ChatGPT · `chatgpt/review-home-publications-polish` · Review `7534464`: OK, DO MERGE. Spójna numeracja EN/PL, menu i metadane kart; 5 testów treści i kontrola diff przeszły. Izolowany Edge: 28 wariantów kart/nawigacji i 10 kontroli menu desktopowego. Zmieniono tylko `HANDOFF.md` w repo.
