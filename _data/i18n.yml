@@ -67,7 +67,7 @@ en:
     - title: Software & automation
       text: Python applications, measurement tools and automation that turn models and analyses into repeatable workflows.
       tools: Python · LabVIEW · Automation
-  about_label: 03 / About
+  about_label: 04 / About
   about_title: From complex systems to clear decisions.
   about_text: I am Sławosz Kleszcz, an R&D engineer with an EngD and experience in universities and industry. I work across numerical modeling, data analysis and software development, connecting engineering research with practical and business applications.
   about_second: My projects range from energy systems and experimental validation to pricing, cost modeling and Python tools. I combine simulation, measurements and analysis to understand how systems perform and support informed decisions.
@@ -84,7 +84,7 @@ en:
       text: Data analysis, cost models and Python/Excel tools for pricing, automation and business decisions.
   portrait_alt: Portrait of Sławosz Kleszcz
   profile_links: Professional profiles
-  contact_label: 04 / Contact
+  contact_label: 05 / Contact
   contact_title: Let’s discuss your next challenge.
   contact_text: For professional opportunities, collaborations or questions about my work in engineering modeling, data analysis, business analytics and software, send a message or connect on LinkedIn.
   name: Name
@@ -106,6 +106,7 @@ en:
   publications_nav: Publications
   publications_path: /publications/
   publications_label: Research
+  home_publications_label: 03 / Publications
   publications_title: Publications
   publications_description: Journal articles, conference papers and conference contributions on heat recovery, air distribution, flow measurement and energy systems.
   publications_profiles: Research profiles
@@ -223,7 +224,7 @@ pl:
     - title: Oprogramowanie i automatyzacja
       text: Aplikacje w Pythonie, narzędzia pomiarowe i automatyzacja przekształcające modele oraz analizy w powtarzalne procesy.
       tools: Python · LabVIEW · Automatyka
-  about_label: 03 / O mnie
+  about_label: 04 / O mnie
   about_title: Od złożonych systemów do świadomych decyzji.
   about_text: Nazywam się Sławosz Kleszcz. Jestem inżynierem R&D ze stopniem EngD i doświadczeniem zdobytym na uczelniach oraz w przemyśle. Łączę modelowanie numeryczne, analizę danych i rozwój oprogramowania z badaniami inżynierskimi oraz zastosowaniami biznesowymi.
   about_second: Moje projekty obejmują systemy energetyczne, walidację eksperymentalną, analizę cen, modelowanie kosztów i narzędzia w Pythonie. Wykorzystuję symulacje, pomiary i analizę, aby zrozumieć działanie systemów i wspierać świadome decyzje.
@@ -240,7 +241,7 @@ pl:
       text: Analiza danych, modele kosztów i narzędzia Python/Excel do wycen, automatyzacji i decyzji biznesowych.
   portrait_alt: Portret Sławosza Kleszcza
   profile_links: Profile zawodowe
-  contact_label: 04 / Kontakt
+  contact_label: 05 / Kontakt
   contact_title: Porozmawiajmy o kolejnym wyzwaniu.
   contact_text: W sprawie możliwości zawodowych, współpracy lub pytań o moje projekty związane z modelowaniem inżynierskim, analizą danych, analityką biznesową i oprogramowaniem wyślij wiadomość albo skontaktuj się przez LinkedIn.
   name: Imię i nazwisko
@@ -262,6 +263,7 @@ pl:
   publications_nav: Publikacje
   publications_path: /pl/publications/
   publications_label: Badania
+  home_publications_label: 03 / Publikacje
   publications_title: Publikacje naukowe
   publications_description: Artykuły, referaty i wystąpienia konferencyjne dotyczące odzysku ciepła, rozdziału powietrza, pomiarów przepływu i systemów energetycznych.
   publications_profiles: Profile naukowe

@@ -1918,7 +1918,14 @@ class BrowserTests(unittest.TestCase):
             carousel = self.page.locator('[data-publication-carousel]')
             cards = carousel.locator('.publication-card')
             expect(cards).to_have_count(total)
-            self.assertEqual(carousel.locator('.publication-year').all_text_contents(), [str(item['year']) for item in research['items']])
+            thesis_label = 'Doctoral thesis' if prefix == '' else 'Rozprawa doktorska'
+            self.assertEqual(carousel.locator('.publication-venue').all_text_contents(), [item.get('venue', thesis_label) for item in research['items']])
+            self.assertEqual(carousel.locator('.card-meta span:last-child').all_text_contents(), [str(item['year']) + (' · ' + item['details'] if item.get('details') else '') for item in research['items']])
+            # Home numbers its sections in order, publications third.
+            numbers = [text.split(' / ')[0] for text in self.page.locator('#expertise > .container > .eyebrow, #projects .section-heading .eyebrow, #publications .section-heading .eyebrow, #about .eyebrow, #contact .eyebrow').all_text_contents()]
+            self.assertEqual(numbers, ['01', '02', '03', '04', '05'])
+            # The menu scrolls to the home section, like Projects.
+            expect(self.page.locator('#site-nav a[href="#publications"]')).to_have_count(1)
             expect(carousel.locator('[data-prev]')).to_have_attribute('aria-label', labels[0])
             expect(carousel.locator('[data-next]')).to_have_attribute('aria-label', labels[1])
             # Home project cards keep their own carousel.

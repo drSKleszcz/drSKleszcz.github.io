@@ -927,10 +927,10 @@ main { overflow-x: clip; }
    typographic cover (year and venue) stands in for the project image. */
 #publications { border-top: 1px solid var(--line); }
 #publications::before { inset: 0 calc(50% - 50vw); background: radial-gradient(620px 460px at 96% 6%, var(--page-glow-warm), transparent 70%), radial-gradient(640px 480px at 0% 100%, var(--page-glow), transparent 70%); }
-.card-image.publication-cover { min-height: 168px; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 20px; background: radial-gradient(260px 180px at 100% 0%, var(--page-glow-warm), transparent 75%), linear-gradient(160deg, var(--panel-light), var(--panel)); }
-.publication-year, .publication-venue { flex-shrink: 0; }
-.publication-year { font-size: clamp(2.6rem, 4vw, 3.2rem); font-weight: 600; line-height: 1; letter-spacing: -.04em; color: var(--warm); }
-.publication-venue { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; font: var(--type-label)/1.5 Consolas, monospace; text-transform: uppercase; letter-spacing: .025em; color: var(--muted); }
+.card-image.publication-cover { min-height: 168px; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 14px; padding: 20px; background: radial-gradient(260px 180px at 100% 0%, var(--page-glow-warm), transparent 75%), linear-gradient(160deg, var(--panel-light), var(--panel)); }
+.card-image.publication-cover::before { content: ""; width: 36px; height: 3px; border-radius: 2px; background: var(--warm); }
+.publication-venue { flex-shrink: 0; }
+.publication-venue { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; font-size: 1.15rem; font-weight: 500; line-height: 1.3; letter-spacing: -.01em; color: var(--text); }
 .publication-card .card-body p { color: var(--muted); }
 .pub-card { scroll-margin-top: calc(var(--header-height, 95px) + 24px); }
 .pub-card:target { border-color: var(--accent); }
