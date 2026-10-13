@@ -5,32 +5,29 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/sections-refresh` (`0e7bf6d`, z `main` `aea42a7`), review `chatgpt/review-sections-refresh`
-- **Pliki:** `assets/site.css`, `tests/test_site.py`
-- **Cel:** Sławosz uznał, że hero na home jest dobre, a sekcje niżej i lista All projects są mdłe. Zmiany wyłącznie w CSS, zasada kolorów bez zmian (mięta = klikalne, pomarańcz = etykiety):
-  - każda sekcja home (Expertise, Projects, About, Contact) ma delikatną poświatę jak hero, nagłówki sekcji są większe;
-  - Expertise: kolumny jako karty z dużymi pomarańczowymi numerami; istniejąca animowana linia zostaje i jest pomarańczowa; karta unosi się po najechaniu;
-  - About: zdjęcie z zaokrągloną ramką (bez poświaty), doświadczenie jako karty z pomarańczowym paskiem z lewej;
-  - Contact ujednolicony z resztą: tło strony zamiast zielonego gradientu, stopka na panelu; usunięty token `--contact-end`;
-  - lista All projects: nagłówek z poświatą, rozdziały z numerami „01 /”, projekty jako karty (unoszą się, miętowa krawędź), organizacja na pomarańczowo, miniatury 200×130 (na telefonie bez zmian);
-  - karty projektów na home i strona pojedynczego projektu bez zmian.
-- **Testy:** zmienione tylko oczekiwania, które opisywały stary wygląd: kolor sekcji kontaktu i stopki (`test_about_and_contact_complete_the_alternating_section_surfaces`) oraz maks. rozmiar miniatury na liście (161→201, 113→131).
+- **Gałąź:** autor `claude/publications` (z `main` `0f005e3`)
+- **Pliki:** `_data/publications.yml` (nowy), `_layouts/publications.html` (nowy), `publications/index.html` i `pl/publications/index.html` (nowe), `_data/i18n.yml`, `_includes/site-nav.html`, `assets/site.css`, `tests/test_site.py`, `tests/test_content.py`
+- **Cel:** Sławosz poprosił o zakładkę z dorobkiem naukowym. Nowa strona `/publications/` i `/pl/publications/` w menu (między Projects a About):
+  - linki do profili Google Scholar, BaDAP AGH i ORCID, liczniki (wszystkie prace, artykuły, referaty, wystąpienia);
+  - 16 prac pogrupowanych latami (malejąco): 6 artykułów, 8 referatów, 1 rozdział, 1 rozprawa doktorska; typ i miejsce publikacji na pomarańczowo, „S. Kleszcz” pogrubione, link DOI miętowy;
+  - osobna lista 9 wystąpień konferencyjnych bez publikacji;
+  - dane połączone z eksportu Scholar (CSV) i raportu BaDAP (PDF) z 13.10.2026; linkowane są tylko DOI potwierdzone w doi.org;
+  - pominięto pozycję Scholar „A numerical analysis of a HYBRID PV+ WT power system” (Sławosz nie jest autorem);
+  - rozprawa doktorska ma tytuł PL w wersji PL i tytuł EN (podany przez Sławosza) w wersji EN (`title_en`);
+  - menu na 901–1180 px ma mniejsze odstępy (bez tego PL wychodził poza ekran przy 901 px).
+- **Dane do sprawdzenia przez recenzenta (treść):** nazwy i opisy w `_data/i18n.yml` (klucze `publications_*`, `publication_types`, `contributions_*`) oraz poprawność wpisów w `_data/publications.yml`. Bez DOI: Energy Reports 2023, Polityka Energetyczna 2019, IOP MSE 1294 012057, EPJ WoC 269 01027, MATEC 240 02003, rozdział Sciendo, rozprawa.
+- **Testy:** nowe `test_publications_page_lists_research_in_both_languages` i `test_publications_are_complete_and_ordered`; nawigacja ma 6 pozycji; sitemap 44 adresy (było 42). U autora: 103 testy (2 znane błędy środowiska jak na `main`), axe `--full` 196 skanów bez błędów.
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`aea42a7`) → `claude/sections-refresh` (`0e7bf6d`); brak potwierdzonych uwag wymagających poprawy.
-- Sprawdzono nowe poświaty i izolację warstw sekcji, karty kompetencji/doświadczenia, skalowanie nagłówków, powrót kontaktu do tła strony, powierzchnię stopki, numerowanie rozdziałów, rozmiary miniatur i aktualizację oczekiwań testów. Nie znaleziono pozostałych odwołań do usuniętego tokenu `--contact-end`. Efekty hover są ograniczone do urządzeń z hover i precyzyjnym wskaźnikiem; istniejące reguły ograniczenia ruchu obejmują nowe karty.
-- Izolowany test Edge z aktualnym CSS i strukturą listy projektów: oba motywy przy 320/390/768/1280 px. Brak poziomego przepełnienia; obrazy mieszczą się w kartach i mają odpowiednio 96×72, 96×72, 110×84, 200×130 px. Przy `prefers-reduced-motion: reduce` przejścia kart mają czas 0 s. Porównanie zrzutów przed/po wyłączeniu pseudo-elementu potwierdziło widoczność poświaty nagłówka listy. Chrome nie uruchomił się w limicie czasu, dlatego użyto Edge. Test jest izolowaną kontrolą CSS, nie pełną weryfikacją wygenerowanej strony.
-- Walidacja recenzenta: 4 testy `tests.test_content` i `git diff --check main..HEAD` przeszły. Detektor Impeccable zgłosił wyłącznie stylistyczne ostrzeżenie `side-tab` dla pomarańczowej lewej krawędzi kart doświadczenia (`assets/site.css:854`); to element jawnie zapisany w celu zadania, bez wykazanej usterki użytkowej, więc nie blokuje review.
-- Pełny build Jekyll, 101 testów (2 znane błędy środowiska) oraz 188 skanów axe bez błędów pozostają raportem autora. Recenzent nie uruchomił pełnego zestawu ani buildu (brak `_site`).
+_(czeka na review)_
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-sections-refresh` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
-- Recenzent zmienił wyłącznie `HANDOFF.md`.
+- **ChatGPT:** review gałęzi `claude/publications` na własnej gałęzi `chatgpt/review-publications`, wynik w sekcji Review.
 
 ## Historia
 
@@ -67,3 +64,5 @@ Gałąź główna: `main`.
 - 2026-10-11 · Sławosz · `main` · Scalono spójność kolorów (`aea42a7`).
 - 2026-10-11 · Claude · `claude/sections-refresh` · Ożywione sekcje home i lista All projects (poświaty, karty, ujednolicony Contact). Status DO REVIEW.
 - 2026-10-12 · ChatGPT · `chatgpt/review-sections-refresh` · Review `0e7bf6d`: OK, DO MERGE. Sprawdzono CSS i zmiany oczekiwań testów; izolowany test Edge potwierdził układ listy w obu motywach, miniatury, widoczność poświaty i ograniczenie ruchu. 4 testy treści i kontrola diff przeszły. Zmieniono tylko `HANDOFF.md`.
+- 2026-10-12 · Sławosz · `main` · Scalono ożywione sekcje i listę projektów (`0f005e3`), opublikowane.
+- 2026-10-13 · Claude · `claude/publications` · Nowa zakładka Publikacje / Publications (dorobek naukowy EN/PL z Scholar i BaDAP). Status DO REVIEW.
