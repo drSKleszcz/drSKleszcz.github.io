@@ -8,7 +8,7 @@ Gałąź główna: `main`.
 - **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/home-publications` (z `main` `3e07af1`)
+- **Gałąź:** autor `claude/home-publications` (z `main` `3e07af1`; `9e258cf` + poprawka P2), review `chatgpt/review-home-publications`
 - **Pliki:** `_includes/publication-card.html` (nowy), `_layouts/home.html`, `_layouts/publications.html`, `_data/i18n.yml`, `assets/site.js`, `assets/site.css`, `tests/test_site.py`
 - **Cel:** Sławosz poprosił o sekcję Publikacje na stronie głównej zaraz po Projects, z karuzelą kart w tym samym stylu co projekty:
   - nowa sekcja `#publications` między `#projects` a `#about`: nagłówek jak w projektach (etykieta, tytuł, opis, link „Zobacz wszystkie publikacje”), poświata jak w innych sekcjach;
@@ -21,11 +21,19 @@ Gałąź główna: `main`.
 
 ## Review
 
-_(czeka na review)_
+**ChatGPT · 2026-10-13 · commit autora `9e258cf` · wynik: POPRAWKI.**
+
+1. **[P2] Nazwa czasopisma jest ucięta w połowie wiersza na wąskim desktopie** — `assets/site.css:930–932`. Przy szerokości okna 1001 px karuzela pokazuje cztery karty, ale okładka zachowuje proporcje obrazka projektu. Rok, pionowy padding i odstęp zostawiają za mało miejsca na dwa wiersze nazwy. Element `.publication-venue` kurczy się do 29,19 px przy wysokości wiersza 18 px; `overflow: hidden` ucina drugi wiersz m.in. „Energy Conversion and Management: X” oraz „IOP Conference Series: Materials Science and Engineering”. Przy 1040 px ma 34,92 px zamiast potrzebnych 36 px; przy 1280 px problem nie występuje. Potwierdzono pomiarem i zrzutem izolowanego układu z rzeczywistym CSS i danymi publikacji. Zapewnić miejsce na pełne wiersze (np. minimalna wysokość okładki lub dostosowanie odstępów przy czterech wąskich kartach) i zapobiec kurczeniu nazwy do części wiersza. Dodać kontrolę okładek w okolicach 1001–1040 px; samo sprawdzenie braku poziomego overflow nie wykrywa tego problemu.
+
+**Sprawdzone:** diff względem `main`, szablony i klucze EN/PL; 5 testów treści przeszło, składnia `site.js` i `git diff --check` bez błędów. Izolowany podgląd Edge z rzeczywistym CSS, JS i danymi potwierdził układ 4 / 2 / 1 karty przy 1001, 1040, 1280, 768 i 390 px oraz niezależność obu karuzel. Strzałki i kropki działają; emulowany gest dotykowy zmienia publikację 1 → 2 bez zmiany karuzeli projektów. Szablony karty i pozycji docelowej używają tego samego identyfikatora; pomocnicza kontrola slugów nie wykazała kolizji dla 16 prac.
+
+**Ograniczenia:** brak lokalnego buildu Jekyll i `_site`, więc pełnych testów strony, przejść kółkiem, rzeczywistego przejścia do kotwicy i audytu axe nie uruchomiono niezależnie. Izolowany podgląd nie obejmuje całej strony ani animacji z `motion.js`. Wyniki 104 testów i 196 skanów axe powyżej pozostają raportem autora. W repo zmieniono wyłącznie `HANDOFF.md`.
+
+**Odpowiedź autora (Claude) na P2:** poprawione. Okładka karty publikacji ma `min-height: 168px` i padding 20 px, rok i nazwa nie kurczą się (`flex-shrink: 0`), nazwa mieści do 3 wierszy (`-webkit-line-clamp: 3`). Najdłuższa nazwa („New Trends in Production Engineering, Pt. 2 (Sciendo)”) zajmuje przy 1001 px 3 wiersze; przy 1040–1280 px okładki mają 168 px, przy 1440 px bez zmian (proporcje obrazka). `test_home_publications_carousel_follows_projects` sprawdza teraz przy 1001 i 1040 px, w EN i PL, wszystkie 16 kart (przewijając karuzelę), że żadna nazwa nie jest ucięta; test bez poprawki CSS nie przechodzi. U autora: 104 testy (2 znane błędy środowiska), axe `--full` 196 skanów bez błędów.
 
 ## Dla następnej osoby
 
-- **ChatGPT:** review gałęzi `claude/home-publications` na własnej gałęzi `chatgpt/review-home-publications`, wynik w sekcji Review.
+- **ChatGPT:** ponowne review poprawki P2 na `chatgpt/review-home-publications`, wynik w sekcji Review.
 
 ## Historia
 
@@ -67,3 +75,6 @@ _(czeka na review)_
 - 2026-10-13 · ChatGPT · `chatgpt/review-publications` · Review `448f720`: OK, DO MERGE. Sprawdzono szablon, EN/PL, wybrane dane w źródłach pierwotnych, testy i 24 warianty izolowanego układu Edge. 5 testów treści i kontrola diff przeszły; kompletność eksportów i pełny build niezweryfikowane niezależnie. Zmieniono tylko `HANDOFF.md` w repo.
 - 2026-10-13 · Sławosz · `main` · Scalono zakładkę Publikacje (`3e07af1`).
 - 2026-10-13 · Claude · `claude/home-publications` · Sekcja Publikacje na home z karuzelą kart w stylu projektów. Status DO REVIEW.
+
+- 2026-10-13 · ChatGPT · `chatgpt/review-home-publications` · Review `9e258cf`: POPRAWKI, P2 — nazwy czasopism ucięte w połowie wiersza przy 1001–1040 px. 5 testów treści, składnia JS i kontrola diff przeszły; izolowany Edge potwierdził układ, niezależne sterowanie, kropki i gest dotykowy. Zmieniono tylko `HANDOFF.md` w repo.
+- 2026-10-13 · Claude · `claude/home-publications` · Poprawka P2: pełne nazwy czasopism na okładkach kart przy 1001–1040 px, test w EN/PL. Status DO REVIEW.

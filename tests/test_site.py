@@ -1927,6 +1927,13 @@ class BrowserTests(unittest.TestCase):
                 self.page.set_viewport_size({'width': width, 'height': 900})
                 expect(carousel.locator('.publication-card:visible')).to_have_count(visible)
                 self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            # Narrow four-card desktops show every venue name in full.
+            for width in [1001, 1040]:
+                self.page.set_viewport_size({'width': width, 'height': 900})
+                for step in range(total // 4):
+                    clipped = carousel.locator('.publication-card:visible .publication-venue').evaluate_all('els => els.filter(el => el.scrollHeight > el.clientHeight + 1).map(el => el.textContent)')
+                    self.assertEqual(clipped, [], f'{prefix or "en"} {width}px')
+                    for _ in range(4): carousel.locator('[data-next]').evaluate('button => button.click()')
             self.page.set_viewport_size({'width': 1440, 'height': 900})
             first = carousel.locator('.publication-card[style="order: 0;"] h3').inner_text()
             carousel.locator('[data-next]').click()
