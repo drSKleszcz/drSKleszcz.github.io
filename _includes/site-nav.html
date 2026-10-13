@@ -9,7 +9,7 @@
       <a data-nav-home href="{% if page.layout == 'home' %}#page-top{% else %}{{ t.home | relative_url }}{% endif %}"{% if page.layout == 'home' %} aria-current="page"{% endif %}>{{ t.home_label }}</a>
       <a href="{% if page.layout == 'home' %}#expertise{% else %}{{ t.home | relative_url }}#expertise{% endif %}">{{ t.expertise_nav }}</a>
       <a href="{% if page.layout == 'home' %}#projects{% else %}{{ t.projects_path | relative_url }}{% endif %}" {% if page.layout == 'project' or page.layout == 'projects' %}aria-current="{% if page.layout == 'projects' %}page{% else %}true{% endif %}"{% endif %}>{{ t.work }}</a>
-      <a href="{{ t.publications_path | relative_url }}"{% if page.layout == 'publications' %} aria-current="page"{% endif %}>{{ t.publications_nav }}</a>
+      <a href="{% if page.layout == 'home' %}#publications{% else %}{{ t.publications_path | relative_url }}{% endif %}"{% if page.layout == 'publications' %} aria-current="page"{% endif %}>{{ t.publications_nav }}</a>
       <a href="{{ t.home | relative_url }}#about">{{ t.about }}</a>
       <a href="{{ t.home | relative_url }}#contact">{{ t.contact }}</a>
     </nav>

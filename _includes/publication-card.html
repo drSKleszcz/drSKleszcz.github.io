@@ -1,10 +1,10 @@
 {% assign item = include.item %}
 <article class="project-card publication-card" data-publication="{{ item.type }}">
   <a href="{{ t.publications_path | relative_url }}#publication-{{ item.title | slugify | truncate: 48, '' }}" class="project-card-link">
-    <div class="card-image publication-cover" aria-hidden="true"><span class="publication-year">{{ item.year }}</span><span class="publication-venue">{{ item.venue | default: t.publication_types[item.type] }}</span></div>
+    <div class="card-image publication-cover" aria-hidden="true"><span class="publication-venue">{{ item.venue | default: t.publication_types[item.type] }}</span></div>
     <div class="carousel-image-slot" aria-hidden="true"></div>
     <div class="card-body">
-      <div class="card-meta"><span>{{ t.publication_types[item.type] }}</span><span>{% if item.details %}{{ item.details }}{% else %}{{ item.year }}{% endif %}</span></div>
+      <div class="card-meta"><span>{{ t.publication_types[item.type] }}</span><span>{{ item.year }}{% if item.details %} · {{ item.details }}{% endif %}</span></div>
       <h3>{% if page.lang == 'en' and item.title_en %}{{ item.title_en }}{% else %}{{ item.title }}{% endif %}</h3>
       <p>{{ item.authors | join: ', ' }}</p>
     </div>
