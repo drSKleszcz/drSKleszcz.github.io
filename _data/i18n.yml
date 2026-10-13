@@ -103,6 +103,24 @@ en:
   collection_label: Project collection
   collection_title: Ideas tested. Systems built.
   collection_description: Explore projects connecting engineering modeling, data analysis, business decisions and software development.
+  publications_nav: Publications
+  publications_path: /publications/
+  publications_label: Research
+  publications_title: Publications
+  publications_description: Journal articles, conference papers and conference contributions on heat recovery, air distribution, flow measurement and energy systems.
+  publications_profiles: Research profiles
+  publications_stats:
+    total: Publications
+    article: Journal articles
+    conference: Conference papers
+    contributions: Conference contributions
+  publication_types:
+    article: Journal article
+    conference: Conference paper
+    chapter: Book chapter
+    thesis: Doctoral thesis
+  contributions_title: Conference contributions
+  contributions_text: Presentations and abstracts at international and national conferences.
   filters_label: Filter projects
   all: All projects
   results_count: projects shown
@@ -236,6 +254,24 @@ pl:
   collection_label: Zbiór projektów
   collection_title: Od pomysłu do działającego systemu.
   collection_description: Poznaj projekty łączące modelowanie inżynierskie, analizę danych, decyzje biznesowe i rozwój oprogramowania.
+  publications_nav: Publikacje
+  publications_path: /pl/publications/
+  publications_label: Badania
+  publications_title: Publikacje naukowe
+  publications_description: Artykuły, referaty i wystąpienia konferencyjne dotyczące odzysku ciepła, rozdziału powietrza, pomiarów przepływu i systemów energetycznych.
+  publications_profiles: Profile naukowe
+  publications_stats:
+    total: Publikacje
+    article: Artykuły w czasopismach
+    conference: Referaty konferencyjne
+    contributions: Wystąpienia konferencyjne
+  publication_types:
+    article: Artykuł w czasopiśmie
+    conference: Referat konferencyjny
+    chapter: Rozdział w monografii
+    thesis: Rozprawa doktorska
+  contributions_title: Wystąpienia konferencyjne
+  contributions_text: Prezentacje i streszczenia na konferencjach międzynarodowych i krajowych.
   filters_label: Filtruj projekty
   all: Wszystkie projekty
   results_count: widocznych projektów

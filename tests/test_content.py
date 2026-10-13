@@ -64,5 +64,32 @@ class ContentTests(unittest.TestCase):
             energy = (ROOT / '_projects' / lang / 'energy-techno-economics.md').read_text(encoding='utf-8')
             self.assertIn('98%', energy)
 
+    def test_publications_are_complete_and_ordered(self):
+        research = yaml.safe_load((ROOT / '_data/publications.yml').read_text(encoding='utf-8'))
+        translations = yaml.safe_load((ROOT / '_data/i18n.yml').read_text(encoding='utf-8'))
+        types = set(translations['en']['publication_types'])
+        self.assertEqual(types, set(translations['pl']['publication_types']))
+        self.assertEqual({p['title'] for p in research['profiles']}, {'Google Scholar', 'BaDAP AGH', 'ORCID'})
+        years = [item['year'] for item in research['items']]
+        self.assertEqual(years, sorted(years, reverse=True))
+        dois = [item['doi'] for item in research['items'] if 'doi' in item]
+        self.assertEqual(len(dois), len(set(dois)))
+        titles = [(item['title'], item['type']) for item in research['items']]
+        self.assertEqual(len(titles), len(set(titles)))
+        for item in research['items']:
+            self.assertIn(item['type'], types)
+            self.assertIn('S. Kleszcz', item['authors'])
+            self.assertGreater(len(item['title']), 20)
+            if item['type'] != 'thesis':
+                self.assertTrue(item.get('venue'), item['title'])
+            if item['type'] == 'thesis':
+                self.assertGreater(len(item.get('title_en', '')), 20)
+        contribution_years = [item['year'] for item in research['contributions']]
+        self.assertEqual(contribution_years, sorted(contribution_years, reverse=True))
+        for lang, prefix in [('en', ''), ('pl', '/pl')]:
+            page = frontmatter(ROOT / prefix.lstrip('/') / 'publications/index.html')
+            self.assertEqual((page['layout'], page['lang'], page['translation_key']), ('publications', lang, 'publications'))
+            self.assertEqual(translations[lang]['publications_path'], prefix + '/publications/')
+
 if __name__ == '__main__':
     unittest.main()

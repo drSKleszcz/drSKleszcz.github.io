@@ -9,6 +9,7 @@ import threading
 import unittest
 from urllib.parse import urlparse, unquote
 import xml.etree.ElementTree as ET
+import yaml
 
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright, expect, TimeoutError as PlaywrightTimeoutError
@@ -83,8 +84,9 @@ class RenderedTests(unittest.TestCase):
     def test_sitemap_contains_every_project_and_no_archive(self):
         tree = ET.parse(SITE / 'sitemap.xml')
         urls = [e.text for e in tree.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-        self.assertEqual(len(urls), 42)
-        self.assertEqual(len(set(urls)), 42)
+        self.assertEqual(len(urls), 44)
+        self.assertEqual(len(set(urls)), 44)
+        self.assertEqual(sum(u.endswith('/publications/') for u in urls), 2)
         self.assertEqual(sum('/projects/' in u and u.rstrip('/').split('/')[-1] != 'projects' for u in urls), 38)
         self.assertFalse(any('2014' in u or '404' in u for u in urls))
 
@@ -1385,7 +1387,7 @@ class BrowserTests(unittest.TestCase):
                 range.selectNodeContents(el);
                 return range.getClientRects().length;
             })''')
-            self.assertEqual(line_counts, [1, 1, 1, 1, 1], f'{width}: {line_counts}')
+            self.assertEqual(line_counts, [1] * 6, f'{width}: {line_counts}')
             self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
 
     def test_wheel_step_and_exact_anchor_alignment(self):
@@ -1871,6 +1873,33 @@ class BrowserTests(unittest.TestCase):
             expect(self.page.locator('#contact-status')).to_contain_text('could not be sent')
             expect(self.page.locator('#contact-message')).to_have_value('A local test; never sent to Formspree.')
             expect(self.page.locator('#contact-form button[type=submit]')).to_be_enabled()
+
+    def test_publications_page_lists_research_in_both_languages(self):
+        research = yaml.safe_load((ROOT / '_data/publications.yml').read_text(encoding='utf-8'))
+        dois = [item['doi'] for item in research['items'] if 'doi' in item]
+        years = sorted({item['year'] for item in research['items']}, reverse=True)
+        for prefix, label in [('', 'Publications'), ('/pl', 'Publikacje')]:
+            for width in [390, 901, 1440]:
+                self.page.set_viewport_size({'width': width, 'height': 900})
+                self.page.goto(self.base + prefix + '/publications/')
+                link = self.page.locator(f'#site-nav a[href="{prefix}/publications/"]')
+                expect(link).to_have_text(label)
+                expect(link).to_have_attribute('aria-current', 'page')
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            expect(self.page.locator('.pub-card')).to_have_count(len(research['items']))
+            expect(self.page.locator('.pub-contributions li')).to_have_count(len(research['contributions']))
+            self.assertEqual(self.page.locator('.pub-year > h2').all_inner_texts(), [str(year) for year in years])
+            thesis = next(item for item in research['items'] if item['type'] == 'thesis')
+            self.assertIn(thesis['title_en'] if prefix == '' else thesis['title'], self.page.locator('.pub-card h3').all_inner_texts())
+            self.assertEqual(self.page.locator('.pub-stats dd').first.inner_text(), str(len(research['items'])))
+            self.assertEqual(self.page.locator('.pub-card a[href^="https://doi.org/"]').evaluate_all('els => els.map(a => a.getAttribute("href"))'), ['https://doi.org/' + doi for doi in dois])
+            self.assertEqual(self.page.locator('.pub-card').count(), self.page.locator('.pub-authors strong', has_text='S. Kleszcz').count())
+            # Only links are mint; publication cards stay static surfaces.
+            card = self.page.locator('.pub-card').first
+            self.assertEqual(card.evaluate('el => getComputedStyle(el).cursor'), 'auto')
+            self.assertEqual(card.locator('.pub-meta').evaluate('el => getComputedStyle(el).color'), self.page.locator('.eyebrow').first.evaluate('el => getComputedStyle(el).color'))
+        self.page.locator('[data-language-switch]').click()
+        expect(self.page).to_have_url(self.base + '/publications/')
 
     def test_no_javascript_still_shows_content_and_navigation(self):
         with self.browser.new_context(java_script_enabled=False, viewport={'width':390, 'height':844}) as context:

@@ -880,3 +880,45 @@ main { overflow-x: clip; }
   .atlas-chapter-heading::before { font-size: 1.8rem; }
 }
 @media (max-width: 600px) { .atlas-row-image { width: 96px; height: 72px; } }
+
+/* Publications: same header as the project index, years as warm chapter
+   marks and publications as static cards (only the DOI link is mint). */
+.pub-profiles { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.pub-stats { display: grid; grid-template-columns: repeat(4, minmax(0, max-content)); gap: 14px; margin: 28px 0 0; }
+.pub-stats > div { padding: 14px 20px; border: 1px solid var(--line); border-radius: 18px; background: color-mix(in srgb, var(--panel) 70%, transparent); }
+.pub-stats dt { color: var(--muted); font: var(--type-label)/1.5 Consolas, monospace; text-transform: uppercase; letter-spacing: .06em; }
+.pub-stats dd { margin: 4px 0 0; color: var(--text); font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+.pub-year { display: grid; grid-template-columns: minmax(185px, 22%) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); padding-block: 46px 20px; }
+.pub-year + .pub-year { border-top: 1px solid var(--line); }
+.pub-year > h2 { position: sticky; top: calc(var(--header-height, 95px) + 28px); align-self: start; padding-top: 16px; color: var(--warm); font-size: 2.4rem; font-weight: 600; line-height: 1; letter-spacing: -.04em; }
+.pub-list { display: grid; gap: 14px; min-width: 0; }
+.pub-card { padding: 22px 26px; border: 1px solid var(--line); border-radius: 22px; background: linear-gradient(180deg, color-mix(in srgb, var(--panel-light) 70%, transparent), color-mix(in srgb, var(--panel) 60%, transparent)); }
+.pub-meta { margin: 0 0 10px; color: var(--warm); font: var(--type-label)/1.5 Consolas, monospace; letter-spacing: .035em; }
+.pub-card h3 { max-width: 62ch; font-size: clamp(1.15rem, 1.5vw, 1.35rem); line-height: 1.35; font-weight: 500; }
+.pub-authors { margin: 10px 0 0; color: var(--reading); font-size: .95rem; line-height: 1.6; }
+.pub-authors strong { color: var(--text); font-weight: 600; white-space: nowrap; }
+.pub-details { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px; margin: 12px 0 0; color: var(--muted); font-size: .88rem; }
+.pub-details .text-link { font: .8rem Consolas, monospace; overflow-wrap: anywhere; }
+.pub-contributions { padding-block: 56px 20px; border-top: 1px solid var(--line); }
+.pub-contributions > p { margin-top: 12px; max-width: 640px; }
+.pub-contributions ul { display: grid; gap: 0; margin: 28px 0 0; padding: 0; list-style: none; }
+.pub-contributions li { display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 34%); gap: 8px 24px; align-items: baseline; padding-block: 16px; border-top: 1px solid var(--line); }
+.pub-contribution-year { color: var(--warm); font: 600 .9rem Consolas, monospace; }
+.pub-contribution-title { color: var(--text); line-height: 1.5; }
+.pub-contribution-event { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+@media (max-width: 900px) {
+  .pub-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pub-year { grid-template-columns: 1fr; gap: 18px; padding-top: 36px; }
+  .pub-year > h2 { position: static; padding-top: 0; font-size: 2rem; }
+  .pub-card { padding: 18px; }
+  .pub-contributions li { grid-template-columns: 52px minmax(0, 1fr); }
+  .pub-contribution-event { grid-column: 2; }
+}
+/* Six navigation links: tighter spacing on narrow desktops keeps the longer
+   Polish labels on one row down to the 901px menu breakpoint. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .header-inner { gap: 20px; }
+  #site-nav { gap: 16px; }
+  .language-links { padding-left: 16px; }
+}
+@media (min-width: 901px) and (max-width: 1040px) { #site-nav { font-size: .8rem; } }
