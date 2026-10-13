@@ -15,7 +15,7 @@ layout: default
   <section class="pub-year" aria-labelledby="publications-{{ year.name }}">
     <h2 id="publications-{{ year.name }}">{{ year.name }}</h2>
     <div class="pub-list">{% for item in year.items %}
-      <article class="pub-card" data-publication="{{ item.type }}">
+      <article class="pub-card" id="publication-{{ item.title | slugify | truncate: 48, '' }}" data-publication="{{ item.type }}">
         <p class="pub-meta">{{ t.publication_types[item.type] }}{% if item.venue %} · {{ item.venue }}{% endif %}</p>
         <h3>{% if page.lang == 'en' and item.title_en %}{{ item.title_en }}{% else %}{{ item.title }}{% endif %}</h3>
         <p class="pub-authors">{% for author in item.authors %}{% if author == 'S. Kleszcz' %}<strong>{{ author }}</strong>{% else %}{{ author }}{% endif %}{% unless forloop.last %}, {% endunless %}{% endfor %}</p>

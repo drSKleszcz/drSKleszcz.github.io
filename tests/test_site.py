@@ -349,7 +349,7 @@ class BrowserTests(unittest.TestCase):
             self.page.goto(self.base + path)
             slot = self.page.locator('[data-carousel] .carousel-image-slot').first
             self.assertEqual(slot.evaluate('el => el.getBoundingClientRect().height'), 0)
-            pagination = self.page.locator('[data-carousel-pagination]')
+            pagination = self.page.locator('[data-carousel] [data-carousel-pagination]')
             self.assertGreaterEqual(pagination.evaluate('el => el.getBoundingClientRect().height'), 68)
             expect(pagination).to_be_hidden()
 
@@ -412,7 +412,7 @@ class BrowserTests(unittest.TestCase):
     def test_related_pagination_preserves_keyboard_focus_and_single_project_state(self):
         self.page.set_viewport_size({'width': 390, 'height': 844})
         self.page.goto(self.base + '/projects/microclimate-control/')
-        pagination = self.page.locator('[data-carousel-pagination]')
+        pagination = self.page.locator('[data-carousel] [data-carousel-pagination]')
         self.assertEqual(pagination.count(), 1)
         pagination.locator('button').last.focus()
         self.page.keyboard.press('Enter')
@@ -421,7 +421,7 @@ class BrowserTests(unittest.TestCase):
         expect(active).to_be_focused()
         self.assertEqual(self.page.locator('.project-card:visible').evaluate('el => el.getAnimations().length'), 0)
         self.page.set_viewport_size({'width': 601, 'height': 844})
-        expect(self.page.locator('[data-next]')).to_be_focused()
+        expect(self.page.locator('[data-carousel] [data-next]')).to_be_focused()
         self.page.set_viewport_size({'width': 390, 'height': 844})
         expect(active).to_be_focused()
         # Exercise the one-recommendation edge case without changing project data.
@@ -434,7 +434,7 @@ class BrowserTests(unittest.TestCase):
         self.page.route('**/projects/microclimate-control/', single_card)
         self.page.goto(self.base + '/projects/microclimate-control/')
         expect(self.page.locator('[data-carousel] .project-card:visible')).to_have_count(1)
-        expect(self.page.locator('[data-carousel-pagination]')).to_be_hidden()
+        expect(self.page.locator('[data-carousel] [data-carousel-pagination]')).to_be_hidden()
         expect(self.page.locator('.carousel-controls')).to_be_hidden()
 
     def test_stacked_portrait_is_centered_without_resizing(self):
@@ -526,10 +526,10 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/#projects')
         for _ in range(2):
             session = self.touch_drag(-80, end=False)
-            self.assertTrue(self.page.locator('.project-grid').evaluate("g=>g.classList.contains('is-swiping')"))
+            self.assertTrue(self.page.locator('[data-carousel] .project-grid').evaluate("g=>g.classList.contains('is-swiping')"))
             session.send('Input.dispatchTouchEvent', {'type':'touchEnd', 'touchPoints':[]})
             session.detach()
-            self.page.wait_for_function("!document.querySelector('.project-grid').classList.contains('is-swiping')")
+            self.page.wait_for_function("!document.querySelector('[data-carousel] .project-grid').classList.contains('is-swiping')")
             self.assertTrue(self.page.locator('.project-card').evaluate_all('cards=>cards.every(c=>!c.getAnimations().length && !c.style.transform && !c.inert)'))
 
     def test_home_images_wait_until_after_load_then_prepare_only_neighbours(self):
@@ -538,7 +538,7 @@ class BrowserTests(unittest.TestCase):
         self.page.on('request', lambda request: requested.append(request.url))
         def delay_script(route):
             self.page.wait_for_timeout(500)
-            expect(self.page.locator('.featured-grid .project-card:visible')).to_have_count(1)
+            expect(self.page.locator('[data-carousel] .featured-grid .project-card:visible')).to_have_count(1)
             route.continue_()
         self.page.route('**/assets/site.js*', delay_script)
         self.page.goto(self.base + '/')
@@ -550,7 +550,7 @@ class BrowserTests(unittest.TestCase):
             const image = document.querySelector(`[data-home-carousel] a[href="/projects/${slug}/"] img`);
             return image.complete && image.naturalWidth > 0;
         })''', timeout=5000)
-        self.assertEqual(self.page.locator('.featured-grid .project-card:visible').count(), 1)
+        self.assertEqual(self.page.locator('[data-carousel] .featured-grid .project-card:visible').count(), 1)
         self.page.wait_for_timeout(100)
         for stem in ['mtt-', 'fedex_app-', 'orficle_2-']:
             self.assertFalse(any('/assets/images/' + stem in url for url in requested), requested)
@@ -558,7 +558,7 @@ class BrowserTests(unittest.TestCase):
         self.assertEqual(len(tea_requests), 1)
         self.assertIn('tea-480.webp', tea_requests[0])
         self.page.locator('[data-home-carousel] [data-carousel-pagination] button').nth(1).click()
-        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img => img.complete && img.naturalWidth > 0'))
+        self.assertTrue(self.page.locator('[data-carousel] .featured-grid .project-card:visible img').evaluate('img => img.complete && img.naturalWidth > 0'))
         self.page.wait_for_timeout(100)
         self.assertEqual(len([url for url in requested if '/assets/images/tea-' in url]), 1)
 
@@ -574,7 +574,7 @@ class BrowserTests(unittest.TestCase):
                 page.wait_for_timeout(1000)
                 self.assertFalse(any('/assets/images/tea-' in url or '/assets/images/orifice_website_home-' in url for url in requested), requested)
                 page.locator('.hero-actions a[href="#projects"]').click()
-                page.locator('[data-carousel-pagination] button').nth(1).click()
+                page.locator('[data-carousel] [data-carousel-pagination] button').nth(1).click()
                 page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] .project-card:not([hidden]) img');return img.complete&&img.naturalWidth>0}''')
 
     def test_background_queue_is_serial_and_continues_after_image_failure(self):
@@ -642,12 +642,12 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/')
         self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/orifice-website/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
         self.page.locator('.hero-actions a[href="#projects"]').click()
-        self.page.locator('[data-prev]').evaluate('button=>button.click()')
-        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
+        self.page.locator('[data-carousel] [data-prev]').evaluate('button=>button.click()')
+        self.assertTrue(self.page.locator('[data-carousel] .featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
         self.page.wait_for_function('''()=>{const img=document.querySelector('[data-home-carousel] a[href="/projects/automated-price-list/"] img');return img.complete&&img.naturalWidth>0}''', timeout=5000)
-        self.page.locator('[data-next]').evaluate('button=>button.click()')
-        self.page.locator('[data-next]').evaluate('button=>button.click()')
-        self.assertTrue(self.page.locator('.featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
+        self.page.locator('[data-carousel] [data-next]').evaluate('button=>button.click()')
+        self.page.locator('[data-carousel] [data-next]').evaluate('button=>button.click()')
+        self.assertTrue(self.page.locator('[data-carousel] .featured-grid .project-card:visible img').evaluate('img=>img.complete&&img.naturalWidth>0'))
 
     def test_portrait_requests_a_variant_matching_its_display_size(self):
         for prefix in ['', '/pl']:
@@ -733,7 +733,7 @@ class BrowserTests(unittest.TestCase):
             # columns before the asynchronous resize handler hides extra cards.
             # Measure browsing only after the requested layout is ready.
             expect(self.page.locator('[data-home-carousel] .project-card:visible')).to_have_count(4 if width > 1000 else 1)
-            grid = self.page.locator('.featured-grid')
+            grid = self.page.locator('[data-carousel] .featured-grid')
             heights = []
             for _ in range(19):
                 heights.append(grid.bounding_box()['height'])
@@ -795,7 +795,7 @@ class BrowserTests(unittest.TestCase):
             gap = self.page.evaluate("document.querySelector('#expertise').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
             self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} repeat: {gap}')
 
-    def test_wheel_steps_from_selected_work_to_about_on_short_desktop(self):
+    def test_wheel_steps_from_selected_work_through_publications_on_short_desktop(self):
         self.page.set_viewport_size({'width': 1280, 'height': 720})
         self.page.emulate_media(reduced_motion='reduce')
         for prefix in ['', '/pl']:
@@ -803,8 +803,14 @@ class BrowserTests(unittest.TestCase):
             self.page.mouse.move(500, 450)
             self.page.mouse.wheel(0, 100)
             self.page.wait_for_timeout(80)
-            gap = self.page.evaluate("document.querySelector('#about').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
-            self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} selected work step: {gap}')
+            # Selected work steps to publications, and publications to About.
+            for section in ['publications', 'about']:
+                gap = self.page.evaluate(f"document.querySelector('#{section}').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
+                self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} {section} step: {gap}')
+                # Wait out the step lock so the next gesture is a new step.
+                self.page.wait_for_timeout(900)
+                self.page.mouse.wheel(0, 100)
+                self.page.wait_for_timeout(80)
 
     def test_wheel_up_from_contact_footer_returns_to_about_in_one_step(self):
         self.page.set_viewport_size({'width': 1280, 'height': 720})
@@ -823,13 +829,13 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/#projects')
         next_button = self.page.locator('[data-home-carousel] [data-next]')
         next_button.click()
-        self.assertTrue(self.page.locator('.featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
+        self.assertTrue(self.page.locator('[data-carousel] .featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
         next_button.click()
-        self.assertIn('fedex-pricing', self.page.locator('.featured-grid .project-card:visible a').first.get_attribute('href'))
+        self.assertIn('fedex-pricing', self.page.locator('[data-carousel] .featured-grid .project-card:visible a').first.get_attribute('href'))
         next_button.focus()
         self.page.keyboard.press('Enter')
-        self.assertFalse(self.page.locator('.featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
-        self.assertIn('orifice-calculation-software', self.page.locator('.featured-grid .project-card:visible a').first.get_attribute('href'))
+        self.assertFalse(self.page.locator('[data-carousel] .featured-grid').evaluate('el => el.getAnimations({subtree:true}).some(a => a.playState === "running")'))
+        self.assertIn('orifice-calculation-software', self.page.locator('[data-carousel] .featured-grid .project-card:visible a').first.get_attribute('href'))
 
     def test_reduced_motion_cancels_running_effects_and_keeps_content_visible(self):
         self.page.goto(self.base + '/#projects')
@@ -838,7 +844,7 @@ class BrowserTests(unittest.TestCase):
         moving = 'el => el.getAnimations({subtree:true}).some(a => a.playState === "running" && a.effect.getKeyframes().some(frame => "transform" in frame || "clipPath" in frame || "opacity" in frame))'
         self.assertFalse(self.page.locator('main').evaluate(moving))
         self.page.locator('[data-home-carousel] [data-next]').click()
-        self.assertFalse(self.page.locator('.featured-grid').evaluate(moving))
+        self.assertFalse(self.page.locator('[data-carousel] .featured-grid').evaluate(moving))
         self.page.goto(self.base + '/pl/')
         expect(self.page.locator('h1')).to_be_visible()
         self.assertTrue(self.page.locator('h1').evaluate('el => el.getAnimations({subtree:true}).some(a => a.animationName === "portfolio-sentence-fade")'))
@@ -846,7 +852,7 @@ class BrowserTests(unittest.TestCase):
 
     def test_hover_resumes_after_keyboard_use_and_real_mouse_movement(self):
         self.page.goto(self.base + '/#projects')
-        card = self.page.locator('.featured-grid .project-card-link').first
+        card = self.page.locator('[data-carousel] .featured-grid .project-card-link').first
         card.hover()
         self.page.keyboard.press('Shift')
         self.assertEqual(card.evaluate('el => getComputedStyle(el).transform'), 'none')
@@ -870,7 +876,7 @@ class BrowserTests(unittest.TestCase):
     def test_resizing_during_carousel_movement_clears_old_positions(self):
         self.page.goto(self.base + '/#projects')
         self.page.locator('[data-home-carousel] [data-next]').click()
-        grid = self.page.locator('.featured-grid')
+        grid = self.page.locator('[data-carousel] .featured-grid')
         grid.evaluate('el => el.getAnimations({subtree:true}).forEach(a => a.pause())')
         self.page.set_viewport_size({'width': 768, 'height': 1000})
         expect(grid.locator('.project-card:visible')).to_have_count(2)
@@ -881,7 +887,7 @@ class BrowserTests(unittest.TestCase):
         self.page.goto(self.base + '/#projects')
         next_button = self.page.locator('[data-home-carousel] [data-next]')
         next_button.click()
-        grid = self.page.locator('.featured-grid')
+        grid = self.page.locator('[data-carousel] .featured-grid')
         grid.evaluate('el => el.getAnimations({subtree:true}).forEach(a => {a.pause(); a.currentTime = 30})')
         arriving = grid.locator('.project-card:visible').last.element_handle()
         before = float(arriving.evaluate('el => getComputedStyle(el).opacity'))
@@ -895,7 +901,7 @@ class BrowserTests(unittest.TestCase):
             self.page.set_viewport_size({'width': width, 'height': 1000})
             self.page.goto(self.base + '/#projects')
             self.page.locator('[data-home-carousel] [data-next]').click()
-            grid = self.page.locator('.featured-grid')
+            grid = self.page.locator('[data-carousel] .featured-grid')
             for time in [0, 55, 110, 210]:
                 gaps = grid.evaluate('''(el, time) => {
                     el.getAnimations({subtree:true}).forEach(a => {a.pause(); a.currentTime = time});
@@ -926,11 +932,11 @@ class BrowserTests(unittest.TestCase):
         self.page.locator('[data-theme-toggle]').click()
         colours = self.page.locator('.hero .button').evaluate('el => ({text:getComputedStyle(el).color, background:getComputedStyle(el).backgroundColor})')
         self.assertEqual(colours, {'text':'rgb(255, 255, 255)', 'background':'rgb(9, 108, 97)'})
-        self.assertEqual(self.page.locator('.featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(32, 45, 48)')
+        self.assertEqual(self.page.locator('[data-carousel] .featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(32, 45, 48)')
         self.page.locator('[data-theme-toggle]').click()
         colours = self.page.locator('.hero .button').evaluate('el => ({text:getComputedStyle(el).color, background:getComputedStyle(el).backgroundColor})')
         self.assertEqual(colours, {'text':'rgb(16, 32, 30)', 'background':'rgb(126, 240, 212)'})
-        self.assertEqual(self.page.locator('.featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(242, 244, 239)')
+        self.assertEqual(self.page.locator('[data-carousel] .featured-grid h3').first.evaluate('el => getComputedStyle(el).color'), 'rgb(242, 244, 239)')
 
     def test_hero_content_and_centered_workflow(self):
         for prefix, removed in [('', 'Informing business decisions.'), ('/pl', 'Wspierać decyzje biznesowe.')]:
@@ -1441,7 +1447,7 @@ class BrowserTests(unittest.TestCase):
 
     def test_homepage_sections_and_reduced_motion(self):
         self.page.goto(self.base + '/')
-        self.assertEqual(self.page.locator('main > section').evaluate_all("els=>els.map(el=>el.id || el.getAttribute('aria-labelledby'))"), ['hero-heading', 'expertise', 'projects', 'about', 'contact'])
+        self.assertEqual(self.page.locator('main > section').evaluate_all("els=>els.map(el=>el.id || el.getAttribute('aria-labelledby'))"), ['hero-heading', 'expertise', 'projects', 'publications', 'about', 'contact'])
         self.assertEqual(self.page.locator('html').evaluate('el=>getComputedStyle(el).scrollSnapType'), 'y')
         self.page.emulate_media(reduced_motion='reduce')
         self.assertEqual(self.page.locator('html').evaluate('el=>getComputedStyle(el).scrollSnapType'), 'none')
@@ -1714,7 +1720,7 @@ class BrowserTests(unittest.TestCase):
             cards = self.page.locator('[data-carousel] .project-card:visible')
             expect(cards).to_have_count(4)
             self.assertEqual(cards.evaluate_all("els=>els.map(el=>el.dataset.category)"), ['engineering'] * 4)
-            self.page.locator('[data-next]').click()
+            self.page.locator('[data-carousel] [data-next]').click()
         cards.first.locator('a').click()
         self.assertIn('category=engineering', self.page.url)
         self.page.locator('[data-language-switch]').click()
@@ -1742,11 +1748,11 @@ class BrowserTests(unittest.TestCase):
         seen = set()
         for _ in range(18):
             seen.add(self.page.locator('[data-carousel] .project-card[style="order: 0;"] a').get_attribute('href'))
-            self.page.locator('[data-next]').click()
+            self.page.locator('[data-carousel] [data-next]').click()
         self.assertEqual(len(seen), 18)
         self.assertFalse(any('microclimate-control' in url for url in seen))
         self.assertEqual(cards.first.locator('a').get_attribute('href'), first)
-        self.page.locator('[data-prev]').click()
+        self.page.locator('[data-carousel] [data-prev]').click()
         self.assertTrue(any('orifice-website' in a.get_attribute('href') for a in cards.locator('a').all()))
         self.page.set_viewport_size({'width': 390, 'height': 844})
         expect(cards).to_have_count(1)
@@ -1900,6 +1906,41 @@ class BrowserTests(unittest.TestCase):
             self.assertEqual(card.locator('.pub-meta').evaluate('el => getComputedStyle(el).color'), self.page.locator('.eyebrow').first.evaluate('el => getComputedStyle(el).color'))
         self.page.locator('[data-language-switch]').click()
         expect(self.page).to_have_url(self.base + '/publications/')
+
+    def test_home_publications_carousel_follows_projects(self):
+        research = yaml.safe_load((ROOT / '_data/publications.yml').read_text(encoding='utf-8'))
+        total = len(research['items'])
+        for prefix, labels in [('', ('Previous publication', 'Next publication')), ('/pl', ('Poprzednia publikacja', 'Następna publikacja'))]:
+            self.page.set_viewport_size({'width': 1440, 'height': 900})
+            self.page.goto(self.base + prefix + '/')
+            order = self.page.evaluate("[...document.querySelectorAll('main > section')].map(s => s.id)")
+            self.assertEqual(order[order.index('projects') + 1:order.index('about')], ['publications'], order)
+            carousel = self.page.locator('[data-publication-carousel]')
+            cards = carousel.locator('.publication-card')
+            expect(cards).to_have_count(total)
+            self.assertEqual(carousel.locator('.publication-year').all_text_contents(), [str(item['year']) for item in research['items']])
+            expect(carousel.locator('[data-prev]')).to_have_attribute('aria-label', labels[0])
+            expect(carousel.locator('[data-next]')).to_have_attribute('aria-label', labels[1])
+            # Home project cards keep their own carousel.
+            expect(self.page.locator('[data-carousel] .publication-card')).to_have_count(0)
+            for width, visible in [(1440, 4), (768, 2), (390, 1)]:
+                self.page.set_viewport_size({'width': width, 'height': 900})
+                expect(carousel.locator('.publication-card:visible')).to_have_count(visible)
+                self.assertLessEqual(self.page.evaluate('document.documentElement.scrollWidth'), width)
+            self.page.set_viewport_size({'width': 1440, 'height': 900})
+            first = carousel.locator('.publication-card[style="order: 0;"] h3').inner_text()
+            carousel.locator('[data-next]').click()
+            expect(carousel.locator('.publication-card[style="order: 0;"] h3')).not_to_have_text(first)
+            # Every card opens its entry on the publications page.
+            hrefs = cards.evaluate_all('els => els.map(el => el.querySelector("a").getAttribute("href"))')
+            self.assertTrue(all(href.startswith(prefix + '/publications/#publication-') for href in hrefs), hrefs)
+            self.page.goto(self.base + hrefs[1])
+            target = self.page.locator('.pub-card:target')
+            expect(target).to_have_count(1)
+            self.assertEqual(target.evaluate('el => getComputedStyle(el).borderTopColor'), self.page.evaluate("(() => { const probe = document.body.appendChild(document.createElement('i')); probe.style.color = 'var(--accent)'; const color = getComputedStyle(probe).color; probe.remove(); return color; })()"))
+            # The fragment scroll is smooth; wait until the entry has arrived.
+            self.page.wait_for_function("(() => { const top = document.querySelector('.pub-card:target').getBoundingClientRect().top; return top > 0 && top < innerHeight / 2; })()")
+            self.assertGreater(target.evaluate('el => el.getBoundingClientRect().top'), self.page.evaluate("document.querySelector('.site-header').getBoundingClientRect().bottom"))
 
     def test_no_javascript_still_shows_content_and_navigation(self):
         with self.browser.new_context(java_script_enabled=False, viewport={'width':390, 'height':844}) as context:

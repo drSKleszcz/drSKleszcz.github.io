@@ -922,3 +922,14 @@ main { overflow-x: clip; }
   .language-links { padding-left: 16px; }
 }
 @media (min-width: 901px) and (max-width: 1040px) { #site-nav { font-size: .8rem; } }
+
+/* Publications on home reuse the project carousel and card frame; a
+   typographic cover (year and venue) stands in for the project image. */
+#publications { border-top: 1px solid var(--line); }
+#publications::before { inset: 0 calc(50% - 50vw); background: radial-gradient(620px 460px at 96% 6%, var(--page-glow-warm), transparent 70%), radial-gradient(640px 480px at 0% 100%, var(--page-glow), transparent 70%); }
+.card-image.publication-cover { flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 22px 24px; background: radial-gradient(260px 180px at 100% 0%, var(--page-glow-warm), transparent 75%), linear-gradient(160deg, var(--panel-light), var(--panel)); }
+.publication-year { font-size: clamp(2.6rem, 4vw, 3.2rem); font-weight: 600; line-height: 1; letter-spacing: -.04em; color: var(--warm); }
+.publication-venue { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font: var(--type-label)/1.5 Consolas, monospace; text-transform: uppercase; letter-spacing: .025em; color: var(--muted); }
+.publication-card .card-body p { color: var(--muted); }
+.pub-card { scroll-margin-top: calc(var(--header-height, 95px) + 24px); }
+.pub-card:target { border-color: var(--accent); }

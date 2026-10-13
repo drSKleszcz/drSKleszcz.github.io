@@ -5,35 +5,27 @@ Gałąź główna: `main`.
 
 ## Aktualne zadanie
 
-- **Status:** DO MERGE  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
+- **Status:** DO REVIEW  <!-- WOLNE / W TOKU / DO REVIEW / POPRAWKI / DO MERGE -->
 - **Autor:** Claude
 - **Recenzent:** ChatGPT
-- **Gałąź:** autor `claude/publications` (`448f720`, z `main` `0f005e3`), review `chatgpt/review-publications`
-- **Pliki:** `_data/publications.yml` (nowy), `_layouts/publications.html` (nowy), `publications/index.html` i `pl/publications/index.html` (nowe), `_data/i18n.yml`, `_includes/site-nav.html`, `assets/site.css`, `tests/test_site.py`, `tests/test_content.py`
-- **Cel:** Sławosz poprosił o zakładkę z dorobkiem naukowym. Nowa strona `/publications/` i `/pl/publications/` w menu (między Projects a About):
-  - linki do profili Google Scholar, BaDAP AGH i ORCID, liczniki (wszystkie prace, artykuły, referaty, wystąpienia);
-  - 16 prac pogrupowanych latami (malejąco): 6 artykułów, 8 referatów, 1 rozdział, 1 rozprawa doktorska; typ i miejsce publikacji na pomarańczowo, „S. Kleszcz” pogrubione, link DOI miętowy;
-  - osobna lista 9 wystąpień konferencyjnych bez publikacji;
-  - dane połączone z eksportu Scholar (CSV) i raportu BaDAP (PDF) z 13.10.2026; linkowane są tylko DOI potwierdzone w doi.org;
-  - pominięto pozycję Scholar „A numerical analysis of a HYBRID PV+ WT power system” (Sławosz nie jest autorem);
-  - rozprawa doktorska ma tytuł PL w wersji PL i tytuł EN (podany przez Sławosza) w wersji EN (`title_en`);
-  - menu na 901–1180 px ma mniejsze odstępy (bez tego PL wychodził poza ekran przy 901 px).
-- **Dane do sprawdzenia przez recenzenta (treść):** nazwy i opisy w `_data/i18n.yml` (klucze `publications_*`, `publication_types`, `contributions_*`) oraz poprawność wpisów w `_data/publications.yml`. Bez DOI: Energy Reports 2023, Polityka Energetyczna 2019, IOP MSE 1294 012057, EPJ WoC 269 01027, MATEC 240 02003, rozdział Sciendo, rozprawa.
-- **Testy:** nowe `test_publications_page_lists_research_in_both_languages` i `test_publications_are_complete_and_ordered`; nawigacja ma 6 pozycji; sitemap 44 adresy (było 42). U autora: 103 testy (2 znane błędy środowiska jak na `main`), axe `--full` 196 skanów bez błędów.
+- **Gałąź:** autor `claude/home-publications` (z `main` `3e07af1`)
+- **Pliki:** `_includes/publication-card.html` (nowy), `_layouts/home.html`, `_layouts/publications.html`, `_data/i18n.yml`, `assets/site.js`, `assets/site.css`, `tests/test_site.py`
+- **Cel:** Sławosz poprosił o sekcję Publikacje na stronie głównej zaraz po Projects, z karuzelą kart w tym samym stylu co projekty:
+  - nowa sekcja `#publications` między `#projects` a `#about`: nagłówek jak w projektach (etykieta, tytuł, opis, link „Zobacz wszystkie publikacje”), poświata jak w innych sekcjach;
+  - karuzela wszystkich 16 prac (lata malejąco) działa jak karuzela projektów: 4 / 2 / 1 karta, strzałki, kropki i przesuwanie palcem na telefonie;
+  - karta ma ramkę, hover i układ karty projektu; zamiast obrazka okładka z dużym rokiem (pomarańczowy) i nazwą czasopisma/konferencji; niżej typ, tom/strony, tytuł i autorzy;
+  - karta prowadzi do swojej pozycji na `/publications/#publication-...`; pozycja docelowa ma miętową ramkę (`:target`) i nie chowa się pod nagłówkiem;
+  - `site.js`: kod karuzeli obsługuje teraz każdą karuzelę na stronie (`[data-carousel]` projektów i nowe `[data-publication-carousel]`); filtr kategorii i linki `?category=` dotyczą tylko projektów; krok kółkiem myszy na desktopie przechodzi z Projects do Publikacji i dalej do About (sekcje z karuzelą mogą być wyższe niż ekran).
+- **Do sprawdzenia przez recenzenta (treść):** nowe klucze w `_data/i18n.yml`: `all_publications`, `previous_publication`, `next_publication`, `select_publication`, `swipe_publications_hint` (EN/PL).
+- **Testy:** nowy `test_home_publications_carousel_follows_projects`; oczekiwana kolejność sekcji home z `publications`; test kroku kółkiem przechodzi Projects → Publikacje → About; lokatory starych testów karuzeli zawężone do `[data-carousel]` (na home są teraz dwie karuzele). U autora: 104 testy (2 znane błędy środowiska jak na `main`, ich pozostałe asercje przechodzą), axe `--full` 196 skanów bez błędów.
 
 ## Review
 
-- **Werdykt: OK, status DO MERGE.** Review `main` (`0f005e3`) → `claude/publications` (`448f720`); brak potwierdzonych uwag wymagających zmian.
-- Sprawdzono szablon Liquid, klucze i opisy EN/PL, lata i typy prac, liczniki, wyróżnienie autora, tytuł rozprawy zależny od języka, układ DOI, aktywną pozycję menu, mapowanie wersji językowych przez istniejący layout oraz zmiany testów/sitemap. Dane zawierają 16 prac (6 artykułów, 8 referatów, rozdział i rozprawę) oraz 9 wystąpień; nie znaleziono duplikatów tytuł+typ ani DOI.
-- Wybrane dane porównano ze źródłami pierwotnymi: [BaDAP — Energy Reports 2023](https://badap.agh.edu.pl/publikacja/146044), [Measurement 2022](https://www.sciencedirect.com/science/article/pii/S0263224122001919), [Energy Conversion and Management: X 2024](https://www.sciencedirect.com/science/article/pii/S2590174524000382), [BaDAP — Thermal Science 2019](https://badap.agh.edu.pl/publikacja/124783), [repozytorium UiS — praca o bezpieczeństwie wodoru](https://uis.brage.unit.no/uis-xmlui/bitstream/handle/11250/3123582/Kleszcz_2023_IOP_Conf._Ser.__Mater._Sci._Eng._1294_012057.pdf?isAllowed=y&sequence=1). Nie znaleziono rozbieżności w sprawdzonych tytułach, latach, miejscach publikacji i autorstwie.
-- Ograniczenia treści: eksport Scholar CSV i raport BaDAP PDF nie są zapisane w repo, więc recenzent nie potwierdza kompletności wszystkich pozycji ani wszystkich wystąpień. Nie zweryfikowano niezależnie autorstwa usuniętej pozycji HYBRID ani pochodzenia angielskiego tytułu rozprawy — są opisane jako ustalenia autora z użytkownikiem. Część bezpośrednich odczytów doi.org nie powiodła się w narzędziu web; nie oznacza to niedziałających linków. Rozwiązywanie wszystkich DOI pozostaje raportem autora.
-- Izolowany test Edge z bieżącym CSS i treścią z YAML, w strukturze odpowiadającej szablonowi: EN/PL × dark/light × 320/390/901/1040/1180/1440 px (24 warianty). Brak poziomego przepełnienia i obcięcia kart/liczników; menu desktopowe jest widoczne od 901 px. To kontrola układu na fixture, nie wykonanie buildu Liquid/Jekyll ani pełnych interakcji menu.
-- Walidacja recenzenta: 5 testów `tests.test_content` i `git diff --check main..claude/publications` przeszły. Pełnego buildu, testów strony i audytu axe nie uruchomiono tutaj (brak `_site`); 103 testy z dwoma znanymi błędami i 196 skanów axe bez błędów pozostają raportem autora.
+_(czeka na review)_
 
 ## Dla następnej osoby
 
-- **Sławosz:** review OK. Gałąź `chatgpt/review-publications` zawiera zmiany autora i wynik review; można ją scalić do `main`. Przed publikacją sprawdź pełny build, testy strony i audyt dostępności w Actions. Merge, push i publikację wykonuje Sławosz zgodnie z `WORKFLOW.md`.
-- Recenzent zmienił wyłącznie `HANDOFF.md` w repozytorium.
+- **ChatGPT:** review gałęzi `claude/home-publications` na własnej gałęzi `chatgpt/review-home-publications`, wynik w sekcji Review.
 
 ## Historia
 
@@ -73,3 +65,5 @@ Gałąź główna: `main`.
 - 2026-10-12 · Sławosz · `main` · Scalono ożywione sekcje i listę projektów (`0f005e3`), opublikowane.
 - 2026-10-13 · Claude · `claude/publications` · Nowa zakładka Publikacje / Publications (dorobek naukowy EN/PL z Scholar i BaDAP). Status DO REVIEW.
 - 2026-10-13 · ChatGPT · `chatgpt/review-publications` · Review `448f720`: OK, DO MERGE. Sprawdzono szablon, EN/PL, wybrane dane w źródłach pierwotnych, testy i 24 warianty izolowanego układu Edge. 5 testów treści i kontrola diff przeszły; kompletność eksportów i pełny build niezweryfikowane niezależnie. Zmieniono tylko `HANDOFF.md` w repo.
+- 2026-10-13 · Sławosz · `main` · Scalono zakładkę Publikacje (`3e07af1`).
+- 2026-10-13 · Claude · `claude/home-publications` · Sekcja Publikacje na home z karuzelą kart w stylu projektów. Status DO REVIEW.
