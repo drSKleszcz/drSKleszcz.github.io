@@ -777,21 +777,21 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(1000)
         self.assertLessEqual(self.page.evaluate('window.scrollY'), 2)
 
-    def test_reduced_motion_wheel_steps_instantly_and_reverses(self):
+    def test_reduced_motion_wheel_steps_glide_and_reverse(self):
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.emulate_media(reduced_motion='reduce')
         for prefix in ['', '/pl']:
             self.page.goto(self.base + prefix + '/')
             self.page.mouse.wheel(0, 100)
-            self.page.wait_for_timeout(80)
+            self.page.wait_for_timeout(700)
             gap = self.page.evaluate("document.querySelector('#expertise').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
             self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} first step: {gap}')
             self.page.mouse.wheel(0, -100)
-            self.page.wait_for_timeout(80)
+            self.page.wait_for_timeout(700)
             self.assertLessEqual(self.page.evaluate('window.scrollY'), 2, f'{prefix or "en"} reversal')
-            self.page.wait_for_timeout(900)
+            self.page.wait_for_timeout(300)
             self.page.mouse.wheel(0, 100)
-            self.page.wait_for_timeout(80)
+            self.page.wait_for_timeout(700)
             gap = self.page.evaluate("document.querySelector('#expertise').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
             self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} repeat: {gap}')
 
@@ -802,15 +802,15 @@ class BrowserTests(unittest.TestCase):
             self.page.goto(self.base + prefix + '/#projects')
             self.page.mouse.move(500, 450)
             self.page.mouse.wheel(0, 100)
-            self.page.wait_for_timeout(80)
+            self.page.wait_for_timeout(700)
             # Selected work steps to publications, and publications to About.
             for section in ['publications', 'about']:
                 gap = self.page.evaluate(f"document.querySelector('#{section}').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
                 self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} {section} step: {gap}')
                 # Wait out the step lock so the next gesture is a new step.
-                self.page.wait_for_timeout(900)
+                self.page.wait_for_timeout(300)
                 self.page.mouse.wheel(0, 100)
-                self.page.wait_for_timeout(80)
+                self.page.wait_for_timeout(700)
 
     def test_wheel_up_from_contact_footer_returns_to_about_in_one_step(self):
         self.page.set_viewport_size({'width': 1280, 'height': 720})
@@ -821,9 +821,64 @@ class BrowserTests(unittest.TestCase):
             self.page.evaluate('scrollTo({top: document.documentElement.scrollHeight, behavior: "instant"})')
             self.page.mouse.move(500, 450)
             self.page.mouse.wheel(0, -100)
-            self.page.wait_for_timeout(80)
+            self.page.wait_for_timeout(700)
             gap = self.page.evaluate("document.querySelector('#about').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
             self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} About return: {gap}')
+
+    def test_wheel_step_glides_through_intermediate_positions(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/')
+        target = self.page.evaluate("document.querySelector('#expertise').getBoundingClientRect().top + scrollY - document.querySelector('.site-header').getBoundingClientRect().height")
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(250)
+        middle = self.page.evaluate('window.scrollY')
+        self.assertGreater(middle, 20, f'glide has not started: {middle}')
+        self.assertLess(middle, target - 20, f'step jumped instead of gliding: {middle} of {target}')
+        self.page.wait_for_timeout(700)
+        self.assertLessEqual(abs(self.page.evaluate('window.scrollY') - target), 3)
+
+    def test_wheel_reversal_during_section_reveal_returns_to_section_top(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        about_gap = "document.querySelector('#about').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom"
+        self.page.goto(self.base + '/#about')
+        # A short overflow makes the next downward step an in-section reveal.
+        self.page.add_style_tag(content='#about .about-experience { padding-bottom: 400px; }')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"scrollBy({{top: {about_gap}, behavior: 'instant'}})")
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(150)
+        self.assertLess(self.page.evaluate(about_gap), -2, 'reveal did not start')
+        self.page.mouse.wheel(0, -100)
+        self.page.wait_for_timeout(900)
+        gap = self.page.evaluate(about_gap)
+        self.assertLessEqual(abs(gap), 3, f'reversal left About: {gap}')
+
+    def test_wheel_glide_stops_on_key_pointer_and_anchor(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        snap = 'document.documentElement.style.scrollSnapType'
+        for interrupt in ['key', 'pointer', 'anchor']:
+            self.page.goto(self.base + '/')
+            self.page.mouse.move(5, 450)
+            self.page.mouse.wheel(0, 100)
+            self.page.wait_for_timeout(200)
+            self.assertEqual(self.page.evaluate(snap), 'none', f'{interrupt}: glide not running')
+            if interrupt == 'anchor':
+                self.page.locator('#site-nav a[href$="#about"]').click()
+                self.page.wait_for_timeout(1500)
+                gap = self.page.evaluate("document.querySelector('#about').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
+                self.assertLessEqual(abs(gap), 3, f'anchor target: {gap}')
+            else:
+                if interrupt == 'key': self.page.keyboard.press('Shift')
+                else: self.page.mouse.down(); self.page.mouse.up()
+                stopped = self.page.evaluate('window.scrollY')
+                self.page.wait_for_timeout(500)
+                self.assertLessEqual(abs(self.page.evaluate('window.scrollY') - stopped), 1, f'{interrupt}: glide kept moving')
+            self.assertEqual(self.page.evaluate(snap), '', f'{interrupt}: snap override left behind')
 
     def test_pointer_carousel_motion_is_interruptible_and_keyboard_is_immediate(self):
         self.page.goto(self.base + '/#projects')

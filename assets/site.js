@@ -35,24 +35,61 @@
     // step from their top still moves on to the next section.
     const carouselSections = sections.filter(section => ['projects', 'publications'].includes(section.id));
     const stepMode = window.matchMedia('(min-width: 1001px) and (min-height: 650px)');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let lockedUntil = 0;
+    // The step glides by script on every system: browsers drop native smooth
+    // scrolling when OS animations are off, which made each step a hard jump.
+    // Snapping pauses during the glide so frames are not pulled to snap points.
+    let glideFrame = 0;
+    const stopGlide = () => {
+      if (!glideFrame) return;
+      cancelAnimationFrame(glideFrame);
+      glideFrame = 0;
+      document.documentElement.style.scrollSnapType = '';
+    };
+    const glideTo = top => {
+      stopGlide();
+      const start = window.scrollY;
+      const distance = top - start;
+      if (Math.abs(distance) < 1) return;
+      const began = performance.now();
+      const duration = Math.min(600, 250 + Math.abs(distance) * .45);
+      const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      document.documentElement.style.scrollSnapType = 'none';
+      const frame = now => {
+        const progress = Math.min(1, (now - began) / duration);
+        window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
+        if (progress < 1) glideFrame = requestAnimationFrame(frame);
+        else { glideFrame = 0; document.documentElement.style.scrollSnapType = ''; }
+      };
+      glideFrame = requestAnimationFrame(frame);
+    };
     let lastWheel = -Infinity;
     let settling = false;
     let pendingSection = null;
     let lastDirection = 0;
-    const moveTo = (index, direction, now) => {
+    // An in-section reveal step remembers both ends, so a reversal returns
+    // within the same section instead of jumping to a neighbouring one.
+    let reveal = null;
+    const moveTo = (index, direction, now, top = null) => {
       const target = sections[index] || (index === sections.length ? footer : null);
       if (!target) return false;
       pendingSection = index;
       lastDirection = direction;
       settling = true;
       lockedUntil = now + 850;
-      const top = index === sections.length
+      reveal = top === null ? null : {from: window.scrollY, to: top};
+      if (top === null) top = index === sections.length
         ? document.documentElement.scrollHeight - innerHeight
         : target.getBoundingClientRect().top + window.scrollY - header.getBoundingClientRect().height;
-      window.scrollTo({top: Math.max(0, top), behavior: reducedMotion.matches ? 'instant' : 'smooth'});
+      glideTo(Math.max(0, top));
       return true;
+    };
+    const reverse = (direction, now) => {
+      if (reveal) {
+        const {from, to} = reveal;
+        moveTo(pendingSection, direction, now, from);
+        reveal = {from: to, to: from};
+      } else if (!moveTo(pendingSection + direction, direction, now)) stopGlide();
     };
     window.addEventListener('wheel', event => {
       if (!stepMode.matches || event.ctrlKey || !event.deltaY || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest('input, textarea, select, dialog, [contenteditable="true"]')) return;
@@ -61,7 +98,7 @@
       lastWheel = now;
       const direction = Math.sign(event.deltaY);
       if (now < lockedUntil || (settling && idle < 160)) {
-        if (direction !== lastDirection && pendingSection !== null) moveTo(pendingSection + direction, direction, now);
+        if (direction !== lastDirection && pendingSection !== null) reverse(direction, now);
         event.preventDefault();
         return;
       }
@@ -76,7 +113,18 @@
       // Empty bottom padding hanging below the viewport is not unread content;
       // nudging through it natively made one wheel step barely move.
       const contentBottom = rect && Math.max(rect.top, ...[...sections[current].children].map(child => child.getBoundingClientRect().bottom));
-      if (rect && !leaveCarousel && ((direction > 0 && contentBottom > innerHeight + 2) || (direction < 0 && rect.top < offset - 2))) return;
+      if (rect && !leaveCarousel) {
+        const hidden = direction > 0 ? contentBottom - innerHeight : offset - rect.top;
+        if (hidden > 2) {
+          // A long section keeps native reading scroll. A short overflow
+          // glides into view as its own step instead of a native jump that
+          // snapping then pulled back.
+          if (hidden > innerHeight * .6) return;
+          const top = window.scrollY + (direction > 0 ? rect.bottom - innerHeight : rect.top - offset);
+          if (moveTo(current, direction, now, top)) event.preventDefault();
+          return;
+        }
+      }
       if (moveTo(current + direction, direction, now)) event.preventDefault();
     }, {passive: false});
 
@@ -100,8 +148,9 @@
     window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCurrentSection); }, {passive: true});
     window.addEventListener('resize', updateCurrentSection);
     requestAnimationFrame(updateCurrentSection);
-    const releaseWheel = () => { lockedUntil = 0; settling = false; pendingSection = null; };
+    const releaseWheel = () => { stopGlide(); lockedUntil = 0; settling = false; pendingSection = null; reveal = null; };
     document.addEventListener('keydown', releaseWheel);
+    document.addEventListener('pointerdown', releaseWheel, {passive: true});
     document.addEventListener('click', event => { if (event.target.closest('a[href*="#"]')) releaseWheel(); });
   }
 
