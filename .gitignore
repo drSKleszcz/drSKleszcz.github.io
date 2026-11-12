@@ -10,3 +10,24 @@ _site
 vendor/
 artifacts/
 __pycache__/
+
+# Relay Workflow: private materials
+INBOX/
+emails/
+meetings/
+issues/
+files/
+.relay/
+*.eml
+*.msg
+
+# Relay Workflow: registers and review records (local only)
+AGENTS.md
+CLAUDE.md
+PROJECT.md
+SOURCES.md
+TASKS.md
+MAP.md
+REVIEW-ROUNDS.md
+tasks/
+reviews/

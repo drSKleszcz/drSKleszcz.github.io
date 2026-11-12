@@ -73,7 +73,10 @@
       if (footer && footer.getBoundingClientRect().top < innerHeight - 2) current = sections.length;
       const rect = sections[current]?.getBoundingClientRect();
       const leaveCarousel = carouselSections.includes(sections[current]) && direction > 0 && Math.abs(rect.top - offset) <= 2;
-      if (rect && !leaveCarousel && ((direction > 0 && rect.bottom > innerHeight + 2) || (direction < 0 && rect.top < offset - 2))) return;
+      // Empty bottom padding hanging below the viewport is not unread content;
+      // nudging through it natively made one wheel step barely move.
+      const contentBottom = rect && Math.max(rect.top, ...[...sections[current].children].map(child => child.getBoundingClientRect().bottom));
+      if (rect && !leaveCarousel && ((direction > 0 && contentBottom > innerHeight + 2) || (direction < 0 && rect.top < offset - 2))) return;
       if (moveTo(current + direction, direction, now)) event.preventDefault();
     }, {passive: false});
 
