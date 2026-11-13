@@ -115,12 +115,17 @@
       const idle = now - lastWheel;
       lastWheel = now;
       const direction = Math.sign(event.deltaY);
-      if (now < lockedUntil || (settling && idle < 160)) {
-        // Each separate gesture (a wheel notch after a short pause) moves one
-        // section further; the dense stream of touchpad or momentum deltas
-        // stays one step. Delta size is no guide: it shrinks with display scaling.
+      // An unfinished glide counts as locked too: on a busy page its frames can
+      // lag behind the clock, and a step taken from the old position was lost.
+      if (now < lockedUntil || glideFrame || (settling && idle < 200)) {
+        // A new gesture (a wheel notch after a clear 200 ms pause) moves one
+        // section further; one spin of the wheel or a touchpad stream stays one
+        // step, also after the lock. A busy page delivers the notches of a
+        // single spin ~100-150 ms apart, so a shorter pause made one spin run
+        // through the whole page. Delta size is no guide: it shrinks with
+        // display scaling.
         if (direction !== lastDirection && pendingSection !== null) reverse(direction, now);
-        else if (idle >= 90 && pendingSection !== null) moveTo(pendingSection + direction, direction, now);
+        else if (idle >= 200 && pendingSection !== null) moveTo(pendingSection + direction, direction, now);
         event.preventDefault();
         return;
       }

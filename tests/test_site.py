@@ -848,12 +848,12 @@ class BrowserTests(unittest.TestCase):
             page.mouse.move(5, height / 2)
             for _ in range(3):
                 page.mouse.wheel(0, 100)
-                page.wait_for_timeout(200)
+                page.wait_for_timeout(300)
             page.wait_for_timeout(900)
             self.assertLessEqual(abs(page.evaluate(gap, 'publications')), 3, f'{width}x{height}@{scale} down')
             for _ in range(2):
                 page.mouse.wheel(0, -100)
-                page.wait_for_timeout(200)
+                page.wait_for_timeout(300)
             page.wait_for_timeout(900)
             self.assertLessEqual(abs(page.evaluate(gap, 'expertise')), 3, f'{width}x{height}@{scale} up')
             context.close()
@@ -957,16 +957,22 @@ class BrowserTests(unittest.TestCase):
     def test_wheel_notch_timing_and_touchpad_streams(self):
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.emulate_media(reduced_motion='reduce')
-        # Notches well inside the 90 ms gesture window are one fast spin: one step.
+        # Notches well inside the 200 ms gesture window are one fast spin: one step.
         self.page.goto(self.base + '/')
         self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 50, 100] for i in range(4)])
         self.page.wait_for_timeout(1200)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, 'spin of notches 50 ms apart')
-        # Separate notches (130 ms apart) each move one section.
+        # One spin on a busy page: the notches arrive 100-150 ms apart. It used to
+        # count as separate notches and ran through the whole page.
         self.page.goto(self.base + '/')
-        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 130, 100] for i in range(4)])
+        self.page.evaluate(WHEEL_STREAM, [[0, 100], [100, 100], [120, 100], [150, 100], [110, 100], [140, 100]])
         self.page.wait_for_timeout(1200)
-        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3, 'notches 130 ms apart')
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, 'spin with notches 100-150 ms apart')
+        # Separate notches (300 ms apart) each move one section.
+        self.page.goto(self.base + '/')
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 300, 100] for i in range(4)])
+        self.page.wait_for_timeout(1200)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3, 'notches 300 ms apart')
         # A long touchpad momentum stream (small deltas, 12 ms apart, ~2 s) is one step each time.
         self.page.goto(self.base + '/')
         flick = [30, 50, 60, 55, 50, 45, 40, 35, 30, 26, 22, 19, 16, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2] + [1] * 140
@@ -980,7 +986,7 @@ class BrowserTests(unittest.TestCase):
         self.page.emulate_media(reduced_motion='no-preference')
         self.page.goto(self.base + '/')
         self.page.evaluate("()=>{window.frames_=[];const f=()=>{frames_.push(scrollY);if(frames_.length<240)requestAnimationFrame(f)};requestAnimationFrame(f)}")
-        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 150, 100] for i in range(4)])
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 250, 100] for i in range(4)])
         self.page.wait_for_timeout(1500)
         frames = self.page.evaluate('frames_')
         backward = [(frames[i], frames[i + 1]) for i in range(len(frames) - 1) if frames[i + 1] < frames[i] - 0.5]
@@ -1014,14 +1020,14 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(1500)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3)
 
-    def test_wheel_gesture_window_boundary_is_90_ms(self):
+    def test_wheel_gesture_window_boundary_is_200_ms(self):
         # The step script reads performance.now(); freezing it gives the two
         # notches exactly `gap` ms apart whatever the handlers cost. The second
         # notch is stamped with the real current time, so the glide it starts
         # runs on the real clock after the stub is removed.
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.emulate_media(reduced_motion='reduce')
-        for gap, section in [(89, 'expertise'), (89.9, 'expertise'), (90, 'projects'), (91, 'projects')]:
+        for gap, section in [(199, 'expertise'), (199.9, 'expertise'), (200, 'projects'), (201, 'projects')]:
             self.page.goto(self.base + '/')
             # Keep the stubbed stamps positive: the step lock starts at 0 ms.
             self.page.wait_for_function('performance.now() > 300')
@@ -1042,6 +1048,75 @@ class BrowserTests(unittest.TestCase):
             }''', gap)
             self.page.wait_for_timeout(1200)
             self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, section)), 3, f'second notch {gap} ms after the first')
+
+    def test_one_spin_stays_one_step_across_the_lock_expiry(self):
+        # The first notch runs on the real clock and its glide finishes. The rest
+        # of the spin is stamped on a frozen clock from that notch, so every gap
+        # is exact and the stream runs past the 850 ms lock.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        cases = [('150 ms spin, 170 ms tail', [150, 300, 450, 600, 750, 920])]
+        cases += [(f'{gap} ms spin', [gap * i for i in range(1, 1300 // gap + 1)]) for gap in (159, 160, 170, 199)]
+        for label, stamps in cases:
+            self.page.goto(self.base + '/')
+            self.page.wait_for_function('performance.now() > 300')
+            self.page.evaluate('''() => {
+              window.base_ = Math.floor(performance.now());
+              const real = performance.now.bind(performance);
+              performance.now = () => base_;
+              try { document.elementFromPoint(5, innerHeight / 2).dispatchEvent(new WheelEvent('wheel', {deltaY: 100, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2})); }
+              finally { performance.now = real; }
+            }''')
+            self.page.wait_for_timeout(900)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, f'{label}: first notch')
+            self.page.evaluate('''stamps => {
+              const real = performance.now.bind(performance);
+              let frozen = 0;
+              performance.now = () => frozen;
+              const el = document.elementFromPoint(5, innerHeight / 2);
+              try {
+                for (const stamp of stamps) {
+                  frozen = base_ + stamp;
+                  el.dispatchEvent(new WheelEvent('wheel', {deltaY: 100, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
+                }
+              } finally { performance.now = real; }
+            }''', stamps)
+            self.page.wait_for_timeout(900)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, f'{label}: moved past Expertise')
+
+    def test_separate_notch_after_a_stalled_glide_moves_on(self):
+        # A busy page can run no animation frame before the lock expires. The
+        # second notch must go on from the pending section, not the old position.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/')
+        # Stamps end at the real time, so the glide then runs on the real clock.
+        self.page.wait_for_function('performance.now() > 1300')
+        self.page.evaluate('''() => {
+          const realNow = performance.now.bind(performance);
+          const realRaf = requestAnimationFrame, realCancel = cancelAnimationFrame;
+          const queued = new Map();
+          let id = 0;
+          window.requestAnimationFrame = cb => { queued.set(++id, cb); return id; };
+          window.cancelAnimationFrame = handle => { queued.delete(handle); };
+          const base = Math.floor(realNow()) - 900;
+          let frozen = base;
+          performance.now = () => frozen;
+          const el = document.elementFromPoint(5, innerHeight / 2);
+          const notch = () => el.dispatchEvent(new WheelEvent('wheel', {deltaY: 100, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
+          try {
+            notch();
+            frozen = base + 900;
+            notch();
+          } finally {
+            performance.now = realNow;
+            window.requestAnimationFrame = realRaf;
+            window.cancelAnimationFrame = realCancel;
+          }
+          for (const cb of queued.values()) realRaf(cb);
+        }''')
+        self.page.wait_for_timeout(1200)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'projects')), 3, 'second notch after a stalled glide was lost')
 
     def test_leaving_step_mode_restores_snapping_after_a_finished_glide(self):
         self.page.set_viewport_size({'width': 1440, 'height': 900})
