@@ -40,23 +40,30 @@
     // scrolling when OS animations are off, which made each step a hard jump.
     // Snapping pauses during the glide so frames are not pulled to snap points.
     let glideFrame = 0;
-    const stopGlide = () => {
+    const stopGlide = (restoreSnap = true) => {
       if (!glideFrame) return;
       cancelAnimationFrame(glideFrame);
       glideFrame = 0;
-      document.documentElement.style.scrollSnapType = '';
+      if (restoreSnap) document.documentElement.style.scrollSnapType = '';
     };
     const glideTo = top => {
-      stopGlide();
+      // A new target during a glide continues at speed (ease-out) rather than
+      // stopping and accelerating again. Snapping stays off in between: turning
+      // it back on for an instant pulled the page to the nearest section edge.
+      const moving = glideFrame !== 0;
+      stopGlide(false);
       const start = window.scrollY;
       const distance = top - start;
-      if (Math.abs(distance) < 1) return;
-      const began = performance.now();
+      if (Math.abs(distance) < 1) { document.documentElement.style.scrollSnapType = ''; return; }
+      const began = performance.now() - (moving ? 16 : 0);
       const duration = Math.min(600, 250 + Math.abs(distance) * .45);
-      const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const ease = moving
+        ? t => 1 - Math.pow(1 - t, 3)
+        : t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       document.documentElement.style.scrollSnapType = 'none';
       const frame = now => {
-        const progress = Math.min(1, (now - began) / duration);
+        // A frame time can precede the gesture that started the glide.
+        const progress = Math.min(1, Math.max(0, (now - began) / duration));
         window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
         if (progress < 1) glideFrame = requestAnimationFrame(frame);
         else { glideFrame = 0; document.documentElement.style.scrollSnapType = ''; }
@@ -98,7 +105,11 @@
       lastWheel = now;
       const direction = Math.sign(event.deltaY);
       if (now < lockedUntil || (settling && idle < 160)) {
+        // Each separate gesture (a wheel notch after a short pause) moves one
+        // section further; the dense stream of touchpad or momentum deltas
+        // stays one step. Delta size is no guide: it shrinks with display scaling.
         if (direction !== lastDirection && pendingSection !== null) reverse(direction, now);
+        else if (idle >= 90 && pendingSection !== null) moveTo(pendingSection + direction, direction, now);
         event.preventDefault();
         return;
       }

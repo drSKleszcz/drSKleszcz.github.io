@@ -825,6 +825,26 @@ class BrowserTests(unittest.TestCase):
             gap = self.page.evaluate("document.querySelector('#about').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom")
             self.assertLessEqual(abs(gap), 3, f'{prefix or "en"} About return: {gap}')
 
+    def test_rapid_wheel_notches_each_move_one_section(self):
+        # Notches faster than one glide must not be swallowed by the step lock.
+        gap = "id=>document.getElementById(id).getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom"
+        for width, height, scale in [(1440, 900, 1), (1536, 820, 2.5)]:
+            context = self.browser.new_context(viewport={'width': width, 'height': height}, device_scale_factor=scale)
+            page = context.new_page()
+            page.goto(self.base + '/')
+            page.mouse.move(5, height / 2)
+            for _ in range(3):
+                page.mouse.wheel(0, 100)
+                page.wait_for_timeout(200)
+            page.wait_for_timeout(900)
+            self.assertLessEqual(abs(page.evaluate(gap, 'publications')), 3, f'{width}x{height}@{scale} down')
+            for _ in range(2):
+                page.mouse.wheel(0, -100)
+                page.wait_for_timeout(200)
+            page.wait_for_timeout(900)
+            self.assertLessEqual(abs(page.evaluate(gap, 'expertise')), 3, f'{width}x{height}@{scale} up')
+            context.close()
+
     def test_wheel_step_glides_through_intermediate_positions(self):
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.emulate_media(reduced_motion='reduce')
