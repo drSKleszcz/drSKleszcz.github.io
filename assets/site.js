@@ -35,7 +35,6 @@
     // step from their top still moves on to the next section.
     const carouselSections = sections.filter(section => ['projects', 'publications'].includes(section.id));
     const stepMode = window.matchMedia('(min-width: 1001px) and (min-height: 650px)');
-    let lockedUntil = 0;
     // The step glides by script on every system: browsers drop native smooth
     // scrolling when OS animations are off, which made each step a hard jump.
     // CSS snapping is held off while the wheel steps: the script aligns every
@@ -45,6 +44,13 @@
     // wheel scrolling through a long section keeps it held as well: Firefox
     // pulled the first notch back to the section top.
     let glideFrame = 0;
+    // Wheel notches during a glide queue at most one more section, taken once
+    // the glide is halfway (or done): a continuous spin moves on steadily
+    // (about three sections a second) and stops at most one section after the
+    // wheel does, however the notches are spaced.
+    let queued = false;
+    let stepReadyAt = 0;
+    let credit = 0;
     const holdSnap = () => { document.documentElement.style.scrollSnapType = 'none'; };
     const restoreSnap = () => { document.documentElement.style.scrollSnapType = ''; };
     const stopGlide = () => {
@@ -60,7 +66,12 @@
       holdSnap();
       const start = window.scrollY;
       const distance = top - start;
-      if (Math.abs(distance) < 1) return;
+      if (Math.abs(distance) < 1) {
+        // Nothing to animate (e.g. a resize re-aim at the current position):
+        // a queued step must not wait for a frame that never comes.
+        if (queued) advance(performance.now());
+        return 0;
+      }
       const began = performance.now() - (moving ? 16 : 0);
       const duration = Math.min(600, 250 + Math.abs(distance) * .45);
       const ease = moving
@@ -71,8 +82,10 @@
         const progress = Math.min(1, Math.max(0, (now - began) / duration));
         window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
         glideFrame = progress < 1 ? requestAnimationFrame(frame) : 0;
+        if (queued && (!glideFrame || performance.now() >= stepReadyAt)) advance(performance.now());
       };
       glideFrame = requestAnimationFrame(frame);
+      return duration;
     };
     let lastWheel = -Infinity;
     let settling = false;
@@ -90,10 +103,15 @@
       pendingSection = index;
       lastDirection = direction;
       settling = true;
-      lockedUntil = now + 850;
+      queued = false;
+      credit = 0;
       reveal = top === null ? null : {from: window.scrollY, to: top};
-      glideTo(Math.max(0, top === null ? stepTop(index) : top));
+      stepReadyAt = now + glideTo(Math.max(0, top === null ? stepTop(index) : top)) / 2;
       return true;
+    };
+    const advance = now => {
+      queued = false;
+      if (!moveTo(pendingSection + lastDirection, lastDirection, now)) credit = 0;
     };
     // A resize during a glide re-aims it at the same section in the new
     // layout; the old target would land mid-section.
@@ -115,21 +133,32 @@
       const idle = now - lastWheel;
       lastWheel = now;
       const direction = Math.sign(event.deltaY);
-      // An unfinished glide counts as locked too: on a busy page its frames can
-      // lag behind the clock, and a step taken from the old position was lost.
-      if (now < lockedUntil || glideFrame || (settling && idle < 200)) {
-        // A new gesture (a wheel notch after a clear 200 ms pause) moves one
-        // section further; one spin of the wheel or a touchpad stream stays one
-        // step, also after the lock. A busy page delivers the notches of a
-        // single spin ~100-150 ms apart, so a shorter pause made one spin run
-        // through the whole page. Delta size is no guide: it shrinks with
-        // display scaling.
-        if (direction !== lastDirection && pendingSection !== null) reverse(direction, now);
-        else if (idle >= 200 && pendingSection !== null) moveTo(pendingSection + direction, direction, now);
-        event.preventDefault();
-        return;
+      // Wheel travel in device pixels: a mouse notch is ~100 at any display
+      // scaling (deltaY shrinks as the scaling grows). Touchpad and momentum
+      // dribble below 20 does not count, so a flick ends instead of creeping on.
+      const amount = Math.abs(event.deltaY) * (event.deltaMode === 1 ? 34 : event.deltaMode === 2 ? 100 : devicePixelRatio);
+      const fresh = idle >= 200;
+      // While a glide runs (or just after it, mid-spin) the step goes on from
+      // the pending section: on a busy page frames lag and the scroll position
+      // is stale.
+      if (pendingSection !== null && (glideFrame || (settling && !fresh))) {
+        if (direction !== lastDirection) {
+          reverse(direction, now);
+          event.preventDefault();
+          return;
+        }
+        if (amount >= 20) credit += amount;
+        if (fresh || credit >= 100) { credit = 0; queued = true; }
+        if (glideFrame || !queued) {
+          if (queued && now >= stepReadyAt) advance(now);
+          event.preventDefault();
+          return;
+        }
+        // The glide has landed and the spin goes on: step on from the landing.
       }
       settling = false;
+      queued = false;
+      credit = 0;
       const offset = header.getBoundingClientRect().height;
       const position = window.scrollY + offset;
       let current = 0;
@@ -175,7 +204,7 @@
     window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCurrentSection); }, {passive: true});
     window.addEventListener('resize', updateCurrentSection);
     requestAnimationFrame(updateCurrentSection);
-    const releaseWheel = () => { stopGlide(); restoreSnap(); lockedUntil = 0; settling = false; pendingSection = null; reveal = null; };
+    const releaseWheel = () => { stopGlide(); restoreSnap(); queued = false; credit = 0; settling = false; pendingSection = null; reveal = null; };
     // Leaving step mode (a smaller window or zoom) hands scrolling back to the
     // browser, also after a finished glide that still holds snapping off.
     stepMode.addEventListener('change', () => { if (!stepMode.matches) releaseWheel(); });
