@@ -1112,6 +1112,57 @@ class BrowserTests(unittest.TestCase):
         up = self.page.evaluate(index)
         self.assertLessEqual(up, down - 2, f'slow upward stream stuck: {down} -> {up}')
 
+    def test_continuous_wheel_stream_lands_on_every_section(self):
+        # Recorded after T15: a steady stream glided Home -> Projects and
+        # Publications -> Contact without stopping on the section between,
+        # because the next step started halfway through the glide.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/')
+        self.page.wait_for_timeout(300)
+        tops = self.page.evaluate("() => { const h = document.querySelector('.site-header').getBoundingClientRect().height; return [...document.querySelectorAll('main > section')].map(s => Math.round(s.getBoundingClientRect().top + scrollY - h)); }")
+        self.page.evaluate('() => { window.__ys = []; const rec = () => { __ys.push(scrollY); requestAnimationFrame(rec); }; requestAnimationFrame(rec); }')
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 31, d] for i, d in enumerate([10, 10, 15] * 50)])
+        self.page.wait_for_timeout(1500)
+        ys = self.page.evaluate('__ys')
+        reached = [i for i, top in enumerate(tops) if max(ys) >= top + 3]
+        self.assertGreaterEqual(len(reached), 3, f'stream did not get far: {max(ys)} vs {tops}')
+        for i in reached:
+            stops = sum(1 for y in ys if abs(y - tops[i]) <= 1)
+            self.assertGreaterEqual(stops, 2, f'glided through section {i} (top {tops[i]}) without landing')
+
+    def test_queued_wheel_step_waits_for_the_landing_with_late_frames_and_resize(self):
+        # Frames held back (a busy page) or a resize re-aim must not let the
+        # queued step cut the Expertise landing short. Frames run by hand at
+        # frozen times; afterwards a recorder checks Expertise was stood on.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        run = "const tick = () => { for (const [k, cb] of [...frames]) { frames.delete(k); cb(frozen); } };"
+        cases = {
+            'late frames': 'wheel({deltaY: 100}); frozen = base + 900; wheel({deltaY: 100});',
+            'resize': 'wheel({deltaY: 100}); frozen = base + 50; wheel({deltaY: 100}); frozen = base + 200; tick(); frozen = base + 300; dispatchEvent(new Event("resize")); frozen = base + 450; tick();',
+        }
+        for name, steps in cases.items():
+            self.page.goto(self.base + '/')
+            self.page.wait_for_function('performance.now() > 600')
+            top = self.page.evaluate("() => Math.round(document.getElementById('expertise').getBoundingClientRect().top + scrollY - document.querySelector('.site-header').getBoundingClientRect().height)")
+            self.page.evaluate('() => { window.__ys = []; const rec = () => { __ys.push(scrollY); requestAnimationFrame(rec); }; requestAnimationFrame(rec); }')
+            self.page.evaluate('() => {' + FRAME_STUB + run + 'try { ' + steps + ' } finally { restore(); } }')
+            self.page.wait_for_timeout(1500)
+            ys = self.page.evaluate('__ys')
+            self.assertGreaterEqual(sum(1 for y in ys if abs(y - top) <= 1), 1, f'{name}: queued step cut the Expertise landing short')
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'projects')), 3, f'{name}: did not go on to Projects')
+
+    def test_quick_separate_notches_each_move_a_section(self):
+        # Five separate notches 210 ms apart (each after a pause, so each is
+        # deliberate) move five sections, Home to Contact, landing on each.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/')
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 210, 100] for i in range(5)])
+        self.page.wait_for_timeout(2500)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'contact')), 3, 'a separate notch was dropped')
+
     def test_fading_wheel_momentum_does_not_add_a_section(self):
         # From an interior section (no page edge to hide an extra step), with a
         # frozen clock: a notch, a residual 30 px, then the tail recorded at the

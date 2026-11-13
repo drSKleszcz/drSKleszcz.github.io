@@ -44,12 +44,15 @@
     // wheel scrolling through a long section keeps it held as well: Firefox
     // pulled the first notch back to the section top.
     let glideFrame = 0;
-    // Wheel notches during a glide queue at most one more section, taken once
-    // the glide is halfway (or done): a continuous spin moves on steadily
-    // (about three sections a second) and stops at most one section after the
-    // wheel does, however the notches are spaced.
+    // Wheel input during a glide queues the next section, taken once the glide
+    // has landed: a continuous spin lands on every section in turn (taking the
+    // next step at halfway made two sections read as one jump) and stops at
+    // most one section after the wheel does. A separate notch (after a 200 ms
+    // pause) while a step is already queued waits in the backlog, so quick
+    // deliberate notches each move a section. A late frame or a resize re-aim
+    // never cuts a landing short: only a finished glide takes the queue.
     let queued = false;
-    let stepReadyAt = 0;
+    let backlog = 0;
     let credit = 0;
     let peak = 0;
     let peakAt = 0;
@@ -76,7 +79,7 @@
         return 0;
       }
       const began = performance.now() - (moving ? 16 : 0);
-      const duration = Math.min(600, 250 + Math.abs(distance) * .45);
+      const duration = Math.min(450, 250 + Math.abs(distance) * .3);
       const ease = moving
         ? t => 1 - Math.pow(1 - t, 3)
         : t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -85,7 +88,7 @@
         const progress = Math.min(1, Math.max(0, (now - began) / duration));
         window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
         glideFrame = progress < 1 ? requestAnimationFrame(frame) : 0;
-        if (queued && (!glideFrame || performance.now() >= stepReadyAt)) advance(performance.now());
+        if (queued && !glideFrame) advance(performance.now());
       };
       glideFrame = requestAnimationFrame(frame);
       return duration;
@@ -107,14 +110,18 @@
       lastDirection = direction;
       settling = true;
       queued = false;
+      backlog = 0;
       credit = 0;
       reveal = top === null ? null : {from: window.scrollY, to: top};
-      stepReadyAt = now + glideTo(Math.max(0, top === null ? stepTop(index) : top)) / 2;
+      glideTo(Math.max(0, top === null ? stepTop(index) : top));
       return true;
     };
     const advance = now => {
+      const more = backlog;
       queued = false;
+      backlog = 0;
       if (!moveTo(pendingSection + lastDirection, lastDirection, now)) credit = 0;
+      else if (more) { queued = true; backlog = more - 1; }
     };
     // A resize during a glide re-aims it at the same section in the new
     // layout; the old target would land mid-section.
@@ -131,6 +138,7 @@
       } else if (!moveTo(pendingSection + direction, direction, now)) {
         stopGlide();
         queued = false;
+        backlog = 0;
         credit = 0;
       }
     };
@@ -138,6 +146,7 @@
     const yieldToNative = () => {
       stopGlide();
       queued = false;
+      backlog = 0;
       credit = 0;
       settling = false;
       pendingSection = null;
@@ -180,9 +189,9 @@
           return;
         }
         if (!momentum) credit += amount;
-        if (fresh || credit >= 100) { credit = 0; queued = true; }
+        if (fresh && queued) backlog = Math.min(backlog + 1, sections.length);
+        else if (fresh || credit >= 100) { credit = 0; queued = true; }
         if (glideFrame || !queued) {
-          if (queued && now >= stepReadyAt) advance(now);
           event.preventDefault();
           return;
         }
@@ -190,6 +199,7 @@
       }
       settling = false;
       queued = false;
+      backlog = 0;
       credit = 0;
       const offset = header.getBoundingClientRect().height;
       const position = window.scrollY + offset;
@@ -224,9 +234,10 @@
         lastDirection = direction;
         settling = true;
         queued = false;
+        backlog = 0;
         credit = 0;
         reveal = null;
-        stepReadyAt = now + glideTo(direction > 0 ? document.documentElement.scrollHeight - innerHeight : 0) / 2;
+        glideTo(direction > 0 ? document.documentElement.scrollHeight - innerHeight : 0);
       }
       event.preventDefault();
     }, {passive: false});
@@ -251,7 +262,7 @@
     window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCurrentSection); }, {passive: true});
     window.addEventListener('resize', updateCurrentSection);
     requestAnimationFrame(updateCurrentSection);
-    const releaseWheel = () => { stopGlide(); restoreSnap(); queued = false; credit = 0; settling = false; pendingSection = null; reveal = null; };
+    const releaseWheel = () => { stopGlide(); restoreSnap(); queued = false; backlog = 0; credit = 0; settling = false; pendingSection = null; reveal = null; };
     // Leaving step mode (a smaller window or zoom) hands scrolling back to the
     // browser, also after a finished glide that still holds snapping off.
     stepMode.addEventListener('change', () => { if (!stepMode.matches) releaseWheel(); });
