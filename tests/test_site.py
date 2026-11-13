@@ -1163,6 +1163,20 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(2500)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'contact')), 3, 'a separate notch was dropped')
 
+    def test_one_smooth_wheel_move_with_a_sparse_tail_moves_one_section(self):
+        # Edge smooth wheel at 250 % (device px): one short move, then the tiny
+        # events it sends ~210 ms apart. Taken as separate notches they ran the
+        # page from Projects to the end.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        move = [[0, 6.25], [31, 10.5], [31, 12.5], [31, 12.5], [31, 10.5], [31, 8.25], [31, 6.25], [31, 4.25], [31, 4.25], [31, 2]]
+        self.page.goto(self.base + '/#projects')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"scrollBy({{top: ({HEADER_GAP})('projects'), behavior: 'instant'}})")
+        self.page.evaluate(WHEEL_STREAM, move + [[210, 2]] * 3)
+        self.page.wait_for_timeout(1500)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, 'one move with a sparse tail ran more than one section')
+
     def test_fading_wheel_momentum_does_not_add_a_section(self):
         # From an interior section (no page edge to hide an extra step), with a
         # frozen clock: a notch, a residual 30 px, then the tail recorded at the

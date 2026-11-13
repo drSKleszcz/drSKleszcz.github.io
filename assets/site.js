@@ -178,7 +178,11 @@
       peak = Math.max(amount, recent);
       peakAt = now;
       peakDirection = direction;
-      const fresh = idle >= 200;
+      // A separate notch: a real step (a notch is ~100) after a 200 ms pause,
+      // or any input after a 400 ms pause. A smooth-scrolling wheel ends a move
+      // with a few tiny events ~200 ms apart; taken as notches, one move ran
+      // three sections on. They only add to the credit.
+      const fresh = (idle >= 200 && amount >= 20) || idle >= 400;
       // While a glide runs (or just after it, mid-spin) the step goes on from
       // the pending section: on a busy page frames lag and the scroll position
       // is stale.
