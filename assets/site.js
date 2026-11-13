@@ -38,35 +38,39 @@
     let lockedUntil = 0;
     // The step glides by script on every system: browsers drop native smooth
     // scrolling when OS animations are off, which made each step a hard jump.
-    // Snapping pauses during the glide so frames are not pulled to snap points.
+    // CSS snapping is held off while the wheel steps: the script aligns every
+    // landing itself, and snapping fought it (frames pulled to section edges;
+    // Firefox pulled a short reveal back to the section top, so the page stuck).
+    // Keys, pointer use, anchor links and leaving step mode restore it. Native
+    // wheel scrolling through a long section keeps it held as well: Firefox
+    // pulled the first notch back to the section top.
     let glideFrame = 0;
-    const stopGlide = (restoreSnap = true) => {
+    const holdSnap = () => { document.documentElement.style.scrollSnapType = 'none'; };
+    const restoreSnap = () => { document.documentElement.style.scrollSnapType = ''; };
+    const stopGlide = () => {
       if (!glideFrame) return;
       cancelAnimationFrame(glideFrame);
       glideFrame = 0;
-      if (restoreSnap) document.documentElement.style.scrollSnapType = '';
     };
     const glideTo = top => {
       // A new target during a glide continues at speed (ease-out) rather than
-      // stopping and accelerating again. Snapping stays off in between: turning
-      // it back on for an instant pulled the page to the nearest section edge.
+      // stopping and accelerating again.
       const moving = glideFrame !== 0;
-      stopGlide(false);
+      stopGlide();
+      holdSnap();
       const start = window.scrollY;
       const distance = top - start;
-      if (Math.abs(distance) < 1) { document.documentElement.style.scrollSnapType = ''; return; }
+      if (Math.abs(distance) < 1) return;
       const began = performance.now() - (moving ? 16 : 0);
       const duration = Math.min(600, 250 + Math.abs(distance) * .45);
       const ease = moving
         ? t => 1 - Math.pow(1 - t, 3)
         : t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      document.documentElement.style.scrollSnapType = 'none';
       const frame = now => {
         // A frame time can precede the gesture that started the glide.
         const progress = Math.min(1, Math.max(0, (now - began) / duration));
         window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
-        if (progress < 1) glideFrame = requestAnimationFrame(frame);
-        else { glideFrame = 0; document.documentElement.style.scrollSnapType = ''; }
+        glideFrame = progress < 1 ? requestAnimationFrame(frame) : 0;
       };
       glideFrame = requestAnimationFrame(frame);
     };
@@ -77,6 +81,9 @@
     // An in-section reveal step remembers both ends, so a reversal returns
     // within the same section instead of jumping to a neighbouring one.
     let reveal = null;
+    const stepTop = index => index === sections.length
+      ? document.documentElement.scrollHeight - innerHeight
+      : sections[index].getBoundingClientRect().top + window.scrollY - header.getBoundingClientRect().height;
     const moveTo = (index, direction, now, top = null) => {
       const target = sections[index] || (index === sections.length ? footer : null);
       if (!target) return false;
@@ -85,12 +92,16 @@
       settling = true;
       lockedUntil = now + 850;
       reveal = top === null ? null : {from: window.scrollY, to: top};
-      if (top === null) top = index === sections.length
-        ? document.documentElement.scrollHeight - innerHeight
-        : target.getBoundingClientRect().top + window.scrollY - header.getBoundingClientRect().height;
-      glideTo(Math.max(0, top));
+      glideTo(Math.max(0, top === null ? stepTop(index) : top));
       return true;
     };
+    // A resize during a glide re-aims it at the same section in the new
+    // layout; the old target would land mid-section.
+    window.addEventListener('resize', () => {
+      if (!stepMode.matches || !glideFrame || pendingSection === null) return;
+      reveal = null;
+      glideTo(Math.max(0, stepTop(pendingSection)));
+    });
     const reverse = (direction, now) => {
       if (reveal) {
         const {from, to} = reveal;
@@ -130,7 +141,7 @@
           // A long section keeps native reading scroll. A short overflow
           // glides into view as its own step instead of a native jump that
           // snapping then pulled back.
-          if (hidden > innerHeight * .6) return;
+          if (hidden > innerHeight * .6) { holdSnap(); return; }
           const top = window.scrollY + (direction > 0 ? rect.bottom - innerHeight : rect.top - offset);
           if (moveTo(current, direction, now, top)) event.preventDefault();
           return;
@@ -159,7 +170,10 @@
     window.addEventListener('scroll', () => { if (!scrollFrame) scrollFrame = requestAnimationFrame(updateCurrentSection); }, {passive: true});
     window.addEventListener('resize', updateCurrentSection);
     requestAnimationFrame(updateCurrentSection);
-    const releaseWheel = () => { stopGlide(); lockedUntil = 0; settling = false; pendingSection = null; reveal = null; };
+    const releaseWheel = () => { stopGlide(); restoreSnap(); lockedUntil = 0; settling = false; pendingSection = null; reveal = null; };
+    // Leaving step mode (a smaller window or zoom) hands scrolling back to the
+    // browser, also after a finished glide that still holds snapping off.
+    stepMode.addEventListener('change', () => { if (!stepMode.matches) releaseWheel(); });
     document.addEventListener('keydown', releaseWheel);
     document.addEventListener('pointerdown', releaseWheel, {passive: true});
     document.addEventListener('click', event => { if (event.target.closest('a[href*="#"]')) releaseWheel(); });

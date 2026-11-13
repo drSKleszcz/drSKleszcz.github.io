@@ -17,6 +17,19 @@ from playwright.sync_api import sync_playwright, expect, TimeoutError as Playwri
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / '_site'
 
+# Dispatches wheel events from inside the page with exact spacing. Playwright's
+# mouse.wheel round trips are too slow and uneven for touchpad-like streams.
+# Synthetic events drive only the stepping script; they never scroll natively.
+# Argument: [[delay_ms_before_event, deltaY], ...]
+WHEEL_STREAM = '''async seq => {
+  const el = document.elementFromPoint(5, innerHeight / 2);
+  for (const [wait, deltaY] of seq) {
+    if (wait) await new Promise(resolve => setTimeout(resolve, wait));
+    el.dispatchEvent(new WheelEvent('wheel', {deltaY, deltaMode: 0, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
+  }
+}'''
+HEADER_GAP = "id => document.getElementById(id).getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom"
+
 class RenderedTests(unittest.TestCase):
     def test_homepage_prioritizes_balanced_work_without_losing_projects(self):
         expected = [
@@ -899,6 +912,202 @@ class BrowserTests(unittest.TestCase):
                 self.page.wait_for_timeout(500)
                 self.assertLessEqual(abs(self.page.evaluate('window.scrollY') - stopped), 1, f'{interrupt}: glide kept moving')
             self.assertEqual(self.page.evaluate(snap), '', f'{interrupt}: snap override left behind')
+
+    def test_wheel_reveal_reversals_up_in_hero_and_twice(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        about_end = "document.querySelector('#about').getBoundingClientRect().bottom - innerHeight"
+        # Upward reveal: from About's end, a step up starts towards its top; reversing returns to the end.
+        self.page.goto(self.base + '/#about')
+        self.page.add_style_tag(content='#about .about-experience { padding-bottom: 400px; }')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"id => scrollBy({{top: ({HEADER_GAP})(id), behavior: 'instant'}})", 'about')
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(900)
+        self.assertLessEqual(abs(self.page.evaluate(about_end)), 3, 'reveal down did not reach the About end')
+        self.page.mouse.wheel(0, -100)
+        self.page.wait_for_timeout(150)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(900)
+        self.assertLessEqual(abs(self.page.evaluate(about_end)), 3, 'upward reveal reversal left the About end')
+        # Second reversal: down, up, down again ends at the reveal target.
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"id => scrollBy({{top: ({HEADER_GAP})(id), behavior: 'instant'}})", 'about')
+        self.page.wait_for_timeout(300)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(150)
+        self.page.mouse.wheel(0, -100)
+        self.page.wait_for_timeout(150)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(900)
+        self.assertLessEqual(abs(self.page.evaluate(about_end)), 3, 'second reversal did not return to the reveal target')
+        # Hero reveal: reversing the first step from the very top returns to the top.
+        self.page.goto(self.base + '/')
+        self.page.add_style_tag(content='.hero > :last-child { padding-bottom: 400px; }')
+        self.page.wait_for_timeout(300)
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(150)
+        self.assertGreater(self.page.evaluate('window.scrollY'), 2, 'hero reveal did not start')
+        self.page.mouse.wheel(0, -100)
+        self.page.wait_for_timeout(900)
+        self.assertLessEqual(self.page.evaluate('window.scrollY'), 2, 'hero reveal reversal kept moving')
+
+    def test_wheel_notch_timing_and_touchpad_streams(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        # Notches well inside the 90 ms gesture window are one fast spin: one step.
+        self.page.goto(self.base + '/')
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 50, 100] for i in range(4)])
+        self.page.wait_for_timeout(1200)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, 'spin of notches 50 ms apart')
+        # Separate notches (130 ms apart) each move one section.
+        self.page.goto(self.base + '/')
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 130, 100] for i in range(4)])
+        self.page.wait_for_timeout(1200)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3, 'notches 130 ms apart')
+        # A long touchpad momentum stream (small deltas, 12 ms apart, ~2 s) is one step each time.
+        self.page.goto(self.base + '/')
+        flick = [30, 50, 60, 55, 50, 45, 40, 35, 30, 26, 22, 19, 16, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2] + [1] * 140
+        for section in ['expertise', 'projects']:
+            self.page.evaluate(WHEEL_STREAM, [[12, delta] for delta in flick])
+            self.page.wait_for_timeout(900)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, section)), 3, f'momentum stream to {section}')
+
+    def test_wheel_retarget_moves_monotonically(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.page.goto(self.base + '/')
+        self.page.evaluate("()=>{window.frames_=[];const f=()=>{frames_.push(scrollY);if(frames_.length<240)requestAnimationFrame(f)};requestAnimationFrame(f)}")
+        self.page.evaluate(WHEEL_STREAM, [[0 if i == 0 else 150, 100] for i in range(4)])
+        self.page.wait_for_timeout(1500)
+        frames = self.page.evaluate('frames_')
+        backward = [(frames[i], frames[i + 1]) for i in range(len(frames) - 1) if frames[i + 1] < frames[i] - 0.5]
+        self.assertEqual(backward, [], 'retargeted glide moved backwards (snap pulled it to a section edge)')
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3)
+        # Snapping stays held while the wheel steps and returns with other input.
+        self.assertEqual(self.page.evaluate('document.documentElement.style.scrollSnapType'), 'none')
+        self.page.keyboard.press('Shift')
+        self.assertEqual(self.page.evaluate('document.documentElement.style.scrollSnapType'), '')
+
+    def test_wheel_reaches_the_footer_on_a_short_window(self):
+        # Snapping used to pull every arrival at the page end back to the Contact top.
+        self.page.set_viewport_size({'width': 1001, 'height': 650})
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.page.goto(self.base + '/#contact')
+        self.page.wait_for_timeout(300)
+        self.page.mouse.move(5, 325)
+        for _ in range(3):
+            self.page.mouse.wheel(0, 100)
+            self.page.wait_for_timeout(1100)
+        remaining = self.page.evaluate('document.documentElement.scrollHeight - innerHeight - scrollY')
+        self.assertLessEqual(remaining, 2, f'page end not reached or pulled back: {remaining}px left')
+
+    def test_resize_during_wheel_glide_lands_on_the_section(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.goto(self.base + '/')
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(200)
+        self.page.set_viewport_size({'width': 1280, 'height': 760})
+        self.page.wait_for_timeout(1500)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3)
+
+    def test_wheel_gesture_window_boundary_is_90_ms(self):
+        # The step script reads performance.now(); freezing it gives the two
+        # notches exactly `gap` ms apart whatever the handlers cost. The second
+        # notch is stamped with the real current time, so the glide it starts
+        # runs on the real clock after the stub is removed.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        for gap, section in [(89, 'expertise'), (89.9, 'expertise'), (90, 'projects'), (91, 'projects')]:
+            self.page.goto(self.base + '/')
+            # Keep the stubbed stamps positive: the step lock starts at 0 ms.
+            self.page.wait_for_function('performance.now() > 300')
+            self.page.evaluate('''gap => {
+              const real = performance.now.bind(performance);
+              const base = Math.floor(real());  // integer, so base - (base - gap) is exactly gap
+              let frozen = base - gap;
+              performance.now = () => frozen;
+              const el = document.elementFromPoint(5, innerHeight / 2);
+              const notch = () => el.dispatchEvent(new WheelEvent('wheel', {deltaY: 100, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
+              try {
+                notch();
+                frozen = base;
+                notch();
+              } finally {
+                performance.now = real;
+              }
+            }''', gap)
+            self.page.wait_for_timeout(1200)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, section)), 3, f'second notch {gap} ms after the first')
+
+    def test_leaving_step_mode_restores_snapping_after_a_finished_glide(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.page.goto(self.base + '/')
+        snap = 'document.documentElement.style.scrollSnapType'
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(900)
+        self.assertEqual(self.page.evaluate(snap), 'none', 'snapping should be held after a wheel step')
+        for width, height in [(1000, 800), (1440, 640)]:
+            self.page.set_viewport_size({'width': width, 'height': height})
+            self.page.wait_for_timeout(200)
+            self.assertEqual(self.page.evaluate(snap), '', f'{width}x{height}: snap hold survived leaving step mode')
+            self.page.set_viewport_size({'width': 1440, 'height': 900})
+            self.page.wait_for_timeout(200)
+            self.page.mouse.wheel(0, 100)
+            self.page.wait_for_timeout(900)
+
+    def test_completed_glide_release_keeps_the_landing(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.page.goto(self.base + '/')
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(900)
+        landed = self.page.evaluate('window.scrollY')
+        self.page.keyboard.press('Shift')
+        self.page.wait_for_timeout(600)
+        self.assertEqual(self.page.evaluate('document.documentElement.style.scrollSnapType'), '')
+        self.assertLessEqual(abs(self.page.evaluate('window.scrollY') - landed), 1, 'restored snapping moved the page')
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3)
+
+    def test_page_end_survives_restored_snapping_on_a_short_window(self):
+        # Protects the footer's scroll-snap-align: end. Once a key restores CSS
+        # snapping at the page end, the Contact top must not pull the page back.
+        self.page.set_viewport_size({'width': 1001, 'height': 650})
+        self.page.emulate_media(reduced_motion='no-preference')
+        self.page.goto(self.base + '/#contact')
+        self.page.wait_for_timeout(300)
+        self.page.mouse.move(5, 325)
+        for _ in range(3):
+            self.page.mouse.wheel(0, 100)
+            self.page.wait_for_timeout(1100)
+        self.page.keyboard.press('Shift')
+        self.page.wait_for_timeout(1000)
+        self.assertEqual(self.page.evaluate('document.documentElement.style.scrollSnapType'), '')
+        remaining = self.page.evaluate('document.documentElement.scrollHeight - innerHeight - scrollY')
+        self.assertLessEqual(remaining, 2, f'restored snapping pulled the page end back: {remaining}px left')
+
+    def test_repeated_resize_during_a_reveal_lands_on_the_section(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/#about')
+        self.page.add_style_tag(content='#about .about-experience { padding-bottom: 400px; }')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"id => scrollBy({{top: ({HEADER_GAP})(id), behavior: 'instant'}})", 'about')
+        self.page.mouse.move(5, 450)
+        self.page.mouse.wheel(0, 100)
+        self.page.wait_for_timeout(100)
+        self.assertLess(self.page.evaluate(HEADER_GAP, 'about'), -2, 'reveal did not start before the resizes')
+        for height in [880, 860, 840]:
+            self.page.set_viewport_size({'width': 1440, 'height': height})
+            self.page.wait_for_timeout(30)
+        self.page.wait_for_timeout(1500)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3)
 
     def test_pointer_carousel_motion_is_interruptible_and_keyboard_is_immediate(self):
         self.page.goto(self.base + '/#projects')

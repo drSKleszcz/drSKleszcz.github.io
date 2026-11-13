@@ -582,7 +582,10 @@ html[data-js] .filter-bar[hidden] { display: flex !important; visibility: hidden
 
 @media (min-width: 1001px) and (min-height: 650px) and (prefers-reduced-motion: no-preference) { html.home-page { scroll-snap-type: y proximity; scroll-padding-top: var(--header-height, 95px); } }
 
-.home-page .site-footer { scroll-snap-align: none; }
+/* The page end is a snap position too: on short windows, where Contact is
+   taller than the space above the footer, snapping otherwise pulled every
+   arrival at the footer back up to the Contact top. */
+.home-page .site-footer { scroll-snap-align: end; }
 
 .featured-carousel, .related-carousel { position: relative; }
 .featured-carousel:not(.enhanced-carousel) .project-card:nth-child(n+5) { display: none; }
