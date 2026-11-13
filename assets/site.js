@@ -125,10 +125,32 @@
         const {from, to} = reveal;
         moveTo(pendingSection, direction, now, from);
         reveal = {from: to, to: from};
-      } else if (!moveTo(pendingSection + direction, direction, now)) stopGlide();
+      } else if (!moveTo(pendingSection + direction, direction, now)) {
+        stopGlide();
+        queued = false;
+        credit = 0;
+      }
+    };
+    // The browser scrolls this wheel sequence itself: drop the step state.
+    const yieldToNative = () => {
+      stopGlide();
+      queued = false;
+      credit = 0;
+      settling = false;
+      pendingSection = null;
+      reveal = null;
     };
     window.addEventListener('wheel', event => {
-      if (!stepMode.matches || event.ctrlKey || !event.deltaY || Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.target.closest('input, textarea, select, dialog, [contenteditable="true"]')) return;
+      if (!stepMode.matches || event.ctrlKey) return;
+      // Chrome makes the rest of a wheel sequence uncancelable when its first
+      // event was not prevented, and then scrolls natively; diagonal events and
+      // events over form controls are left native on purpose. A glide running
+      // at the same time fought that scroll (the page froze or jerked), so it
+      // stops and the browser has the sequence.
+      if (!event.deltaY || Math.abs(event.deltaX) > Math.abs(event.deltaY) || !event.cancelable || event.target.closest('input, textarea, select, dialog, [contenteditable="true"]')) {
+        if (event.deltaY) yieldToNative();
+        return;
+      }
       const now = performance.now();
       const idle = now - lastWheel;
       lastWheel = now;
@@ -181,7 +203,22 @@
           return;
         }
       }
-      if (moveTo(current + direction, direction, now)) event.preventDefault();
+      // Past the first or last section the step still takes the event: left to
+      // the browser it made the rest of the sequence native (see above).
+      // The edge glide keeps the step state coherent: its target is the page
+      // edge (index 0 or sections.length, the page end in stepTop), so a further
+      // notch stays there, a reversal returns to the last section's top or the
+      // second section, and a resize re-aims at the edge.
+      if (!moveTo(current + direction, direction, now)) {
+        pendingSection = direction > 0 ? sections.length : 0;
+        lastDirection = direction;
+        settling = true;
+        queued = false;
+        credit = 0;
+        reveal = null;
+        stepReadyAt = now + glideTo(direction > 0 ? document.documentElement.scrollHeight - innerHeight : 0) / 2;
+      }
+      event.preventDefault();
     }, {passive: false});
 
     const sectionLinks = [...document.querySelectorAll('#site-nav a')];

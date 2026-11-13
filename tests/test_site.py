@@ -28,6 +28,27 @@ WHEEL_STREAM = '''async seq => {
     el.dispatchEvent(new WheelEvent('wheel', {deltaY, deltaMode: 0, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
   }
 }'''
+# Controls animation frames and the clock inside page.evaluate: frames are
+# queued until restore(), performance.now() returns `frozen` (starts at `base`).
+FRAME_STUB = '''
+          const realNow = performance.now.bind(performance);
+          const realRaf = requestAnimationFrame, realCancel = cancelAnimationFrame;
+          const frames = new Map();
+          let id = 0;
+          window.requestAnimationFrame = cb => { frames.set(++id, cb); return id; };
+          window.cancelAnimationFrame = handle => { frames.delete(handle); };
+          const base = Math.floor(realNow());
+          let frozen = base;
+          performance.now = () => frozen;
+          const at = (x, y) => document.elementFromPoint(x, y);
+          const wheel = (init, target = at(5, innerHeight / 2)) => target.dispatchEvent(new WheelEvent('wheel', Object.assign({bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}, init)));
+          const restore = () => {
+            performance.now = realNow;
+            window.requestAnimationFrame = realRaf;
+            window.cancelAnimationFrame = realCancel;
+            for (const cb of frames.values()) realRaf(cb);
+          };
+'''
 HEADER_GAP = "id => document.getElementById(id).getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().bottom"
 
 class RenderedTests(unittest.TestCase):
@@ -1117,15 +1138,101 @@ class BrowserTests(unittest.TestCase):
         self.page.set_viewport_size({'width': 1440, 'height': 900})
         self.page.emulate_media(reduced_motion='reduce')
         self.page.goto(self.base + '/')
-        self.page.evaluate('''async () => {
+        self.page.wait_for_function('performance.now() > 600')
+        self.page.evaluate('''() => {
+          const real = performance.now.bind(performance);
+          const base = Math.floor(real());
+          let frozen = base - 50;
+          performance.now = () => frozen;
           const el = document.elementFromPoint(5, innerHeight / 2);
           const notch = () => el.dispatchEvent(new WheelEvent('wheel', {deltaY: 3, deltaMode: 1, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2}));
-          notch();
-          await new Promise(resolve => setTimeout(resolve, 50));
-          notch();
+          try {
+            notch();
+            frozen = base;  // 50 ms later: inside a gesture, so only the credit can queue the step
+            notch();
+          } finally { performance.now = real; }
         }''')
         self.page.wait_for_timeout(1500)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'projects')), 3, 'second line-mode notch was not queued')
+
+    def test_wheel_past_the_page_edges_is_still_taken(self):
+        # Chrome turns the rest of a wheel sequence native when its first event is
+        # not prevented; a notch past the top or the end must still be taken.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        notch = '''deltaY => { const e = new WheelEvent('wheel', {deltaY, bubbles: true, cancelable: true, clientX: 5, clientY: innerHeight / 2});
+          document.elementFromPoint(5, innerHeight / 2).dispatchEvent(e); return e.defaultPrevented; }'''
+        self.page.goto(self.base + '/')
+        self.page.wait_for_timeout(300)
+        self.assertTrue(self.page.evaluate(notch, -100), 'notch up at the top was left to the browser')
+        self.page.evaluate('scrollTo(0, document.documentElement.scrollHeight)')
+        self.page.wait_for_timeout(300)
+        self.assertTrue(self.page.evaluate(notch, 100), 'notch down at the end was left to the browser')
+        # A notch past the last section with the page end not yet reached glides to the end.
+        self.page.evaluate('scrollTo(0, document.documentElement.scrollHeight - innerHeight - 40)')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(notch, 100)
+        self.page.wait_for_timeout(900)
+        remaining = self.page.evaluate('document.documentElement.scrollHeight - innerHeight - scrollY')
+        self.assertLessEqual(remaining, 2, f'{remaining}px left before the page end')
+
+    def test_native_wheel_events_stop_the_glide(self):
+        # Events the browser scrolls itself (uncancelable, diagonal, over a form
+        # control) must stop a running glide instead of fighting the native
+        # scroll. Frames and the clock are controlled: the glide has not moved yet.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        cases = {
+            'uncancelable': "wheel({deltaY: 100, cancelable: false})",
+            'diagonal uncancelable': "wheel({deltaX: 80, deltaY: 40, cancelable: false})",
+            'diagonal': "wheel({deltaX: 80, deltaY: 40})",
+            'over a textarea': "const box = document.createElement('textarea'); document.body.append(box); wheel({deltaY: 100}, box)",
+        }
+        for label, second in cases.items():
+            self.page.goto(self.base + '/')
+            self.page.wait_for_timeout(300)
+            self.page.evaluate('() => {' + FRAME_STUB + 'try { wheel({deltaY: 100}); frozen = base + 50; ' + second + '; } finally { restore(); } }')
+            self.page.wait_for_timeout(900)
+            self.assertLessEqual(self.page.evaluate('scrollY'), 1, f'{label}: glide went on against a native scroll')
+            # The next ordinary notch steps from the real position.
+            self.page.evaluate('scrollTo(0, 300)')
+            self.page.evaluate(WHEEL_STREAM, [[300, 100]])
+            self.page.wait_for_timeout(1000)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, f'{label}: no recovery after the native scroll')
+
+    def test_edge_glide_keeps_a_coherent_step_state(self):
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        # Empty space below Contact's content: the last section is current while
+        # the page end is still 120 px away, so a notch down glides to the edge.
+        tall_contact = '#contact { padding-bottom: 700px !important; }'
+        near_end = 'scrollTo(0, document.documentElement.scrollHeight - innerHeight - 120)'
+        end = 'document.documentElement.scrollHeight - innerHeight'
+        cases = {
+            'second notch down': ("wheel({deltaY: 100}); frozen = base + 60; wheel({deltaY: 100})", f'{end}'),
+            # A reversal returns to the top of Contact, the last section.
+            'reversal up': ("wheel({deltaY: 100}); frozen = base + 60; wheel({deltaY: -100})", f"scrollY + ({HEADER_GAP})('contact')"),
+            'resize': ("wheel({deltaY: 100}); window.dispatchEvent(new Event('resize'))", f'{end}'),
+        }
+        for label, (steps, expected) in cases.items():
+            # An earlier step leaves state behind (pending Expertise); the page then
+            # reaches the end natively (e.g. the scrollbar) without other input.
+            self.page.goto(self.base + '/')
+            self.page.add_style_tag(content=tall_contact)
+            self.page.wait_for_timeout(300)
+            self.page.evaluate(WHEEL_STREAM, [[0, 100]])
+            self.page.wait_for_timeout(900)
+            self.page.evaluate(near_end)
+            self.page.wait_for_timeout(300)
+            self.page.evaluate("window.min_ = scrollY; window.trackMin_ = () => { min_ = Math.min(min_, scrollY); requestAnimationFrame(trackMin_); }; requestAnimationFrame(trackMin_)")
+            start = self.page.evaluate('scrollY')
+            self.assertLess(self.page.evaluate(HEADER_GAP, 'contact'), 0, f'{label}: Contact is not the current section')
+            self.page.evaluate('() => {' + FRAME_STUB + 'try { ' + steps + '; } finally { restore(); } }')
+            self.page.wait_for_timeout(1200)
+            target = self.page.evaluate(expected)
+            self.assertLessEqual(abs(self.page.evaluate('scrollY') - target), 2, f'{label}: landed {self.page.evaluate("scrollY")}, expected {target}')
+            if label != 'reversal up':
+                self.assertGreaterEqual(self.page.evaluate('min_'), start - 1, f'{label}: moved backwards from the edge glide')
 
     def test_separate_notch_after_a_stalled_glide_moves_on(self):
         # A busy page can run no animation frame before the lock expires. The
