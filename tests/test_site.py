@@ -998,7 +998,7 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(1200)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3, 'notches 300 ms apart')
         # A touchpad flick (small deltas, 12 ms apart, ~2 s): its strong start moves two
-        # sections, the momentum dribble below 20 device pixels does not creep on.
+        # sections, the fading momentum does not creep on.
         self.page.goto(self.base + '/')
         flick = [30, 50, 60, 55, 50, 45, 40, 35, 30, 26, 22, 19, 16, 14, 12, 10, 9, 8, 7, 6, 5, 4, 3, 2] + [1] * 140
         for section in ['projects', 'about']:
@@ -1086,12 +1086,49 @@ class BrowserTests(unittest.TestCase):
         self.assertGreaterEqual(final, 3, 'continuous spin hung')
         self.assertLessEqual(final, at_stop + 2, f'ran on after the wheel stopped: {at_stop} -> {final}')
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, self.page.evaluate(f"document.querySelectorAll('main > section')[{final}].id"))), 3, 'spin did not land on a section')
-        # Momentum dribble (2 device px every 12 ms for 1.3 s) straight after a notch
-        # runs past the landing and stays put.
+        # The fading tail after a notch (~80 device px, as recorded at the end of a
+        # real spin) stays below the next step.
         self.page.goto(self.base + '/')
-        self.page.evaluate(WHEEL_STREAM, [[0, 100]] + [[12, 2] for _ in range(108)])
+        self.page.evaluate(WHEEL_STREAM, [[0, 100]] + [[12, d] for d in [12, 10, 9, 8, 7, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1]])
         self.page.wait_for_timeout(900)
-        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, 'momentum dribble crept on')
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'expertise')), 3, 'fading tail crept on')
+
+    def test_slow_smooth_wheel_stream_moves_through_sections(self):
+        # Recorded on Edge at 250 % scaling: a wheel turned slowly sends only a
+        # steady stream of 1.7-2.5 CSS px (4-6 device px) every ~31 ms with no
+        # pause; the page stood on Expertise for 12 s. Every event must count.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        index = "() => { const h = document.querySelector('.site-header').getBoundingClientRect().bottom; return [...document.querySelectorAll('main > section')].filter(s => s.getBoundingClientRect().top - h <= 3).length - 1; }"
+        stream = lambda sign: [[0 if i == 0 else 31, sign * d] for i, d in enumerate([4.25, 4.25, 6.25] * 32)]
+        self.page.goto(self.base + '/')
+        self.page.evaluate(WHEEL_STREAM, stream(1))
+        self.page.wait_for_timeout(1200)
+        down = self.page.evaluate(index)
+        self.assertGreaterEqual(down, 2, f'slow stream stuck on section {down}')
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, self.page.evaluate(f"document.querySelectorAll('main > section')[{down}].id"))), 3, 'slow stream did not land on a section')
+        self.page.evaluate(WHEEL_STREAM, stream(-1))
+        self.page.wait_for_timeout(1200)
+        up = self.page.evaluate(index)
+        self.assertLessEqual(up, down - 2, f'slow upward stream stuck: {down} -> {up}')
+
+    def test_fading_wheel_momentum_does_not_add_a_section(self):
+        # From an interior section (no page edge to hide an extra step), with a
+        # frozen clock: a notch, a residual 30 px, then the tail recorded at the
+        # end of a real spin (Edge, 250 %, ~76 device px); and a notch followed by
+        # a long strictly fading tail. Each moves exactly one section.
+        recorded = [[31, 8.25], [30, 8.25], [32, 6.25], [31, 6.25], [32, 4.25], [3, 6.25], [1, 4.25], [43, 2], [31, 4.25], [31, 2], [31, 4.25], [32, 2], [31, 2], [32, 2], [31, 2], [64, 2], [31, 2], [62, 2], [79, 2], [76, 2], [188, 2]]
+        fading = [[31, d] for d in range(19, 0, -1)]
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        for name, seq in [('recorded tail', [[0, 100], [31, 30]] + recorded), ('fading tail', [[0, 100]] + fading)]:
+            self.page.goto(self.base + '/#projects')
+            self.page.wait_for_timeout(300)
+            self.page.evaluate(f"scrollBy({{top: ({HEADER_GAP})('projects'), behavior: 'instant'}})")
+            self.page.wait_for_function('performance.now() > 600')
+            self.page.evaluate('seq => {' + FRAME_STUB + 'try { for (const [gap, d] of seq) { frozen += gap; wheel({deltaY: d / devicePixelRatio}); } } finally { restore(); } }', seq)
+            self.page.wait_for_timeout(1200)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, f'{name} added a section')
 
     def test_queued_step_survives_a_resize_before_the_first_frame(self):
         # A reveal starts and a second notch queues a step before any frame;

@@ -51,6 +51,9 @@
     let queued = false;
     let stepReadyAt = 0;
     let credit = 0;
+    let peak = 0;
+    let peakAt = 0;
+    let peakDirection = 0;
     const holdSnap = () => { document.documentElement.style.scrollSnapType = 'none'; };
     const restoreSnap = () => { document.documentElement.style.scrollSnapType = ''; };
     const stopGlide = () => {
@@ -156,9 +159,16 @@
       lastWheel = now;
       const direction = Math.sign(event.deltaY);
       // Wheel travel in device pixels: a mouse notch is ~100 at any display
-      // scaling (deltaY shrinks as the scaling grows). Touchpad and momentum
-      // dribble below 20 does not count, so a flick ends instead of creeping on.
+      // scaling (deltaY shrinks as the scaling grows). A smooth-scrolling or
+      // high-resolution wheel turned slowly sends only a steady stream of a
+      // few pixels, so small events count; momentum fades instead, so an event
+      // below half the recent peak (which halves every 300 ms) does not count.
       const amount = Math.abs(event.deltaY) * (event.deltaMode === 1 ? 34 : event.deltaMode === 2 ? 100 : devicePixelRatio);
+      const recent = direction === peakDirection ? peak * 2 ** (-(now - peakAt) / 300) : 0;
+      const momentum = amount < recent / 2;
+      peak = Math.max(amount, recent);
+      peakAt = now;
+      peakDirection = direction;
       const fresh = idle >= 200;
       // While a glide runs (or just after it, mid-spin) the step goes on from
       // the pending section: on a busy page frames lag and the scroll position
@@ -169,7 +179,7 @@
           event.preventDefault();
           return;
         }
-        if (amount >= 20) credit += amount;
+        if (!momentum) credit += amount;
         if (fresh || credit >= 100) { credit = 0; queued = true; }
         if (glideFrame || !queued) {
           if (queued && now >= stepReadyAt) advance(now);
