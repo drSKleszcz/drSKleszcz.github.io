@@ -51,6 +51,10 @@
     // pause) while a step is already queued waits in the backlog, so quick
     // deliberate notches each move a section. A late frame or a resize re-aim
     // never cuts a landing short: only a finished glide takes the queue.
+    // A smooth-scrolling wheel sends one move as 200-250 device px of small
+    // events, so during a glide small events queue the next section only for
+    // a strong spin (300); notch-sized events (a mouse notch is ~100) still
+    // queue at 100. After the landing, input that goes on steps on (100).
     let queued = false;
     let backlog = 0;
     let credit = 0;
@@ -76,6 +80,7 @@
         // Nothing to animate (e.g. a resize re-aim at the current position):
         // a queued step must not wait for a frame that never comes.
         if (queued) advance(performance.now());
+        else credit = 0;
         return 0;
       }
       const began = performance.now() - (moving ? 16 : 0);
@@ -88,7 +93,9 @@
         const progress = Math.min(1, Math.max(0, (now - began) / duration));
         window.scrollTo({top: start + distance * ease(progress), behavior: 'instant'});
         glideFrame = progress < 1 ? requestAnimationFrame(frame) : 0;
-        if (queued && !glideFrame) advance(performance.now());
+        // A landing without a queued step starts the count afresh: what one
+        // move sent during the glide is spent, so it does not run on.
+        if (!glideFrame) { if (queued) advance(performance.now()); else credit = 0; }
       };
       glideFrame = requestAnimationFrame(frame);
       return duration;
@@ -194,7 +201,7 @@
         }
         if (!momentum) credit += amount;
         if (fresh && queued) backlog = Math.min(backlog + 1, sections.length);
-        else if (fresh || credit >= 100) { credit = 0; queued = true; }
+        else if (fresh || credit >= (glideFrame && amount < 50 ? 300 : 100)) { credit = 0; queued = true; }
         if (glideFrame || !queued) {
           event.preventDefault();
           return;

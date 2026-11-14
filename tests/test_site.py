@@ -1177,6 +1177,22 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(1500)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, 'one move with a sparse tail ran more than one section')
 
+    def test_recorded_smooth_wheel_moves_each_move_one_section(self):
+        # Two single moves recorded on Edge, 250 % (device px, 2026-11-14): a
+        # quick one and a slower one, each 200-250 px in all. Credit from the
+        # glide queued a second section, so each move ran two sections.
+        quick = [[0, 12.5], [8, 10.5], [23, 12.5], [13, 12.5], [12, 12.5], [13, 12.5], [14, 10.5], [0, 12.5], [13, 23], [15, 10.5], [13, 10.5], [1, 8.25], [13, 16.75], [16, 6.25], [13, 6.25], [14, 10.5], [15, 6.25], [15, 4.25], [14, 4.25], [14, 4.25], [0, 4.25], [14, 2], [12, 4.25], [1, 2], [13, 2], [16, 2], [20, 6.25], [29, 2], [14, 2], [33, 2], [16, 2], [26, 2], [15, 2], [40, 2], [43, 2], [67, 2]]
+        slow = [[0, 6.25], [8, 4.25], [28, 6.25], [18, 4.25], [19, 4.25], [2, 6.25], [19, 4.25], [20, 6.25], [20, 4.25], [0, 4.25], [20, 6.25], [20, 4.25], [16, 4.25], [15, 4.25], [0, 6.25], [15, 4.25], [13, 4.25], [1, 6.25], [25, 10.5], [6, 4.25], [14, 4.25], [12, 4.25], [14, 4.25], [14, 4.25], [12, 4.25], [13, 4.25], [13, 4.25], [14, 4.25], [14, 4.25], [16, 2], [1, 4.25], [12, 2], [13, 4.25], [12, 2], [13, 4.25], [15, 2], [22, 6.25], [12, 2], [12, 2], [12, 2], [13, 2], [13, 2], [12, 2], [13, 2], [12, 2], [12, 2], [12, 2], [13, 2], [14, 2], [13, 2], [13, 2], [13, 2], [54, 6.25], [21, 2], [25, 2], [12, 2], [24, 2], [13, 2], [37, 2], [12, 2], [38, 2], [13, 2], [50, 2], [39, 2], [26, 2], [38, 2], [42, 2], [60, 2], [73, 2], [100, 2]]
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        for name, move in [('quick move', quick), ('slow move', slow)]:
+            self.page.goto(self.base + '/#projects')
+            self.page.wait_for_timeout(300)
+            self.page.evaluate(f"scrollBy({{top: ({HEADER_GAP})('projects'), behavior: 'instant'}})")
+            self.page.evaluate(WHEEL_STREAM, move)
+            self.page.wait_for_timeout(1500)
+            self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, f'one {name} ran more than one section')
+
     def test_fading_wheel_momentum_does_not_add_a_section(self):
         # From an interior section (no page edge to hide an extra step), with a
         # frozen clock: a notch, a residual 30 px, then the tail recorded at the
@@ -1194,6 +1210,28 @@ class BrowserTests(unittest.TestCase):
             self.page.evaluate('seq => {' + FRAME_STUB + 'try { for (const [gap, d] of seq) { frozen += gap; wheel({deltaY: d / devicePixelRatio}); } } finally { restore(); } }', seq)
             self.page.wait_for_timeout(1200)
             self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, f'{name} added a section')
+
+    def test_resize_landing_without_a_queued_step_spends_the_credit(self):
+        # A reveal starts, small events gather credit below the in-glide
+        # threshold, and a resize before the first frame re-aims at About's top,
+        # the current position, so the glide lands at once. A small tail event
+        # after that landing must not start another reveal.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/#about')
+        self.page.add_style_tag(content='#about .about-experience { padding-bottom: 400px; }')
+        self.page.wait_for_timeout(300)
+        self.page.evaluate(f"scrollBy({{top: ({HEADER_GAP})('about'), behavior: 'instant'}})")
+        self.page.wait_for_function('performance.now() > 600')
+        self.page.evaluate('() => {' + FRAME_STUB + """try {
+            wheel({deltaY: 30 / devicePixelRatio});
+            for (let i = 0; i < 5; i++) { frozen += 30; wheel({deltaY: 30 / devicePixelRatio}); }
+            window.dispatchEvent(new Event('resize'));
+            frozen += 30;
+            wheel({deltaY: 10 / devicePixelRatio});
+          } finally { restore(); } }""")
+        self.page.wait_for_timeout(1500)
+        self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'about')), 3, 'a tail event after a resize landing started another step')
 
     def test_queued_step_survives_a_resize_before_the_first_frame(self):
         # A reveal starts and a second notch queues a step before any frame;
