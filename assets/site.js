@@ -85,9 +85,9 @@
       }
       const began = performance.now() - (moving ? 16 : 0);
       const duration = Math.min(450, 250 + Math.abs(distance) * .3);
-      const ease = moving
-        ? t => 1 - Math.pow(1 - t, 3)
-        : t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      // Ease-out from rest too: an ease-in start moved only ~4% of the way in
+      // the first 100 ms, so the page seemed to answer the wheel late.
+      const ease = t => 1 - Math.pow(1 - t, 3);
       const frame = now => {
         // A frame time can precede the gesture that started the glide.
         const progress = Math.min(1, Math.max(0, (now - began) / duration));

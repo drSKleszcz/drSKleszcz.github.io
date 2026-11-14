@@ -1177,6 +1177,21 @@ class BrowserTests(unittest.TestCase):
         self.page.wait_for_timeout(1500)
         self.assertLessEqual(abs(self.page.evaluate(HEADER_GAP, 'publications')), 3, 'one move with a sparse tail ran more than one section')
 
+    def test_wheel_glide_answers_at_once(self):
+        # The glide from rest eases out: an ease-in start covered only ~4% of
+        # the way in the first 100 ms, so the wheel seemed to answer late.
+        self.page.set_viewport_size({'width': 1440, 'height': 900})
+        self.page.emulate_media(reduced_motion='reduce')
+        self.page.goto(self.base + '/')
+        self.page.wait_for_function('performance.now() > 600')
+        share = self.page.evaluate('() => {' + FRAME_STUB + """try {
+            const target = document.getElementById('expertise').getBoundingClientRect().top - document.querySelector('.site-header').getBoundingClientRect().height + scrollY;
+            wheel({deltaY: 100});
+            for (const [handle, cb] of [...frames]) { frames.delete(handle); cb(frozen + 100); }
+            return scrollY / target;
+          } finally { restore(); } }""")
+        self.assertGreater(share, .3, f'only {share:.0%} of the way after 100 ms')
+
     def test_recorded_smooth_wheel_moves_each_move_one_section(self):
         # Two single moves recorded on Edge, 250 % (device px, 2026-11-14): a
         # quick one and a slower one, each 200-250 px in all. Credit from the
